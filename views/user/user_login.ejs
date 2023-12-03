@@ -1,4 +1,5 @@
 
+  
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -24,6 +25,8 @@
     <link rel="stylesheet" href="/user/css/style.css" type="text/css">
     <link rel="stylesheet" href="/user/css/user.css" type="text/css">
 </head>
+
+
 
 <body>
     <!-- Page Preloder -->
@@ -75,49 +78,15 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="./index.html"><img src="/user/img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <nav class="header__menu">
-                        <ul>
-                            <li class="active"><a href="/index">Home</a></li>
-                            <li><a href="/shop-grid">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="/blog">Blog</a></li>
-                            <li><a href="./contact.html">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3">
-                    <div class="header__cart">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-                        </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="humberger__open">
-                <i class="fa fa-bars"></i>
-            </div>
-        </div>
+
+
     </header>
     <!-- Header Section End -->
 
-    
+
+
+  
+<!-- login page start -->
 
  <section class="container">
     <div class="row justify-content-center mt-5">
@@ -125,17 +94,19 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
-                    <form action="/login" method="POST">
+                    <form action="/login" method="POST" id="form1">
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
                             <input type="text" class="form-control" id="username" name="username" required>
+                            <p id="e_err"></p>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <p id="p_err"></p>
                         </div>
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                           <a href="/user/otpVerification"> <button type="submit" class="btn btn-primary">Login</button> </a>
                         </div>
                         <div class="form-check d-flex justify-content-center mb-4">
                             <p>Create an accound <a href="/register">Register</a></p>
@@ -150,8 +121,67 @@
 
 
 
+<script>
+    const form1 = document.getElementById('form1')
+    form1.addEventListener('submit',(e)=>{
+        e.preventDefault();
+
+
+        const email = document.forms['form1']['username'].value
+        const password = document.forms['form1']['password'].value
+
+        const e_err = document.getElementById('e_err')
+        const p_err = document.getElementById('p_err')
+        var regexp =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/;
+
+
+        if(email===""){
+            e_err.innerHTML = 'Please choose a email'
+            return false
+        }else{
+            e_err.innerHTML = ""
+        }
+
+        if(!regexp.test(email)){
+            e_err.innerHTML = 'Please choose a valid email'
+            return false
+        }else{
+            e_err.innerHTML = ""
+        }
+
+        if(password===""){
+            p_err.innerHTML = "Please choose a password"
+            return false
+        }else{
+            p_err.innerHTML = ""
+        }
+
+        form1.submit()
+        return true
+
+    })
+
+</script>
 
 
 
+</footer>
 
-<%- include('../partials/user/footer') %>
+<!-- Js Plugins -->
+<script src="/user/js/jquery-3.3.1.min.js"></script>
+<script src="/user/js/bootstrap.min.js"></script>
+<script src="/user/js/jquery.nice-select.min.js"></script>
+<script src="/user/js/jquery-ui.min.js"></script>
+<script src="/user/js/jquery.slicknav.js"></script>
+<script src="/user/js/mixitup.min.js"></script>
+<script src="/user/js/owl.carousel.min.js"></script>
+<script src="/user/js/main.js"></script>
+
+
+
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,77 @@
+<%- include('../partials/user/header') %>
+
+
+
+    <section class="login_part section_padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6">
+                    <div class="login_part_text text-center">
+                        <div class="login_part_text_center_iner">
+                            <h2>OTP Verification?</h2>
+                            <p>There are advances being made in science and technology everyday, and a good example of
+                                this is the.. Verify you email now...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="login_part_form">
+                        <div class="login_part_form_iner">
+                            <h2>Enter The OTP<br>Verify Your Email</h2>
+
+                            <form action="/user/otpVerification" method="post" novalidate="novalidate">
+                                <div class="col-md-12 form-group p_star">
+                                    <input type="text" class="form-control" id="OTP" name="OTP" value="" placeholder="Enter Your OTP">
+                                </div>
+                                <input type="hidden" name="ID" id="userId" value="<%= id %>">
+                                <div class="text-danger" id="countdown">
+                                    Time Remaining: <span id="timer">60</span>Seconds
+                                </div>
+
+                                <div class="row col md-12 form-group p_star "">
+                                    <button type="submit" value="submit" id="resend" class="btn_3">Send</button>
+                                </div>
+
+                                <!-- error message -->
+                                <% if (typeof message !="undefined" ) {%>
+                                    <p class="mt-3 text-danger ">
+                                        <%= message %>
+                                    </p>
+                                    <%} %>
+                                        <!--end messages-->
+                            </form>
+                            <div id="resendContainer" class="row col-md-12 form-group p_star" style="display: none;">
+                                <form action="/resend-otp" method="post">
+                                  <input type="hidden" name="userId" value="<%= id %>">
+                                  <button type="submit" class="btn" id="resendButton">Resend OTP</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+   <!--================login_part end =================-->
+</main>
+<footer>
+    <!-- Footer Start-->
+    <%- include('../partials/user/footer') %>
+        <!-- Footer End-->
+</footer>
+<!-- Otp counter script -->
+<script src="/user/js/otpCounter.js"></script>
+<script >
+// Define the startCountdown function
+
+
+</script>
+
+
+
+
+
+   

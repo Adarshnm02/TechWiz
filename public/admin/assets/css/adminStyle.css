@@ -1,0 +1,29 @@
+
+/* style for addProduct page  */
+
+.card{
+   padding-left: 10px !important 
+
+}
+.mywork{
+    width: 95%;
+}
+.form-control{
+    width: 95% !important ;
+}
+ .drop1{                        /* styling for dropdown */
+    width: 95% !important;
+    height: 35px !important;  
+    
+}
+.btn{
+    margin-top: 30px !important;
+}
+::placeholder{
+    color: #999 !important;
+}
+
+/* 
+.app-header{
+  background-color: transparent;
+} */

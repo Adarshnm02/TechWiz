@@ -1,0 +1,105 @@
+<%- include('../partials/admin/adminHeader') %>
+
+<div class="container mt-5">
+    <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">Product Save Info</h3>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="productName" class="form-label mt-4">Product Name</label>
+                            <input type="text" name="productName" class="form-control" id="productName"
+                                placeholder="Product Name">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="brandName" class="form-label mt-4">Product Brand</label>
+                            <input type="text" name="brandName" class="form-control" id="brandName"
+                                placeholder="Product Brand">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="description" class="form-label mt-4">Product Description</label>
+                            <textarea class="form-control" name="description" id="description" cols="30" rows="3"
+                                placeholder="Product Description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
+                            <input type="number" name="stockCount" class="form-control" id="stockCount"
+                                placeholder="Stock Quantity">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="price" class="form-label mt-4">Price</label>
+                            <input type="number" name="price" class="form-control" id="price"
+                                placeholder="Main Price">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="mainImage" class="form-label mt-4">Main Image / File</label>
+                            <input type="file" name="image" class="form-control" id="mainImage"
+                                placeholder="Main Image / File">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="category" class="form-label mt-4">Product Category</label>
+                            <select class="form-select drop1" name="category">
+                                <option value="mobile">Mobile</option>
+                                <option value="laptop">Laptop</option>
+                                <option value="camera">Camera</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="colorTypes" class="form-label mt-4">Color Types</label>
+                            <input type="text" name="color" class="form-control" id="colorTypes"
+                                placeholder="Color Types">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 text-center mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg">Save Products</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+    <%- include('../partials/admin/adminFooter') %>
+
+
+
+
+
+
+
+
+
