@@ -1,7 +1,7 @@
 <%- include('../partials/admin/adminHeader') %>
 
 <div class="container mt-5">
-    <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;">
+    <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;" enctype="multipart/form-data">
         <div class="card">
             <div class="card-body">
                 <div class="card-header bg-primary text-white">
@@ -56,7 +56,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="mainImage" class="form-label mt-4">Main Image / File</label>
-                            <input type="file" name="image" class="form-control" id="mainImage"
+                            <input type="file" name="image" multiple class="form-control" id="mainImage"
                                 placeholder="Main Image / File">
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 const express = require('express')
-const UserOTPVerification = require("../../models/userOTPVerification")
+// const UserOTPVerification = require("../../models/userOTPVerification")
+const User = require('../../models/userModel')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
@@ -27,98 +28,189 @@ const loadSignup = (req,res)=>{
     res.render('user/userSignup')
 }
 
-const sendOTPVerificationEmail = async ({ _id, email }, res) => {
-        try {
-            const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-            // Mail options
-            const mailOption = {
-                from: process.env.AUTH_EMAIL, // Use the correct environment variable
-                to: email,
-                subject: "Verify Your Email",
-                html: `<p>Enter <b>${otp}</b> in the app to verify your email address and complete the verification</p>
-                       <p>This code <b>expires in 1 minute</b>.</p>`
-            };
-            // Hash the OTP
-            const saltRounds = 10;
-            const hashedOTP = await bcrypt.hash(otp, saltRounds);
-            const newOTPVerification = new UserOTPVerification({
-                userId: _id,
-                otp: hashedOTP,
-                createdAt: Date.now(),
-                expireAt: Date.now() + 60000,
-            });
-    
-            // Save OTP record
-            await UserOTPVerification.deleteMany({ userId: _id })
-            await newOTPVerification.save();
-            // Send email
-            await transporter.sendMail(mailOption);
-            // Send a single response at the end of the try block
-        } catch (error) {
-            // Handle errors and send an error response
-            // res.render("User/404", { message: "An error occurred. Please try again later." });
-            console.log(error);
+const loadDel = (req,res)=>{
+    res.render('user/forDelete')
+}
+
+
+let salt;
+
+async function generateSalt(){
+    salt = await bcrypt.genSalt(10)
+}
+
+generateSalt()
+
+// const securePassword = async (password) => {
+//     try{
+//         const passwordHash = await bcrypt.hash(password,10)
+//         return passwordHash
+//     }catch(err){
+//         console.log(err);
+//         // res.render('/user/interItnalError', {err})
+//     }
+// }
+
+
+
+
+
+const insertUser = async (req, res) => {
+    try {
+        console.log("Form req.body Body", req.body);
+        const { email, username, password, confirmPassword } = req.body;
+
+        if (email && username && password && confirmPassword) {
+            const foundUser = await User.findOne({ email: email });
+
+            if (foundUser) {
+                // User already exists
+                res.render('user/userSignup', {message: "User already exist"});
+            } else {
+                if (password === confirmPassword) {
+                    const hashPassword = await bcrypt.hash(password, salt)
+                    const newUser = new User({
+                        userName: username,
+                        email: email,
+                        password: hashPassword,
+                        is_verified: false
+                    });
+
+                    await newUser.save();
+                    console.log("Showing newUser ", newUser);
+                    console.log("User saved successfully");
+                } else {
+                    // Passwords don't match
+                    res.render('user/userSignup', { message: "Confirm Password is not a match" });
+                    console.log("Confirm Password is not a match");
+                }
+            }
+        } else {
+            // All fields are required
+            res.render('user/userSignup', { message: "All fields are required" });
+            console.log("All fields are required");
         }
-    };//RENDER THE OTP PAGE
-    const loadOTPpage = async (req, res) => {
-        try {
-            const userId = req.query.userId;
-            console.log(userId); // Log the userId for debugging
-            res.render('user/otpVerification', {
-                message: '', id: userId, user: "", success: req.flash("success"),
-                error: req.flash("error"),
-            });
-        } catch (error) {
-            // res.render("User/404", { message: "An error occurred. Please try again later." });
-            console.log(error);
+    } catch (error) {
+        // Handle error more appropriately, either send an error response or use error middleware
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+
+const userLogin = async (req,res) => {
+    try{
+        const {email,password} = req.body;
+        if(!email || !password){
+            return res.render('user/user_login',{message: "Empty field are not allowed"})
+        } else {
+            const verifiedUser = await User.findOne({email});
+
+            if(!verifiedUser){
+                return res.render('user/user_login', {message: "User not found"})
+            }else if(verifiedUser.is_blocked === true){
+                return res.render('user/user_login', {message: "Your Blocked By Admin"})
+            }else if(verifiedUser.is_varified === true){
+                const hashPassword = verifiedUser.password;
+                const match = await bcrypt.compare(password,hashPassword)
+                // const matchTemp = (password === hashPassword)? true:false
+                // console.log(verifiedUser.is_varified);
+                // console.log(hashPassword,password);
+                // console.log(match);
+                // console.log(matchTemp);
+
+                if(!match){
+                    return res.render('user/user_login',{message: "Invalid Password"})
+                } else {
+                    req.session.user = verifiedUser._id
+                    console.log("Login Successful");
+                    return res.redirect("/")
+                } 
+            }else {
+                return res.render('user/user_login',{message: "Not a Verified User "})
+            }
         }
-    }//CHECK THE OTP IS VALID
-    const checkOTPValid = async (req, res) => {
-        try {
-            const { OTP, ID } = req.body;
-            if (OTP === '') {
-                return res.render("user/otpVerification", { message: "Empty data is not allowed", id: ID, user: "" });
-            }
-            const OTPRecord = await UserOTPVerification.findOne({ userId: ID });
-            if (!OTPRecord) {
-                return res.render("user/otpVerification", { message: "Enter a valid OTP", id: ID, user: "" });
-            }
-            const { expireAt, userId, otp } = OTPRecord;
-            if (expireAt < Date.now()) {
-                await UserOTPVerification.deleteOne({ userId });
-                return res.render("user/otpVerification", { message: "The code has expired, please try again", id: ID, user: "" });
-            }
-            const isValid =  bcrypt.compare(OTP, otp);
-            if (!isValid) {
-                return res.render("user/otpVerification", { message: "The entered OTP is invalid", id: ID, user: "" });
-            }
-            await Customer.updateOne({ _id: ID }, { $set: { is_varified: true } });
-            await UserOTPVerification.deleteOne({ userId });
-            return res.redirect('/user/user_Login');
-         } catch (error) {
-                console.log(error);
-        //     res.render("User/404", { message: "Internal Server Error" });
-        }
-    };
-    //RESEND OTP
-    const resedOtp = async (req, res) => {
-        try {
-            const { userId } = req.body
-            const userDate = await Customer.findById(userId)
-            await sendOTPVerificationEmail(userDate)
-            if (userDate) {
-                return res.redirect(`/user/otpVerification?userId=${userId}`)
-            }
-        } catch (error) {
-                console.log(error);
-        //    res.render("User/404", { message: "An error occurred. Please try again later." });
-        }
+    }catch(error){
+        console.log(err);
+    }
 }
 
 
 
+module.exports = {loadHome, login, loadShop, loadBlog, insertUser, loadSignup, loadDel, userLogin };
 
 
 
 
-module.exports = {loadHome,login,loadShop,loadBlog,resedOtp,checkOTPValid,loadOTPpage,sendOTPVerificationEmail,loadSignup };
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// const insertUser = async (req,res) => {
+//     try{
+//         console.log("Form req.body Body",req.body);
+//         const {email, username, password, confirmPassword} = req.body;
+
+//         if(email && username && password && confirmPassword){
+//             const foundUser = User.findOne({email:email})
+//             if(!foundUser){
+//                 res.render('user/userSignup')
+//                 console.log("User already existing"); //show in frendend
+//               } else {
+            
+//                 if(password === confirmPassword){
+//                     // const hashPassword = await bcrypt.hash(password,salt)
+//                     const newUser = new User({
+//                         userName: username,
+//                         email: email,
+//                         // phone: phone,
+//                         password: password,
+//                         is_varified: false
+//                     })
+
+//                     await newUser.save()
+//                     console.log("Showing newUser ",newUser);
+//                     console.log("User saved Successfully")
+//                 } else {
+//                     res.render('user/userSignup')
+//                     console.log("Confirm Password is not match");
+//                 }
+//             }
+//         } else {
+//             res.render('user/userSignup')
+//             console.log("All fields are require"); // show in frondend 
+//         }
+
+//     }catch(error){
+//         // next(error)
+//         console.log(err);
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+// module.exports = {loadHome, login, loadShop, loadBlog, insertUser,loadSignup,loadDel };

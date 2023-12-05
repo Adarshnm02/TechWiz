@@ -39,14 +39,15 @@ const addProduct = async (req, res) => {
             price: price,
             stock_count: stockCount,
             description: description,
-            category: category
+            category: category,
+            image: []
         });
-        // req.files.forEach((file) => {
-        //     createdProduct.image.push({
-        //         data: file.buffer,
-        //         contentType: file.mimetype
-        //     });
-        // })
+        req.files.forEach((file) => {
+            createdProduct.image.push({
+                data: file.buffer,
+                contentType: file.mimetype
+            });
+        })
 
         await createdProduct.save();
         console.log('ggggggggggggggggg',createdProduct);

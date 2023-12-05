@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | TechWiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/user/css/elegant-icons.css">
+    <link rel="stylesheet" href="/user/css/nice-select.css">
+    <link rel="stylesheet" href="/user/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/user/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/user/css/slicknav.min.css">
+    <link rel="stylesheet" href="/user/css/style.css">
+    <link rel="stylesheet" href="/user/css/user.css">
+</head>
+
+<body>
+    <header class="header">
+        <!-- Your header content here -->
+    </header>
+
+    <section class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Login</h5>
+                        <form action="/login" method="POST" id="form1">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                                <p id="e_err"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <p id="p_err"></p>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                            <div class="form-check d-flex justify-content-center mt-3">
+                                <p>Create an account <a href="/register">Register</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Your script goes here
+    </script>
+
+    <!-- Js Plugins -->
+    <script src="/user/js/jquery-3.3.1.min.js"></script>
+    <script src="/user/js/bootstrap.min.js"></script>
+    <script src="/user/js/jquery.nice-select.min.js"></script>
+    <script src="/user/js/jquery-ui.min.js"></script>
+    <script src="/user/js/jquery.slicknav.js"></script>
+    <script src="/user/js/mixitup.min.js"></script>
+    <script src="/user/js/owl.carousel.min.js"></script>
+    <script src="/user/js/main.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+<!-- for Delete in controle
+delete below  -->
+<!-- const sendOTPVerificationEmail = async ({ _id, email }, res) => {
+        try {
+            const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+            // Mail options
+            const mailOption = {
+                from: process.env.AUTH_EMAIL, // Use the correct environment variable
+                to: email,
+                subject: "Verify Your Email",
+                html: `<p>Enter <b>${otp}</b> in the app to verify your email address and complete the verification</p>
+                       <p>This code <b>expires in 1 minute</b>.</p>`
+            };
+            // Hash the OTP
+            const saltRounds = 10;
+            const hashedOTP = await bcrypt.hash(otp, saltRounds);
+            const newOTPVerification = new UserOTPVerification({
+                userId: _id,
+                otp: hashedOTP,
+                createdAt: Date.now(),
+                expireAt: Date.now() + 60000,
+            });
+    
+            // Save OTP record
+            await UserOTPVerification.deleteMany({ userId: _id })
+            await newOTPVerification.save();
+            // Send email
+            await transporter.sendMail(mailOption);
+            // Send a single response at the end of the try block
+        } catch (error) {
+            // Handle errors and send an error response
+            // res.render("User/404", { message: "An error occurred. Please try again later." });
+            console.log(error);
+        }
+    };//RENDER THE OTP PAGE
+    const loadOTPpage = async (req, res) => {
+        try {
+            const userId = req.query.userId;
+            console.log(userId); // Log the userId for debugging
+            res.render('user/otpVerification', {
+                message: '', id: userId, user: "", success: req.flash("success"),
+                error: req.flash("error"),
+            });
+        } catch (error) {
+            // res.render("User/404", { message: "An error occurred. Please try again later." });
+            console.log(error);
+        }
+    }//CHECK THE OTP IS VALID
+    const checkOTPValid = async (req, res) => {
+        try {
+            const { OTP, ID } = req.body;
+            if (OTP === '') {
+                return res.render("user/otpVerification", { message: "Empty data is not allowed", id: ID, user: "" });
+            }
+            const OTPRecord = await UserOTPVerification.findOne({ userId: ID });
+            if (!OTPRecord) {
+                return res.render("user/otpVerification", { message: "Enter a valid OTP", id: ID, user: "" });
+            }
+            const { expireAt, userId, otp } = OTPRecord;
+            if (expireAt < Date.now()) {
+                await UserOTPVerification.deleteOne({ userId });
+                return res.render("user/otpVerification", { message: "The code has expired, please try again", id: ID, user: "" });
+            }
+            const isValid =  bcrypt.compare(OTP, otp);
+            if (!isValid) {
+                return res.render("user/otpVerification", { message: "The entered OTP is invalid", id: ID, user: "" });
+            }
+            await Customer.updateOne({ _id: ID }, { $set: { is_varified: true } });
+            await UserOTPVerification.deleteOne({ userId });
+            return res.redirect('/user/user_Login');
+         } catch (error) {
+                console.log(error);
+        //     res.render("User/404", { message: "Internal Server Error" });
+        }
+    };
+    //RESEND OTP
+    const resedOtp = async (req, res) => {
+        try {
+            const { userId } = req.body
+            const userDate = await Customer.findById(userId)
+            await sendOTPVerificationEmail(userDate)
+            if (userDate) {
+                return res.redirect(`/user/otpVerification?userId=${userId}`)
+            }
+        } catch (error) {
+                console.log(error);
+        //    res.render("User/404", { message: "An error occurred. Please try again later." });
+        }
+} -->

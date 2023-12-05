@@ -3,33 +3,34 @@ const productCategory = require('../../models/categoryModel');
 
 
 
-const loadAddCategory = (req,res)=>{
-    try{
+const loadAddCategory = (req, res) => {
+    try {
         res.render("admin/addCategory")
-    }catch(err){
-        console.log("at rendering Category",err);
+    } catch (err) {
+        console.log("at rendering Category", err);
     }
 }
 
 
-const addProductCategory = async (req,res)=>{
+const addProductCategory = async (req, res) => {
     try {
-        if(!req.body.categoryName){
-            console.log("Not Found the categoryName");
-            res.render('admin/addCategory')
+        if (!req.body.categoryName || !req.file) {
+            console.log("Category name or image not found");
+            return res.render('admin/addCategory')
         }
         const exist = await productCategory.findOne({
             categoryName: req.body.categoryName
         });
-        if(!exist){
+        if (!exist) {
             const category = new productCategory({
                 categoryName: req.body.categoryName,
                 description: req.body.description,
-                // image:{
-                //     data:req.file.buffer,
-                //     contentType: req.file.mimetype
-                // }
+                image: {
+                    data: req.file.buffer,
+                    contentType: req.file.mimetype
+                }
             });
+
 
             await category.save();
             console.log("Category Saved", category);
@@ -50,4 +51,4 @@ const addProductCategory = async (req,res)=>{
 
 
 
-module.exports= {loadAddCategory,addProductCategory}
+module.exports = { loadAddCategory, addProductCategory }

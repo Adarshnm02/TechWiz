@@ -84,11 +84,7 @@
     <!-- Header Section End -->
 
 
-
-  
-<!-- login page start -->
-
- <section class="container">
+<!-- <section class="container">
     <div class="row justify-content-center mt-5">
         <div class="mt-6">
             <div class="card">
@@ -111,13 +107,56 @@
                         <div class="form-check d-flex justify-content-center mb-4">
                             <p>Create an accound <a href="/register">Register</a></p>
                             <!-- <p>or sign up with:</p> -->
-                          </div>
+                         
+                            <!-- </div>
                     </form>
                 </div>
             </div>
         </div>
     </div> 
- </section>
+ </section> -->
+
+
+ <section class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-4">Login</h5>
+                    <% if (typeof message !="undefined" ) {%>
+
+                        <p class="mt-3 text-info ">
+                            <%= message %>
+                        </p>
+                
+                        <%} %>
+                    <form action="/login" method="POST" id="form1">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email">
+                            <p id="e_err"></p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <p id="p_err"></p>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="/index">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </a>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Create an account <a href="/signup">Register</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 
 
 
@@ -127,7 +166,7 @@
         e.preventDefault();
 
 
-        const email = document.forms['form1']['username'].value
+        const email = document.forms['form1']['email'].value
         const password = document.forms['form1']['password'].value
 
         const e_err = document.getElementById('e_err')
