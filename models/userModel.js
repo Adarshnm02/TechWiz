@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     is_varified:{
         type:Boolean,
-        default:true
+        default:false
     },
     is_blocked:{
         type:String,

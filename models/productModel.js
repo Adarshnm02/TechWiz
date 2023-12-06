@@ -37,7 +37,8 @@ const productSchema  = new mongoose.Schema({
         contentType : String
     }],
     is_delete :{
-        type : Boolean
+        type : Boolean,
+        default: false
     }
 
 })

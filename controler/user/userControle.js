@@ -3,6 +3,8 @@ const express = require('express')
 const User = require('../../models/userModel')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const sendMail = require('../../util/sendMail')
+const userOTP = require('../../models/userOtpModel')
 
 
 
@@ -17,20 +19,31 @@ const login = (req,res)=>{
         res.render('user/user_login')
 }
 
-const loadShop = (req,res)=>{
-        res.render('user/shop-grid')
-}
+
 const loadBlog = (req,res)=>{
         res.render('user/blog')
 }
 
 const loadSignup = (req,res)=>{
-    res.render('user/userSignup')
+    try{
+        res.render('user/userSignup')
+    }catch(error){
+        console.log(error.message);
+    }
 }
 
-const loadDel = (req,res)=>{
-    res.render('user/forDelete')
+const load_otp = (req,res)=>{
+    // res.render('user/forDelete')
+    const id = '123';
+    res.render('user/otpVerification',{id})
 }
+
+
+
+
+
+
+
 
 
 let salt;
@@ -79,6 +92,10 @@ const insertUser = async (req, res) => {
                     await newUser.save();
                     console.log("Showing newUser ", newUser);
                     console.log("User saved successfully");
+
+                    const savedUser = await User.findOne({userName:username})
+                    sendMail(req,res,savedUser._id,false)
+
                 } else {
                     // Passwords don't match
                     res.render('user/userSignup', { message: "Confirm Password is not a match" });
@@ -96,6 +113,47 @@ const insertUser = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+
+
+const otpVerification = async(req,res) =>{
+    try{
+        const {OTP,ID} = req.body;
+        console.log(OTP);
+        if(!OTP){
+           return res.render('user/otpVerification',{message:"Cannot send empty message",id:ID})
+        }
+        const OTPrecord = await userOTP.findOne({userId:ID})
+        if(!OTPrecord){
+            return res.render('user/otpVerification',{message:"Enter valied OTP",id:ID})
+        }
+        const { expireAt, userId, otp} = OTPrecord;
+        if(expireAt<Date.now()){
+            await userOTP.deleteOne({userId})
+            return res.render('user/otpVerification',{message:'OTP has been expired,Please try again' ,id:ID})
+        }
+        console.log("11"+OTP,otp);
+        const isvalid =  bcrypt.compare(OTP,otp);
+        console.log(isvalid);
+        console.log("11  "+OTP+"   helo   "+otp);
+        if(!isvalid){
+            return res.render('user/otpVerification',{message:'The entered OTP is invalid',id:ID})
+        }
+        await User.updateOne({_id: ID},{$set:{is_varified:true}})
+        await userOTP.deleteOne({userId})
+        req.session.user = userId._id
+        return res.redirect('/login')
+    }catch(error){
+        console.log(error.message);
+        res.status(500).send('Internal Server Error')
+    }
+
+}
+
+
+
+
+
+
 
 
 
@@ -138,7 +196,11 @@ const userLogin = async (req,res) => {
 
 
 
-module.exports = {loadHome, login, loadShop, loadBlog, insertUser, loadSignup, loadDel, userLogin };
+
+
+
+
+module.exports = {loadHome, login, loadBlog, insertUser, loadSignup, load_otp, userLogin, otpVerification };
 
 
 
