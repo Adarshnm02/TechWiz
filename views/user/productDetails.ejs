@@ -23,6 +23,18 @@
     <link rel="stylesheet" href="/user/css/slicknav.min.css" type="text/css" />
     <link rel="stylesheet" href="/user/css/style.css" type="text/css" />
     <link rel="stylesheet" href="/user/css/user.css" type="text/css" />
+
+    <!-- Slick Carousel stylesheets -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+
+    <!-- jQuery and Slick Carousel scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+
 </head>
 
 <body>
@@ -141,7 +153,7 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="/"><img src="/user/img/new-logo.png" alt="" /></a>
+                        <a href="/"><img src="/user/img/new-logo.png" alt="" style="max-width: 50%;" /></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -203,32 +215,53 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__pic">
-                        <div class="product__details__pic__item">
-                            <%details.image.forEach((image) => {%>
-                            
-								<div class="item-slick3  " data-thumb="data:<%= image.contentType %>;base64,<%= image.data.toString('base64') %>">
-									<div class="wrap-pic-w pos-relative">
-                                        <img src="data:<%= image.image[0].contentType %>;base64,<%= image.image[0].data.toString('base64')%>"
-                                        alt="IMG-PRODUCT" style="width: 442px;height: 500px;"" />
-									</div>
-								</div>
-								<%})%>
+                        <div class="product__details__pic__item slick-slider">
+
+                            <div class="item-slick3">
+                                <div class="wrap-pic-w pos-relative"
+                                    style="min-width: 422px ; display:flex ; align-content: center; justify-content: center;">
+                                    <% if (details.image) { %>
+                                        <img src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>"
+                                            alt="IMG-PRODUCT" style="width: 253px;height: 435px;" />
+                                        <% } else { %>
+                                            <p>Image is not available</p>
+                                            <% } %>
+                                                <div id="zoom"></div>
+                                </div>
+                            </div>
+
                         </div>
+
+
+
                         <div class="product__details__pic__slider owl-carousel">
-                            <img data-imgbigurl="img/product/details/product-details-2.jpg"
-                                src="img/product/details/thumb-1.jpg" alt="">
+                            <% if (details.image) { %>
+                                <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
+                                    alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
+                                <% } %>
+                                    <% if (details.image) { %>
+                                        <img src="data:<%= details.image[2].contentType %>;base64,<%= details.image[2].data.toString('base64')%>"
+                                            alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
+                                        <% } %>
+                                            <!-- <img data-imgbigurl="img/product/details/product-details-2.jpg"
+                                src="/user/img/product/details/thumb-1.jpg" alt="">
                             <img data-imgbigurl="img/product/details/product-details-3.jpg"
-                                src="img/product/details/thumb-2.jpg" alt="">
+                                src="/user/img/product/details/thumb-2.jpg" alt="">
                             <img data-imgbigurl="img/product/details/product-details-5.jpg"
-                                src="img/product/details/thumb-3.jpg" alt="">
+                                src="/user/img/product/details/thumb-3.jpg" alt="">
                             <img data-imgbigurl="img/product/details/product-details-4.jpg"
-                                src="img/product/details/thumb-4.jpg" alt="">
+                                src="/user/img/product/details/thumb-4.jpg" alt=""> -->
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
-                        <h3>Vetgetable’s Package</h3>
+                        <h3>
+                            <p style="color: #422a2a; font-size: 33px;">
+                                <%= details.product_name %>
+                            </p>
+                        </h3>
+
                         <div class="product__details__rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -237,10 +270,11 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
-                        <div class="product__details__price">$50.00</div>
-                        <p>Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam
-                            vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet
-                            quam vehicula elementum sed sit amet dui. Proin eget tortor risus.</p>
+
+                        <div class="product__details__price">
+                            <%= details.price%>
+                        </div>
+
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
@@ -248,12 +282,14 @@
                                 </div>
                             </div>
                         </div>
+
                         <a href="#" class="primary-btn">ADD TO CARD</a>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+
                         <ul>
-                            <li><b>Availability</b> <span>In Stock</span></li>
-                            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
-                            <li><b>Weight</b> <span>0.5 kg</span></li>
+                            <li><b>Availability</b> <span>
+                                    <%= details.stock_count%>
+                                </span></li>
                             <li><b>Share on</b>
                                 <div class="share">
                                     <a href="#"><i class="fa fa-facebook"></i></a>
@@ -285,48 +321,20 @@
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                 <div class="product__details__tab__desc">
                                     <h6>Products Infomation</h6>
-                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vivamus
-                                        suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam
-                                        vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
-                                        Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat,
-                                        accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a
-                                        pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula
-                                        elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus
-                                        et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam
-                                        vel, ullamcorper sit amet ligula. Proin eget tortor risus.</p>
-                                        <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
-                                        ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
-                                        elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
-                                        porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
-                                        nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                        Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed
-                                        porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum
-                                        sed sit amet dui. Proin eget tortor risus.</p>
+                                    <p>
+                                        <%= details.description %>.
+                                    </p>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
                                 <div class="product__details__tab__desc">
                                     <h6>Products Infomation</h6>
-                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
-                                        Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
-                                        sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
-                                        eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
-                                        Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent
-                                        sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac
-                                        diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante
-                                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-                                        Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
-                                        Proin eget tortor risus.</p>
-                                    <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
-                                        ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
-                                        elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
-                                        porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
-                                        nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.</p>
+                                    <p>
+                                        <%= details.description %>.
+                                    </p>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <!-- <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <div class="product__details__tab__desc">
                                     <h6>Products Infomation</h6>
                                     <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
@@ -341,7 +349,7 @@
                                         Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
                                         Proin eget tortor risus.</p>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -350,9 +358,27 @@
     </section>
     <!-- Product Details Section End -->
 
- 
 
-   
+
+
+
+
+    <script>
+
+        // $(document).ready(function(){
+        //     $('.slick-slider').slick({
+        //         slidesToShow: 1,
+        //         slidesToScroll: 1,
+        //         autoplay: true,
+        //         autoplaySpeed: 2000,
+        //         dots: true,
+        //         arrows: true
+        //         // Add other settings as needed
+        //     });
+        // });
+    </script>
+
+
 
 
     <%- include('../partials/user/footer') %>

@@ -1,145 +1,250 @@
-
 <!DOCTYPE html>
 <html lang="zxx">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="description" content="Ogani Template">
-        <meta name="keywords" content="Ogani, unica, creative, html">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>TechWiz</title>
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="Ogani Template">
+	<meta name="keywords" content="Ogani, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>TechWiz</title>
 
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
-        <!-- Css Styles -->
-        <link rel="stylesheet" href="../user/css/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/font-awesome.min.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/elegant-icons.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/nice-select.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/jquery-ui.min.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/owl.carousel.min.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/slicknav.min.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/style.css" type="text/css">
-        <link rel="stylesheet" href="/user/css/user.css" type="text/css">
-	    <link rel="stylesheet" href="/user/css/userSignup.css" type="text/css">
-    </head>
+	<!-- Css Styles -->
+	<link rel="stylesheet" href="../user/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/elegant-icons.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/nice-select.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/jquery-ui.min.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/owl.carousel.min.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/style.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/user.css" type="text/css">
+	<link rel="stylesheet" href="/user/css/userSignup.css" type="text/css">
+</head>
 
 
-    <body>
-        <!-- Page Preloder -->
-        <div id="preloder">
-         <div class="loader"></div>
-        </div>
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
 
-        <!-- Humberger Begin -->
-    
-        <!-- Humberger End -->
+	<!-- Humberger Begin -->
 
-    
-    
-        <!-- Header Section Begin -->
+	<!-- Humberger End -->
 
-        <!-- Header Section End -->
-        <!-- <body> -->
-	
-	    <div class="limiter" >
-		    <div class="container-login100">
-			    <div class="wrap-login100">
-				    <div class="login100-pic js-tilt" data-tilt>
-					    <img src="/user/img/signup.png"" alt="IMG">
-			    	</div>
-                    <!-- class="login100-form validate-form" action="/userSignup" method="post"> -->
-				    <form class="login100-form validate-form" action="/signup" method="post">
-					    <span class="login100-form-title">
-						    SignUp
-					    </span>
-                        <% if (typeof message !="undefined" ) {%>
 
-                            <p class="mt-3 text-info ">
-                                <%= message %>
-                            </p>
-                    
-                            <%} %>
 
-                        <div class="wrap-input100 validate-input">
-						    <input class="input100" type="text" name="username" placeholder="Username">
-						    <span class="focus-input100"></span>
-						    <span class="symbol-input100">
-							    <i class="fa fa-envelope" aria-hidden="true"></i>
-						    </span>
-					    </div>
+	<!-- Header Section Begin -->
 
-					    <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						    <input class="input100" type="text" name="email" placeholder="Email">
-						    <span class="focus-input100"></span>
-						    <span class="symbol-input100">
-							    <i class="fa fa-envelope" aria-hidden="true"></i>
-						    </span>
-					    </div>
+	<!-- Header Section End -->
+	<!-- <body> -->
 
-					    <div class="wrap-input100 validate-input" data-validate = "Password is required">
-						    <input class="input100" type="password" name="password" placeholder="Password">
-						    <span class="focus-input100"></span>
-						    <span class="symbol-input100">
-							    <i class="fa fa-lock" aria-hidden="true"></i>
-						    </span>
-					    </div>
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="/user/img/signup.png"" alt=" IMG">
+				</div>
+				<!-- class="login100-form validate-form" action="/userSignup" method="post"> -->
+				<form class="login100-form validate-form" action="/signup" method="post" id="registrationForm">
+					<span class="login100-form-title">
+						SignUp
+					</span>
+					<% if (typeof message !="undefined" ) {%>
 
-                        <div class="wrap-input100 validate-input" data-validate = "Password is required">
-						    <input class="input100" type="password" name="confirmPassword" placeholder="Confirm Password">
-						    <span class="focus-input100"></span>
-						    <span class="symbol-input100">
-							    <i class="fa fa-lock" aria-hidden="true"></i>
-						    </span>
-					    </div>
-					
-					    <div class="container-login100-form-btn">
-						    <button class="login100-form-btn">
-							    SignUp
-						    </button>
-					    </div>
+						<p class="mt-3 text-info ">
+							<%= message %>
+						</p>
 
-					    <div class="text-center p-t-12">
-						    <span class="txt1">
-							    Forgot
-						    </span>
-						    <a class="txt2" href="#">
-							    Username / Password?
-						    </a>
-					    </div>
+						<%} %>
 
-					    <!-- <div class="text-center p-t-136">
+							<div class="wrap-input100 validate-input">
+								<input class="input100" type="text" name="username" placeholder="Username"
+									id="userName">
+								<span class="focus-input100"></span>
+								<span class="symbol-input100">
+									<i class="fa fa-envelope" aria-hidden="true"></i>
+								</span>
+								<p class="text-danger" id="nameError"></p>
+							</div>
+
+							<div class="wrap-input100 validate-input"
+								data-validate="Valid email is required: ex@abc.xyz">
+								<input class="input100" type="text" name="email" placeholder="Email"
+									id="email">
+								<span class="focus-input100"></span>
+								<span class="symbol-input100">
+									<i class="fa fa-envelope" aria-hidden="true"></i>
+								</span>
+								<p class="text-danger" id="emailError" ></p>
+							</div>
+
+							<div class="wrap-input100 validate-input" data-validate="Password is required">
+								<input class="input100" type="password" name="password" placeholder="Password"
+									id="password">
+								<span class="focus-input100"></span>
+								<span class="symbol-input100">
+									<i class="fa fa-lock" aria-hidden="true"></i>
+								</span>
+								<p class="text-danger" id="passwordError"></p>
+							</div>
+
+							<div class="wrap-input100 validate-input" data-validate="Password is required"
+								id="exampleInputConfirmPassword1">
+								<input class="input100" type="password" name="confirmPassword"
+									placeholder="Confirm Password"id="confirmpassword">
+								<span class="focus-input100"></span>
+								<span class="symbol-input100">
+									<i class="fa fa-lock" aria-hidden="true"></i>
+								</span>
+								<p class="text-danger" id="repasswordError"></p>
+							</div>
+
+							<div class="container-login100-form-btn">
+								<button class="login100-form-btn">
+									SignUp
+								</button>
+							</div>
+
+							<div class="text-center p-t-12">
+								<span class="txt1">
+									Forgot
+								</span>
+								<a class="txt2" href="#">
+									Username / Password?
+								</a>
+							</div>
+
+							<!-- <div class="text-center p-t-136">
 						    <a class="txt2" href="#">
 							    Create your Account
 							    <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
 						    </a>
 					    </div> -->
-				    </form>
-			    </div>
-		    </div>
-	    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- </section> -->
+
+	<script>
+
+		const couponForm = document.getElementById("registrationForm");
+		const nameInput = document.getElementById("userName");
+		const nameError = document.getElementById("nameError");
+
+		const emailInput = document.getElementById("email");
+		const emailError = document.getElementById("emailError");
+
 	
-	
-        <!-- </section> -->
+		const passwordInput = document.getElementById("password");
+		const passwordError = document.getElementById("passwordError");
+
+		const repasswordInput = document.getElementById("confirmpassword");
+		const repasswordError = document.getElementById("repasswordError");
+
+		
+
+		function emailValidation() {
+			if (emailInput.value.trim() === "") {
+				emailError.innerHTML = "Please enter your Email Address!";
+				return false;
+			} else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
+				emailError.innerHTML = "Please enter a valid Email address.";
+				return false;
+			} else {
+				emailError.innerHTML = "";
+				return true;
+			}
+		}
+
+
+		function nameValidation() {
+			const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+			if (nameInput.value.trim() === "") {
+				nameError.innerHTML = "Please enter your Name!";
+				return false;
+			} else if (!nameRegex.test(nameInput.value)) {
+				nameError.innerHTML = "Please enter a valid Name.";
+				return false;
+			} else {
+				nameError.innerHTML = "";
+				return true;
+			}
+		}
+
+
+		function passwordValidation() {
+			if (passwordInput.value.trim() === "" || passwordInput.value.length < 4) {
+				passwordError.innerHTML = "Please Enter Password with a minimum length of 8 characters!";
+				return false;
+			} else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{4,}$/.test(passwordInput.value))) {
+				passwordError.innerHTML = "Password includes uppercase, lowercase, numbers, and symbols!";
+				return false;
+			} else {
+				passwordError.innerHTML = "";
+				return true;
+			}
+		}
+
+		function confirmPassword() {
+			if (repasswordInput.value.trim() === "") {
+				repasswordError.innerHTML = "Please confirm your password.";
+				return false;
+			} else if (repasswordInput.value !== passwordInput.value) {
+				repasswordError.innerHTML = "Passwords do not match!";
+				return false;
+			} else {
+				repasswordError.innerHTML = "";
+				return true;
+			}
+		}
+
+		couponForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+			const validations = [
+				nameValidation(),
+				emailValidation(),
+				
+				passwordValidation(),
+				confirmPassword(),
+
+				// Add this line
+			];
+			const hasErrors = validations.some(validation => validation === false);
+			if (!hasErrors) {
+				couponForm.submit(); // Trigger the form submission
+			}
+		});
+	</script>
 
 
 
-        <!-- </footer> -->
-
-        <!-- Js Plugins -->
-        <script src="/user/js/jquery-3.3.1.min.js"></script>    
-        <script src="/user/js/bootstrap.min.js"></script>
-        <script src="/user/js/jquery.nice-select.min.js"></script>
-        <script src="/user/js/jquery-ui.min.js"></script>
-        <script src="/user/js/jquery.slicknav.js"></script>
-        <script src="/user/js/mixitup.min.js"></script>
-        <script src="/user/js/owl.carousel.min.js"></script>
-        <script src="/user/js/main.js"></script>
 
 
 
-    </body>
+
+	<!-- </footer> -->
+
+	<!-- Js Plugins -->
+	<script src="/user/js/jquery-3.3.1.min.js"></script>
+	<script src="/user/js/bootstrap.min.js"></script>
+	<script src="/user/js/jquery.nice-select.min.js"></script>
+	<script src="/user/js/jquery-ui.min.js"></script>
+	<script src="/user/js/jquery.slicknav.js"></script>
+	<script src="/user/js/mixitup.min.js"></script>
+	<script src="/user/js/owl.carousel.min.js"></script>
+	<script src="/user/js/main.js"></script>
+
+
+
+</body>
 
 </html>

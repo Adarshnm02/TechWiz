@@ -11,7 +11,7 @@ const productSchema  = new mongoose.Schema({
     },
     category : {
         type : String,
-        ref : 'productCategory'
+        ref : 'productcategories'
     },
     brand_name : {
         type : String,

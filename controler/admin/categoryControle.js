@@ -3,6 +3,26 @@ const productCategory = require('../../models/categoryModel');
 
 
 
+
+const category = async (req,res) => {
+    try{
+        const category  = await productCategory.find()
+
+    if(category){
+        res.render('admin/category', {category})
+    }else{
+        console.log("Category not found ");
+    }
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
+
+
+
 const loadAddCategory = (req, res) => {
     try {
         res.render("admin/addCategory")
@@ -51,4 +71,4 @@ const addProductCategory = async (req, res) => {
 
 
 
-module.exports = { loadAddCategory, addProductCategory }
+module.exports = { loadAddCategory, addProductCategory, category }

@@ -1,6 +1,6 @@
 <%- include('../partials/admin/adminHeader') %>
 
-<div class="container mt-5">
+<div class="container">
     <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;" enctype="multipart/form-data">
         <div class="card">
             <div class="card-body">
@@ -65,10 +65,17 @@
                         <div class="form-group">
                             <label for="category" class="form-label mt-4">Product Category</label>
                             <select class="form-select drop1" name="category">
-                                <option value="mobile">Mobile</option>
+
+                                <% category.forEach((category) => { %>
+                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                  <% }) %>
+
+
+
+                                <!-- <option value="mobile">Mobile</option>
                                 <option value="laptop">Laptop</option>
                                 <option value="camera">Camera</option>
-                                <option value="accessories">Accessories</option>
+                                <option value="accessories">Accessories</option> -->
                             </select>
                         </div>
                     </div>

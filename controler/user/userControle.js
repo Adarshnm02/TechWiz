@@ -133,15 +133,15 @@ const otpVerification = async(req,res) =>{
         }
         console.log("11"+OTP,otp);
         const isvalid =  bcrypt.compare(OTP,otp);
-        console.log(isvalid);
-        console.log("11  "+OTP+"   helo   "+otp);
+        // console.log(isvalid);
+        // console.log("11  "+OTP+"   helo   "+otp);
         if(!isvalid){
             return res.render('user/otpVerification',{message:'The entered OTP is invalid',id:ID})
         }
         await User.updateOne({_id: ID},{$set:{is_varified:true}})
         await userOTP.deleteOne({userId})
         req.session.user = userId._id
-        return res.redirect('/login')
+        return res.redirect('/')
     }catch(error){
         console.log(error.message);
         res.status(500).send('Internal Server Error')

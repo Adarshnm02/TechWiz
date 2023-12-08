@@ -34,10 +34,6 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Humberger Begin -->
-    
-    <!-- Humberger End -->
-
     
     
     <!-- Header Section Begin -->
@@ -84,40 +80,9 @@
     <!-- Header Section End -->
 
 
-<!-- <section class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="mt-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Login</h5>
-                    <form action="/login" method="POST" id="form1">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                            <p id="e_err"></p>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                            <p id="p_err"></p>
-                        </div>
-                        <div class="d-grid gap-2">
-                           <a href="/user/otpVerification"> <button type="submit" class="btn btn-primary">Login</button> </a>
-                        </div>
-                        <div class="form-check d-flex justify-content-center mb-4">
-                            <p>Create an accound <a href="/register">Register</a></p>
-                            <!-- <p>or sign up with:</p> -->
-                         
-                            <!-- </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> 
- </section> -->
 
 
- <section class="container">
+ <section class="container" style="margin-top: 175px;">
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
             <div class="card">
@@ -130,21 +95,21 @@
                         </p>
                 
                         <%} %>
-                    <form action="/login" method="POST" id="form1">
+                    <form action="/login" method="POST" id="registrationForm2">
                         <div class="mb-3">
                             <label for="username" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email">
-                            <p id="e_err"></p>
+                            <input type="text" class="form-control" id="email2" name="email">
+                            <p id="emailError"></p>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                            <p id="p_err"></p>
+                            <input type="password" class="form-control" id="password2" name="password">
+                            <p id="passwordError"></p>
                         </div>
                         <div class="d-grid gap-2">
-                            <a href="/index">
+                            <!-- <a href="/index"> -->
                                 <button type="submit" class="btn btn-primary">Login</button>
-                            </a>
+                            <!-- </a> -->
                         </div>
                         <div class="text-center mt-3">
                             <p>Create an account <a href="/signup">Register</a></p>
@@ -161,44 +126,57 @@
 
 
 <script>
-    const form1 = document.getElementById('form1')
-    form1.addEventListener('submit',(e)=>{
-        e.preventDefault();
 
 
-        const email = document.forms['form1']['email'].value
-        const password = document.forms['form1']['password'].value
+		const couponForm = document.getElementById("registrationForm2");
 
-        const e_err = document.getElementById('e_err')
-        const p_err = document.getElementById('p_err')
-        var regexp =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/;
+		const emailInput = document.getElementById("email2");
+		const emailError = document.getElementById("emailError");
+
+	
+		const passwordInput = document.getElementById("password2");
+		const passwordError = document.getElementById("passwordError");
+
+		
+
+		function emailValidation() {
+			if (emailInput.value.trim() === "") {
+				emailError.innerHTML = "Please enter your Email Address!";
+				return false;
+			} else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
+				emailError.innerHTML = "Please enter a valid Email address.";
+				return false;
+			} else {
+				emailError.innerHTML = "";
+				return true;
+			}
+		}
 
 
-        if(email===""){
-            e_err.innerHTML = 'Please choose a email'
-            return false
-        }else{
-            e_err.innerHTML = ""
-        }
+		function passwordValidation() {
+			if (passwordInput.value.trim() === "" || passwordInput.value.length < 4) {
+				passwordError.innerHTML = "Please Enter Password with a minimum length of 8 characters!";
+				return false;
+			} else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{4,}$/.test(passwordInput.value))) {
+				passwordError.innerHTML = "Password includes uppercase, lowercase, numbers, and symbols!";
+				return false;
+			} else {
+				passwordError.innerHTML = "";
+				return true;
+			}
+		}
 
-        if(!regexp.test(email)){
-            e_err.innerHTML = 'Please choose a valid email'
-            return false
-        }else{
-            e_err.innerHTML = ""
-        }
-
-        if(password===""){
-            p_err.innerHTML = "Please choose a password"
-            return false
-        }else{
-            p_err.innerHTML = ""
-        }
-
-        form1.submit()
-        return true
-
-    })
+		couponForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+			const validations = [
+				emailValidation(),
+				passwordValidation()
+			];
+			const hasErrors = validations.some(validation => validation === false);
+			if (!hasErrors) {
+				couponForm.submit(); // Trigger the form submission
+			}
+		});
 
 </script>
 
