@@ -36,7 +36,9 @@ const addProductCategory = async (req, res) => {
     try {
         if (!req.body.categoryName || !req.file) {
             console.log("Category name or image not found");
-            return res.render('admin/addCategory')
+            return res.render('admin/addCategory', {
+          message: "All fields must be filled",
+        })
         }
         const exist = await productCategory.findOne({
             categoryName: req.body.categoryName

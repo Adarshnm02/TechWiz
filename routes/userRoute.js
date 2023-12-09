@@ -16,6 +16,7 @@ user_Route.get('/index', userControle.loadHome)
 //Login 
 user_Route.get('/login', userControle.login)
 user_Route.post('/login', userControle.userLogin)
+user_Route.get('/logout', userControle.logout)
 
 //Signup
 user_Route.get('/signup', userControle.loadSignup)

@@ -78,10 +78,11 @@ module.exports = {
     async loadShop(req, res) {
         //Fetching Product
         try {
+            const session = req.session.user;
             const products = await Product
-                .find()
+                .find({is_delete:false})
             console.log(products, "Product");
-            res.render('user/shop-grid', { products })
+            res.render('user/shop-grid', { products, session })
 
         } catch (err) {
             console.log(err);

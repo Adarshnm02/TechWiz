@@ -11,8 +11,9 @@ const userOTP = require('../../models/userOtpModel')
 
 
 const loadHome = (req,res)=>{
-  
-        res.render('user/index')
+
+     const session = req.session.user;
+        res.render('user/index', {session})
         
 }
 const login = (req,res)=>{
@@ -172,11 +173,7 @@ const userLogin = async (req,res) => {
             }else if(verifiedUser.is_varified === true){
                 const hashPassword = verifiedUser.password;
                 const match = await bcrypt.compare(password,hashPassword)
-                // const matchTemp = (password === hashPassword)? true:false
-                // console.log(verifiedUser.is_varified);
-                // console.log(hashPassword,password);
-                // console.log(match);
-                // console.log(matchTemp);
+            
 
                 if(!match){
                     return res.render('user/user_login',{message: "Invalid Password"})
@@ -195,67 +192,20 @@ const userLogin = async (req,res) => {
 }
 
 
+const logout = (req,res)=>{
+    try{
+        req.session.destroy();
+        res.redirect('/')
+
+    }catch(err){
+        console.log(err);
+    }
+}
 
 
 
 
-
-module.exports = {loadHome, login, loadBlog, insertUser, loadSignup, load_otp, userLogin, otpVerification };
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-// const insertUser = async (req,res) => {
-//     try{
-//         console.log("Form req.body Body",req.body);
-//         const {email, username, password, confirmPassword} = req.body;
-
-//         if(email && username && password && confirmPassword){
-//             const foundUser = User.findOne({email:email})
-//             if(!foundUser){
-//                 res.render('user/userSignup')
-//                 console.log("User already existing"); //show in frendend
-//               } else {
-            
-//                 if(password === confirmPassword){
-//                     // const hashPassword = await bcrypt.hash(password,salt)
-//                     const newUser = new User({
-//                         userName: username,
-//                         email: email,
-//                         // phone: phone,
-//                         password: password,
-//                         is_varified: false
-//                     })
-
-//                     await newUser.save()
-//                     console.log("Showing newUser ",newUser);
-//                     console.log("User saved Successfully")
-//                 } else {
-//                     res.render('user/userSignup')
-//                     console.log("Confirm Password is not match");
-//                 }
-//             }
-//         } else {
-//             res.render('user/userSignup')
-//             console.log("All fields are require"); // show in frondend 
-//         }
-
-//     }catch(error){
-//         // next(error)
-//         console.log(err);
-//     }
-// }
+module.exports = {loadHome, login, loadBlog, insertUser, loadSignup, load_otp, userLogin, otpVerification ,logout};
 
 
 
@@ -269,10 +219,4 @@ module.exports = {loadHome, login, loadBlog, insertUser, loadSignup, load_otp, u
 
 
 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-// module.exports = {loadHome, login, loadShop, loadBlog, insertUser,loadSignup,loadDel };
+////////////////////////////////////////////////////////////////////////////////////////////
