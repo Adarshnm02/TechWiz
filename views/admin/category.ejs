@@ -1,0 +1,81 @@
+<%- include('../partials/admin/adminHeader') %>
+
+<div class="col-lg-10 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">category's</h4>
+      <div class="form-group">
+        <label for="productSearch">Search:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="productSearch"
+          placeholder="Search products"
+        />
+      </div>
+      <div class="table-responsive">
+        <table id="productTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Image</th>
+              <th>Category Name</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="table-content">
+            <% category.forEach((category,i)=>{ %>
+            <tr>
+              <td><%= i %></td>
+              <td>
+                <img
+                  src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                  class="category-image"
+                />
+              </td>
+              <td><%= category.categoryName %></td>
+
+              <% if(category.is_delete===true){ %>
+              <td>
+                <label class="text-danger">Deactive</label>
+              </td>
+              <td>
+                <a
+                  href="/admin/products/<%= category._id %>/edit"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+                <a
+                  href="/admin/products/acivate/<%= category._id %>"
+                  class="btn btn-primary"
+                  >active</a
+                >
+              </td>
+              <% }else{ %>
+              <td>
+                <label class="text-success">Activate</label>
+              </td>
+              <td>
+                <a
+                  href="/admin/products/<%= category._id %>/edit"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+                <a
+                  href="/admin/products/deactive/<%= category._id %>"
+                  class="btn btn-danger"
+                  >Deactivate</a
+                >
+              </td>
+              <% } %>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin/adminFooter') %>

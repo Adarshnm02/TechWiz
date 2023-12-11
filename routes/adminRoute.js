@@ -34,9 +34,10 @@ adminRoute.get('/products/deactive/:id', productControl.productDesable )
 
 //Category
 
+adminRoute.get('/category', categoryCtrl.category )
 adminRoute.get('/addCategory', categoryCtrl.loadAddCategory)
 adminRoute.post('/addCategory', upload.single('image'), categoryCtrl.addProductCategory);
-
+// adminRoute.get('/category/acti', )
 
 
 
