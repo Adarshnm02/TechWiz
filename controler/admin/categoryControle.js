@@ -10,6 +10,7 @@ module.exports = {
     async category(req, res) {
         try {
             const category = await productCategory.find()
+            console.log(category);
 
             if (category) {
                 res.render('admin/category', { category })
@@ -91,8 +92,32 @@ module.exports = {
         }else{
             return res.send().status(400)
         }
-    }
+    },
 
+
+    async loadCategoryEdit (req,res){
+        const {id} = req.params;
+        const category = await productCategory.find({_id : id})
+        if(category){
+            return res.render('admin/editCategory',{category:category[0]});
+        }else{
+            return res.send("Not Found!")
+
+        }
+    },
+
+    async updateCategory (req,res) {
+        console.log("fhasdfasdfjasdfjasdfhnvsdjvasdjvnsdjkn");
+        const {id} = req.params;
+        const {categoryName, description,} = req.body;
+        const data = {categoryName:categoryName,description:description}
+        const updatedCategory = await productCategory.findByIdAndUpdate(id,{$set:data},{new:true})
+
+        console.log(updatedCategory);
+        await updatedCategory.save()
+        return res.redirect('/admin/category')
+        
+    }
 
 
 

@@ -1,0 +1,89 @@
+<%- include('../partials/admin/adminHeader') %>
+
+    <style>
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+            background-color: #f7f7f7;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-delete-image {
+            position: absolute;
+            left: 50px;
+            top: 5px;
+            right: 5px;
+            padding: 2px 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Edit Category</h3>
+                            <form class="forms-sample" method="post" action="/admin/category/edit/<%= category._id %>"
+                                enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="<%= category._id %>">
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Category Name</label>
+                                    <input type="text" name="productName" class="form-control" id="exampleInputName1"
+                                        placeholder="<% category.categoryName %>" value="<%= category.categoryName %>">
+                                </div>
+
+                                <!-- Other form fields... -->
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="6"
+                                        placeholder="Write about the Product"><%= category.description %></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <div style="position: relative;">
+                                                    <% if (category.image) { %>
+                                                        <img src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                                                            class="category-image" />
+                                                        <a class="btn btn-danger btn-delete-image"
+                                                            href="/admin/category/<%= category._id %>/deleteImg">Delete</a>
+                                                        <% } else { %>
+                                                            <p>No image available</p>
+                                                            <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Add a file input for uploading a new image -->
+                                        <input type="file" id="images" name="image"
+                                            class="form-control file-upload-info">
+                                    </div>
+                                </div>
+
+
+                                <% if (typeof message !=="undefined" ) { %>
+                                    <p class="text-info">
+                                        <%= message %>
+                                    </p>
+                                    <% } %>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="reset" class="btn btn-light ml-2">Cancel</button>
+                                        </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/admin/adminFooter') %>

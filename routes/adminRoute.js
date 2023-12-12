@@ -39,7 +39,8 @@ adminRoute.get('/addCategory', categoryCtrl.loadAddCategory)
 adminRoute.post('/addCategory', upload.single('image'), categoryCtrl.addProductCategory);
 adminRoute.get('/category/activate/:id', categoryCtrl.categoryActive )
 adminRoute.get('/category/deactivate/:id', categoryCtrl.categoryDisable )
-
+adminRoute.get('/category/:id/edit', categoryCtrl.loadCategoryEdit)
+adminRoute.post('/category/edit/:id', categoryCtrl.updateCategory)
 
 
 module.exports = adminRoute;
