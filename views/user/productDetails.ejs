@@ -239,10 +239,12 @@
                                 <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
                                     alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
                                 <% } %>
-                                    <% if (details.image) { %>
+                                    <% if (details.image && details.image[2]) { %>
                                         <img src="data:<%= details.image[2].contentType %>;base64,<%= details.image[2].data.toString('base64')%>"
                                             alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
                                         <% } %>
+
+
                                             <!-- <img data-imgbigurl="img/product/details/product-details-2.jpg"
                                 src="/user/img/product/details/thumb-1.jpg" alt="">
                             <img data-imgbigurl="img/product/details/product-details-3.jpg"
