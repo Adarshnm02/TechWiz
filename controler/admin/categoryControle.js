@@ -9,7 +9,7 @@ module.exports = {
 
     async category(req, res) {
         try {
-            const category = await productCategory.find({is_disable: false})
+            const category = await productCategory.find()
 
             if (category) {
                 res.render('admin/category', { category })
@@ -76,7 +76,7 @@ module.exports = {
         const disable = await productCategory.findByIdAndUpdate(id , {$set:{is_disable : true}},{new:true})
 
         if(disable){
-            return res.redirect('/admin/categories')
+            return res.redirect('/admin/category')
         }else{
             return res.send().status(400)
         }
@@ -87,7 +87,7 @@ module.exports = {
         const active = await productCategory.findByIdAndUpdate(id , {$set:{is_disable : false}},{new:true})
 
         if(active){
-            return res.redirect('/admin/categories')
+            return res.redirect('/admin/category')
         }else{
             return res.send().status(400)
         }

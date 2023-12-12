@@ -36,13 +36,13 @@
               </td>
               <td><%= category.categoryName %></td>
 
-              <% if(category.is_delete===true){ %>
+              <% if(category.is_disable ===true){ %>
               <td>
                 <label class="text-danger">Deactive</label>
               </td>
               <td>
                 <a
-                  href="/admin/products/<%= category._id %>/edit"
+                  href="/admin/category/<%= category._id %>/edit"
                   class="btn btn-primary"
                   >Edit</a
                 >
@@ -58,7 +58,7 @@
               </td>
               <td>
                 <a
-                  href="/admin/products/<%= category._id %>/edit"
+                  href="/admin/category/<%= category._id %>/edit"
                   class="btn btn-primary"
                   >Edit</a
                 >
@@ -71,7 +71,9 @@
               <% } %>
             </tr>
             <% }) %>
+
           </tbody>
+
         </table>
       </div>
     </div>
