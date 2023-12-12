@@ -29,7 +29,7 @@ adminRoute.post("/products/edit/:id",upload.array('image'),productControl.editpr
 adminRoute.get("/products/:imageId/:id/deleteImg", productControl.deleteImgDelete) 
 
 
-adminRoute.get('/products/acivate/:id', productControl.productActivate )
+adminRoute.get('/products/activate/:id', productControl.productActivate )
 adminRoute.get('/products/deactive/:id', productControl.productDesable )
 
 //Category
@@ -37,7 +37,8 @@ adminRoute.get('/products/deactive/:id', productControl.productDesable )
 adminRoute.get('/category', categoryCtrl.category )
 adminRoute.get('/addCategory', categoryCtrl.loadAddCategory)
 adminRoute.post('/addCategory', upload.single('image'), categoryCtrl.addProductCategory);
-// adminRoute.get('/category/acti', )
+adminRoute.get('/category/activate/:id',  )
+adminRoute.get('/category/deactivate/:id', )
 
 
 

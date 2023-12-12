@@ -11,7 +11,8 @@ const productCategorySchema = new mongoose.Schema({
     },
     is_disable: {
         type : Boolean,
-        contentType : String
+        contentType : String,
+        default  : false
     },
     image : {
         data: Buffer,
