@@ -27,3 +27,27 @@
 .app-header{
   background-color: transparent;
 } */
+
+
+
+
+/* style for category  */
+
+.category-image{
+    width: 200px;
+    height: 200px;
+}
+
+/* .table-content{
+    /* text-align: center !important;
+    text-justify: center !important; */
+    
+    /* Add this CSS to your existing stylesheet or create a new one */
+    
+.text-center {
+    text-align: center;
+}
+
+.text-center .btn {
+    margin-top: 5px; /* Adjust as needed */
+}
