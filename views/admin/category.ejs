@@ -1,12 +1,13 @@
 <%- include('../partials/admin/adminHeader') %>
-<style>
-  .tableData{
-    padding-top: 75px !important;
-  }
-  .tableDataBtn{
-    padding-top: 46px !important;
-  }
-</style>
+  <style>
+    .tableData {
+      padding-top: 75px !important;
+    }
+
+    .tableDataBtn {
+      padding-top: 46px !important;
+    }
+  </style>
 
   <div class="col-lg-10 grid-margin stretch-card container-fluid ">
     <div class="card">
@@ -34,10 +35,15 @@
                     <%= i + 1 %>
                   </td>
                   <td>
-                    <img
-                      src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
-                      class="category-image" />
+                    <% if(category.image && category.image.contentType && category.image.data) { %>
+                      <img
+                        src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                        class="category-image" />
+                      <% } else { %>
+                        <p>No image available</p>
+                        <% } %>
                   </td>
+
                   <td class="tableData">
                     <%= category.categoryName %>
                   </td>

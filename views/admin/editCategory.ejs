@@ -30,8 +30,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Edit Category</h3>
-                        <form class="forms-sample" method="post" action="/admin/category/edit/<%= category._id %>">
+                        <form class="forms-sample" method="post" action="/admin/category/edit/<%= category._id %>" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<%= category._id %>">
+
                             <div class="form-group">
                                 <label for="exampleInputName1">Category Name</label>
                                 <input type="text" name="categoryName" class="form-control" id="exampleInputName1"
@@ -50,19 +51,19 @@
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <div style="position: relative;">
-                                                <% if (category.image) { %>
+                                                <% if (category.image && category.image.contentType && category.image.data) { %>
                                                     <img src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
                                                         class="category-image" />
                                                     <a class="btn btn-danger btn-delete-image"
                                                         href="/admin/category/<%= category._id %>/deleteImg">Delete</a>
                                                     <% } else { %>
-                                                        <p>No image available</p>
+                                                        <p style="width: 145px;">No image available</p>
                                                         <% } %>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- Add a file input for uploading a new image -->
-                                    <!-- <input type="file" id="images" name="image" class="form-control file-upload-info"> -->
+                                    <input type="file" id="images" name="image" class="form-control file-upload-info">
                                 </div>
                             </div>
 
