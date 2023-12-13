@@ -1,4 +1,12 @@
 <%- include('../partials/admin/adminHeader') %>
+<style>
+  .tableData{
+    padding-top: 75px !important;
+  }
+  .tableDataBtn{
+    padding-top: 46px !important;
+  }
+</style>
 
   <div class="col-lg-10 grid-margin stretch-card container-fluid ">
     <div class="card">
@@ -30,15 +38,16 @@
                       src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
                       class="category-image" />
                   </td>
-                  <td>
+                  <td class="tableData">
                     <%= category.categoryName %>
                   </td>
 
                   <% if (category.is_disable===true) { %>
-                    <td>
+                    <td class="tableData">
                       <label class="text-danger">Deactivated</label>
                     </td>
-                    <td>
+
+                    <td class="tableDataBtn">
                       <a href="/admin/category/<%= category._id %>/edit" class="btn btn-primary">
                         Edit
                       </a>
@@ -47,10 +56,10 @@
                       </a>
                     </td>
                     <% } else { %>
-                      <td>
+                      <td class="tableData">
                         <label class="text-success">Activated</label>
                       </td>
-                      <td>
+                      <td class="tableDataBtn">
                         <a href="/admin/category/<%= category._id %>/edit" class="btn btn-primary">
                           Edit
                         </a>

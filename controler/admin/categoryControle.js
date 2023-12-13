@@ -109,7 +109,8 @@ module.exports = {
     async updateCategory (req,res) {
         console.log("fhasdfasdfjasdfjasdfhnvsdjvasdjvnsdjkn");
         const {id} = req.params;
-        const {categoryName, description,} = req.body;
+        const {categoryName, description} = req.body;
+        console.log("sdfsdf",req.body)
         const data = {categoryName:categoryName,description:description}
         const updatedCategory = await productCategory.findByIdAndUpdate(id,{$set:data},{new:true})
 
@@ -124,5 +125,6 @@ module.exports = {
 
 
 
-    // module.exports = { loadAddCategory, addProductCategory, category 
 }
+
+// module.exports = { loadAddCategory, addProductCategory, category 
