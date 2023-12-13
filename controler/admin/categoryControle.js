@@ -42,8 +42,11 @@ module.exports = {
                     message: "All fields must be filled",
                 })
             }
+
+            const categoryName = req.body.categoryName.charAt(0).toUpperCase() + req.body.categoryName.slice(1).toLowerCase();
+
             const exist = await productCategory.findOne({
-                categoryName: req.body.categoryName
+                categoryName: categoryName
             });
             if (!exist) {
                 const category = new productCategory({
@@ -58,10 +61,11 @@ module.exports = {
 
                 await category.save();
                 console.log("Category Saved", category);
-                return res.render("admin/addCategory")
+                return res.render("admin/addCategory", {message: "Category insert successfully"})
+
             } else {
-                console.log("The Category is not save");
-                return res.render("admin/addCategory")
+                console.log("This Category is already exist");
+                return res.render("admin/addCategory", {message: "This Category is already exist"})
             }
         } catch (error) {
             console.log(error.message);
@@ -155,7 +159,7 @@ module.exports = {
                 { new: true }
             );
 
-            const category = updatedCategory; // Replace this line with how you actually fetch the category
+            const category = updatedCategory;
 
             if (category) {
                 console.log("Image Successfully Deleted");
@@ -178,4 +182,3 @@ module.exports = {
 
 }
 
-// module.exports = { loadAddCategory, addProductCategory, category 

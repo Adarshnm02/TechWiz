@@ -34,14 +34,14 @@ module.exports = {
                 category,
             } = req.body;
 
-            if (
-                !productName || !brandName ||
-                !price || !description ||
-                !stockCount || !category
-            ) {
-                console.log("fsfsdgsdgsdgsdgsd");
-                return res.render('admin/addProduct')
-            }
+            // if (
+            //     !productName || !brandName ||
+            //     !price || !description ||
+            //     !stockCount || !category
+            // ) {
+            //     console.log("fsfsdgsdgsdgsdgsd");
+            //     return res.render('admin/addProduct')
+            // }
 
             // Create the product 
 
@@ -135,10 +135,7 @@ module.exports = {
             const id = req.params.id;
             const products = await Product.findById(id);
             const category = await Category.find()
-            //change it last
-            //   const categories = await productCategory.find({
-            //     categoryName: { $ne: products.category },
-            //   });
+            console.log("cat from loadproductedit", category);
             if (products && category) {
                 res.render("admin/editProduct", { message: "", products, id, category });
             } else {

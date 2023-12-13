@@ -56,8 +56,12 @@
                         <tr>
                             <td><%= i + 1 %></td>
                             <td>
+                                <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
                                 <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
                                     alt="<%= product.price %>" class="product-image">
+                                <% } else { %>
+                                    <p>No image available</p>
+                                <% } %>
                             </td>
                             <td><%= product.product_name.substring(0, 20) + '...' %></td>
                             <td><%= product.brand_name %></td>
