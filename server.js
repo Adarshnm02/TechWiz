@@ -15,11 +15,13 @@ app.set('views',path.join(__dirname,"views"));
 
 app.use(morgan('dev')); // 'combined' is a predefined log format
 
+// g
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.set("view engine", 'ejs')
 app.use(express.static("public"));
+app.all("/*",(req,res)=>res.render("404"))
 
 app.use(session({
   secret: 'your-secret-key',

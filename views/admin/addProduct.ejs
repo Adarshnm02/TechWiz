@@ -170,34 +170,32 @@
             }
         }
 
-        function colorTypes_validation(){
-            if(!/^[A-Za-z\s]+$/.test(colorTypes.value.trim())){
-                colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)"
+        function colorTypes_validation() {
+            if (!/^[A-Za-z\s]+$/.test(colorTypes.value.trim())) {
+                colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
                 return false;
             }
+            colorTypes_error.innerHTML = ""; // Clear error message if validation succeeds
+            return true; // Return true when validation passes
         }
-
 
 
         productEditingForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
             const validations = [
-            nameValidation(),
-            brandName_validation(),
-            description_Validation(),
-            colorTypes_validation()
+                nameValidation(),
+                brandName_validation(),
+                description_Validation(),
+                colorTypes_validation()
             ];
 
-            const hasErrors = validations.some(validation => validations === false);
-            console.log(hasErrors)
-            
+            const hasErrors = validations.some(validation => validation === false); // Corrected typo here
+            console.log(hasErrors);
+
             if (!hasErrors) {
-                // console.log("ddf")
                 productEditingForm.submit(); // Trigger the form submission
             }
-
-        })
-
+        });
     </script>
     <%- include('../partials/admin/adminFooter') %>
