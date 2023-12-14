@@ -111,7 +111,7 @@ const insertUser = async (req, res) => {
     } catch (error) {
         // Handle error more appropriately, either send an error response or use error middleware
         console.log(error);
-        res.status(500).send("Internal Server Error");
+        res.render('/user/500')
     }
 };
 
@@ -145,7 +145,7 @@ const otpVerification = async(req,res) =>{
         return res.redirect('/')
     }catch(error){
         console.log(error.message);
-        res.status(500).send('Internal Server Error')
+        res.render('/user/500')
     }
 
 }
@@ -188,6 +188,7 @@ const userLogin = async (req,res) => {
         }
     }catch(error){
         console.log(err);
+        res.render('/user/500')
     }
 }
 
@@ -199,6 +200,7 @@ const logout = (req,res)=>{
 
     }catch(err){
         console.log(err);
+        res.render('/user/500')
     }
 }
 

@@ -20,6 +20,7 @@ module.exports = {
 
         } catch (err) {
             console.log(err);
+            res.render('/admin/500')
         }
     },
 
@@ -30,6 +31,7 @@ module.exports = {
             res.render("admin/addCategory")
         } catch (err) {
             console.log("at rendering Category", err);
+            res.render('/admin/500')
         }
     },
 
@@ -69,7 +71,7 @@ module.exports = {
             }
         } catch (error) {
             console.log(error.message);
-            return res.status(500).send("internal server error");
+            res.render('/admin/500')
         }
     },
 
@@ -143,7 +145,7 @@ module.exports = {
             return res.redirect('/admin/category');
         } catch (error) {
             console.log(error.message);
-            return res.status(500).send("Internal server error");
+            res.render('/admin/500')
         }
     },
 
@@ -170,7 +172,8 @@ module.exports = {
             }
         } catch (error) {
             console.error("Error occurred during image deletion:", error);
-            return res.status(500).send("Internal Server Error");
+            res.render('/admin/500')
+            
         }
     }
 
