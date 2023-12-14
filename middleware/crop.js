@@ -23,7 +23,7 @@ const multiCrop = async (req, res, next) => {
             next();
         } catch (error) {
             console.error(error);
-            return res.status(500).send('Error processing images');
+            res.render('/admin/500')
         }
     } else {
         next();

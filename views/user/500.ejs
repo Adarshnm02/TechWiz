@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>500 - Internal Server Error</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .error-container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 8em;
+            margin: 0;
+            color: #333;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #39ac31;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <h1>500</h1>
+        <% if (typeof message !="undefined" ) {%>
+
+            <p>
+                <%= message %>
+            </p>
+
+        <%} else { %>
+
+            <p>Oops! Something went wrong</p>
+
+        <%}%>
+
+        <p><a href="/">Go back to home</a></p>
+    </div>
+</body>
+
+</html>

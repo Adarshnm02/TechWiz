@@ -1,112 +1,201 @@
 <%- include('../partials/admin/adminHeader') %>
 
-<div class="container">
-    <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;" enctype="multipart/form-data">
-        <div class="card">
-            <div class="card-body">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="text-center mb-0">Product Save Info</h3>
-                </div>
+    <div class="container">
+        <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;"
+            enctype="multipart/form-data" id="productEditingForm">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="text-center mb-0">Product Save Info</h3>
+                    </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="productName" class="form-label mt-4">Product Name</label>
-                            <input type="text" name="productName" class="form-control" id="productName"
-                                placeholder="Product Name">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="productName" class="form-label mt-4">Product Name</label>
+                                <input type="text" name="productName" class="form-control" id="productName"
+                                    placeholder="Product Name">
+                                <p class="text-danger" id="name_error"></p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="brandName" class="form-label mt-4">Product Brand</label>
+                                <input type="text" name="brandName" class="form-control" id="brandName"
+                                    placeholder="Product Brand">
+                                <p class="text-danger" id="brandName_error"></p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="brandName" class="form-label mt-4">Product Brand</label>
-                            <input type="text" name="brandName" class="form-control" id="brandName"
-                                placeholder="Product Brand">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="description" class="form-label mt-4">Product Description</label>
+                                <textarea class="form-control" name="description" id="description" cols="30" rows="3"
+                                    placeholder="Product Description"></textarea>
+                                <p class="text-danger" id="description_error"></p>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="description" class="form-label mt-4">Product Description</label>
-                            <textarea class="form-control" name="description" id="description" cols="30" rows="3"
-                                placeholder="Product Description"></textarea>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
+                                <input type="number" name="stockCount" class="form-control" id="stockCount"
+                                    placeholder="Stock Quantity">
+                                <p class="text-danger" id="stockCount_error"></p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
-                            <input type="number" name="stockCount" class="form-control" id="stockCount"
-                                placeholder="Stock Quantity">
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="price" class="form-label mt-4">Price</label>
-                            <input type="number" name="price" class="form-control" id="price"
-                                placeholder="Main Price">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="mainImage" class="form-label mt-4">Main Image / File</label>
-                            <input type="file" name="image" multiple class="form-control" id="mainImage"
-                                placeholder="Main Image / File">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="price" class="form-label mt-4">Price</label>
+                                <input type="number" name="price" class="form-control" id="price"
+                                    placeholder="Main Price">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="category" class="form-label mt-4">Product Category</label>
-                            <select class="form-select drop1" name="category">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="mainImage" class="form-label mt-4">Main Image / File</label>
+                                <input type="file" name="image" multiple class="form-control" id="mainImage"
+                                    placeholder="Main Image / File">
+                            </div>
+                        </div>
 
-                                <% category.forEach((category) => { %>
-                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
-                                  <% }) %>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="category" class="form-label mt-4">Product Category</label>
+                                <select class="form-select drop1" name="category">
+
+                                    <% category.forEach((category)=> { %>
+                                        <option value="<%= category._id %>">
+                                            <%= category.categoryName %>
+                                        </option>
+                                        <% }) %>
 
 
 
-                                <!-- <option value="mobile">Mobile</option>
+                                            <!-- <option value="mobile">Mobile</option>
                                 <option value="laptop">Laptop</option>
                                 <option value="camera">Camera</option>
                                 <option value="accessories">Accessories</option> -->
-                            </select>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="colorTypes" class="form-label mt-4">Color Types</label>
+                                <input type="text" name="color" class="form-control" id="colorTypes"
+                                    placeholder="Color Types">
+                                <p class="text-danger" id="colorTypes_error"></p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="colorTypes" class="form-label mt-4">Color Types</label>
-                            <input type="text" name="color" class="form-control" id="colorTypes"
-                                placeholder="Color Types">
+                    <div class="row">
+                        <div class="col-md-12 text-center mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg">Save Products</button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12 text-center mt-5">
-                        <button type="submit" class="btn btn-primary btn-lg">Save Products</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
 
+
+    <script>
+
+        const productEditingForm = document.getElementById("productEditingForm")
+
+        const productName = document.getElementById("productName")
+        const brandName = document.getElementById("brandName")
+        const description = document.getElementById("description")
+        const colorTypes = document.getElementById("colorTypes")
+
+        const name_error = document.getElementById("name_error")
+        const brandName_error = document.getElementById("brandName_error")
+        const description_error = document.getElementById("description_error")
+        const colorTypes_error = document.getElementById("colorTypes_error")
+
+
+        function nameValidation() {
+
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+            if (productName.value.trim() === "") {
+                name_error.innerHTML = "Please enter the Product Name!";
+                return false;
+            } else if (!nameRegex.test(productName.value)) {
+                name_error.innerHTML = "Please enter a valid Product Name.";
+                return false;
+            } else {
+                name_error.innerHTML = "";
+                return true;
+            }
+        }
+        function brandName_validation() {
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+            if (brandName.value.trim() === "") {
+                brandName_error.innerHTML = "Please enter a valid Product Name.";
+                return false;
+
+            } else if (!nameRegex.test(brandName.value)) {
+                brandName_error.innerHTML = "Please enter a valid Product Name.";
+                return false;
+
+            } else {
+                return true
+            }
+        }
+
+        function description_Validation() {
+
+            if (!/^[A-Za-z\s]+$/.test(description.value.trim())) {
+                description_error.innerHTML = "Description must contain only words (non-numeric characters).";
+                return false;
+
+            } else if (description.value.trim().length <= 15) {
+                description_error.innerHTML = "Description must be at least 15 characters long.";
+                return false;
+
+            } else {
+                description_error.innerHTML = "";
+                return true;
+            }
+        }
+
+        function colorTypes_validation() {
+            if (!/^[A-Za-z\s]+$/.test(colorTypes.value.trim())) {
+                colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
+                return false;
+            }
+            colorTypes_error.innerHTML = ""; // Clear error message if validation succeeds
+            return true; // Return true when validation passes
+        }
+
+
+        productEditingForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const validations = [
+                nameValidation(),
+                brandName_validation(),
+                description_Validation(),
+                colorTypes_validation()
+            ];
+
+            const hasErrors = validations.some(validation => validation === false); // Corrected typo here
+            console.log(hasErrors);
+
+            if (!hasErrors) {
+                productEditingForm.submit(); // Trigger the form submission
+            }
+        });
+    </script>
     <%- include('../partials/admin/adminFooter') %>
-
-
-
-
-
-
-
-
-

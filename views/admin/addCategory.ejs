@@ -6,36 +6,37 @@
             <div class="col-lg-9">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add Category</h4>
+                        <h5 class="card-title text-center">Add Category</h5>
                         <form action="/admin/addCategory" class="forms-sample" method="post"
                             enctype="multipart/form-data" id="category-form">
                             <div class="mb-3">
                                 <label for="exampleInputName1" class="form-label">Category Name</label>
                                 <input type="text" name="categoryName" class="form-control" id="exampleInputName1"
                                     placeholder="Name" required>
-                                <p class="text-danger" id="name-error-display"></p>
+                                <p class="text-danger" id="Category-name-error"></p>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleTextarea1" class="form-label">Description</label>
                                 <textarea name="description" id="exampleTextarea1" class="form-control" rows="4"
                                     required></textarea>
+                                <p class="text-danger" id="description-error"></p>
                             </div>
                             <div class="mb-3">
                                 <label for="image" class="form-label">Image Upload</label>
                                 <input type="file" id="image" name="image" class="form-control file-upload-info">
                             </div>
                             <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-                            <% if ( typeof message !== "undefined" ) { %>
+                            <% if ( typeof message !=="undefined" ) { %>
                                 <p class="text-danger">
                                     <%= message %>
                                 </p>
                                 <% } %>
 
 
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-primary"
-                                    style="margin-right: 30px;">Submit</button>
-                            </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary"
+                                            style="margin-right: 30px;">Submit</button>
+                                    </div>
                         </form>
                     </div>
                 </div>
@@ -43,6 +44,60 @@
         </div>
     </div>
 
-  
+
+    <script>
+        const CategoryForm = document.getElementById("category-form")
+
+        const CategoryName = document.getElementById("exampleInputName1")
+        const nameError = document.getElementById("Category-name-error")
+        const CategoryDescription = document.getElementById("exampleTextarea1")
+        const descriptionError = document.getElementById("description-error")
+
+        function nameValidation() {
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+            if (CategoryName.value.trim() === "") {
+                nameError.innerHTML = "Please enter the Category Name!";
+                return false;
+            } else if (!nameRegex.test(CategoryName.value)) {
+                nameError.innerHTML = "Please enter a valid Category Name.";
+                return false;
+            } else {
+                nameError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function descriptionValidation() {
+
+            if (!/^[A-Za-z\s]+$/.test(CategoryDescription.value.trim())) {
+                descriptionError.innerHTML = "Description must contain only words (non-numeric characters).";
+                return false;
+
+            } else if (CategoryDescription.value.trim().length <= 15) {
+                descriptionError.innerHTML = "Description must be at least 15 characters long.";
+                return false;
+
+            } else {
+                descriptionError.innerHTML = "";
+                return true;
+            }
+        }
+
+
+        CategoryForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const validations = [
+                nameValidation(),
+                descriptionValidation()
+            ];
+            const hasErrors = validations.some(validation => validation === false);
+            if (!hasErrors) {
+                CategoryForm.submit(); // Trigger the form submission
+            }
+        })
+    </script>
+
+
 
     <%- include('../partials/admin/adminFooter') %>

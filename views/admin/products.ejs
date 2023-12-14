@@ -1,116 +1,114 @@
 <%- include('../partials/admin/adminHeader') %>
 
-    <style>
+<style>
+    .product-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* Adjustments for smaller screens */
+    @media (max-width: 768px) {
         .product-image {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
+            width: 30px;
+            height: 30px;
         }
-    </style>
+    }
 
+    /* Improve table layout */
+    th {
+        text-align: center;
+    }
 
+    td {
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
 
-    <div class="col-lg-10 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Products</h4>
-                <div class="form-group">
-                    <label for="productSearch">Search:</label>
-                    <input type="text" class="form-control" id="productSearch" placeholder="Search products">
-                </div>
-                <div class="table-responsive">
-                    <table id="productTable" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Brand </th>
-                                <th>product Offer</th>
-                                <th>Category</th>
-                                <th>Price(MRP)</th>
-                                <th>Quantity</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% products.forEach((product,i)=>{ %>
-                                <tr>
-                                    <td>
-                                        <%= i %>
-                                    </td>
-                                    <td>
-                                    
-                                            <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
-                                                alt="<%= product.price %>" class="product-image">
-                                           
-                                    </td>
-                                    <td>
-                                        <%= product.product_name.substring(0, 30) + '...' %>
-                                    </td>
-                                    <td>
-                                        <%= product.brand_name %>
-                                    </td>
-                                    <% if(product.offer){ %>
-                                        <td>
-                                            <%=product.offer%>
-                                        </td>
-                                        <% }else { %>
-                                            <td>0</td>
-                                            <% } %>
-                                                <td>
-                                                    <%= product.categoryName%>
-                                                </td>
-                                                <td>
-                                                    <%=product.price%>
-                                                </td>
-                                                <td>
-                                                    <%=product.stock_count%>
-                                                </td>
-                                                <% if(product.is_delete===true){ %>
-                                                    <td>
-                                                        <label class="text-danger">Deactive</label>
-                                                    </td>
-                                                    <td>
-                                                        <a href="/admin/products/<%= product._id %>/edit"
-                                                            class="btn btn-primary">Edit</a>
-                                                        <a href="/admin/products/activate/<%= product._id %>"
-                                                            class="btn btn-primary">active</a>
-                                                    </td>
-                                                    <% }else{ %>
-                                                        <td>
-                                                            <label class="text-success">Activate</label>
-                                                        </td>
-                                                        <td>
-                                                            <a href="/admin/products/<%= product._id %>/edit"
-                                                                class="btn btn-primary">Edit</a>
-                                                            <a href="/admin/products/deactive/<%= product._id %>"
-                                                                class="btn btn-danger">Deactivate</a>
-                                                        </td>
-                                                        <% } %>
-                                </tr>
-                                <% }) %>
-
-                        </tbody>
-                    </table>
-                </div>
+<div class="col-lg-10 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Products</h4>
+            <div class="form-group">
+                <label for="productSearch">Search:</label>
+                <input type="text" class="form-control" id="productSearch" placeholder="Search products">
+            </div>
+            <div class="table-responsive">
+                <table id="productTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Brand</th>
+                            <th>Product Offer</th>
+                            <th>Category</th>
+                            <th>Price (MRP)</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% products.forEach((product,i)=>{ %>
+                        <tr>
+                            <td><%= i + 1 %></td>
+                            <td>
+                                <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
+                                <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
+                                    alt="<%= product.price %>" class="product-image">
+                                <% } else { %>
+                                    <p>No image available</p>
+                                <% } %>
+                            </td>
+                            <td><%= product.product_name.substring(0, 20) + '...' %></td>
+                            <td><%= product.brand_name %></td>
+                            <% if(product.offer) { %>
+                            <td><%= product.offer %></td>
+                            <% } else { %>
+                            <td>0</td>
+                            <% } %>
+                            <td><%= product.categoryName %></td>
+                            <td><%= product.price %></td>
+                            <td><%= product.stock_count %></td>
+                            <td>
+                                <% if(product.is_delete === true) { %>
+                                <label class="text-danger">Deactive</label>
+                                <% } else { %>
+                                <label class="text-success">Activate</label>
+                                <% } %>
+                            </td>
+                            <td>
+                                <a href="/admin/products/<%= product._id %>/edit" class="btn btn-primary">Edit</a>
+                                <a href="<%= product.is_delete === true ? '/admin/products/activate/' + product._id : '/admin/products/deactive/' + product._id %>"
+                                    class="btn <%= product.is_delete === true ? 'btn-primary' : 'btn-danger' %>">
+                                    <%= product.is_delete === true ? 'Activate' : 'Deactivate' %>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function () {
-            // Initialize DataTable with your table's id
-            var dataTable = $('#productTable').DataTable();
-
-            // Add an event listener for the search input
-            $('#productSearch').keyup(function () {
-                dataTable.search($(this).val()).draw();
-            });
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable with your table's id
+        var dataTable = $('#productTable').DataTable({
+            responsive: true // Enable responsiveness
         });
-    </script>
 
-    <%- include('../partials/admin/adminFooter') %>
+        // Add an event listener for the search input
+        $('#productSearch').keyup(function () {
+            dataTable.search($(this).val()).draw();
+        });
+    });
+</script>
 
-        </html>
+<%- include('../partials/admin/adminFooter') %>
+</html>

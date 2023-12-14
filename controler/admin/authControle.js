@@ -8,6 +8,7 @@ module.exports = {
     async checkAdmin(req, res){
         console.log("Enter to CheckAdmin");
         try {
+            
             const { email, password } = req.body;
             const findAdmin = await User.findOne({ email })
             if (!findAdmin) {
@@ -27,8 +28,11 @@ module.exports = {
                     }
                 }
             }
+            
+
         } catch (error) {
             console.log(error.message);
+            res.render('admin/500')
         }
     },
 

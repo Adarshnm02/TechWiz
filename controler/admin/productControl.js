@@ -19,6 +19,7 @@ module.exports = {
             }
         } catch (err) {
             console.log(err);
+            res.render("admin/500")
         }
     },
 
@@ -34,14 +35,14 @@ module.exports = {
                 category,
             } = req.body;
 
-            if (
-                !productName || !brandName ||
-                !price || !description ||
-                !stockCount || !category
-            ) {
-                console.log("fsfsdgsdgsdgsdgsd");
-                return res.render('admin/addProduct')
-            }
+            // if (
+            //     !productName || !brandName ||
+            //     !price || !description ||
+            //     !stockCount || !category
+            // ) {
+            //     console.log("fsfsdgsdgsdgsdgsd");
+            //     return res.render('admin/addProduct')
+            // }
 
             // Create the product 
 
@@ -71,6 +72,7 @@ module.exports = {
 
         } catch (error) {
             console.log(error);
+            res.render("admin/500")
         }
     },
 
@@ -86,6 +88,7 @@ module.exports = {
 
         } catch (err) {
             console.log(err);
+            res.render("admin/500")
         }
 
 
@@ -109,6 +112,7 @@ module.exports = {
 
         } catch (error) {
             console.log(error.message);
+            res.render("admin/500")
         }
 
     },
@@ -126,6 +130,7 @@ module.exports = {
             }
         } catch (error) {
             console.log(error.message);
+            res.render("admin/500")
         }
     },
 
@@ -135,10 +140,7 @@ module.exports = {
             const id = req.params.id;
             const products = await Product.findById(id);
             const category = await Category.find()
-            //change it last
-            //   const categories = await productCategory.find({
-            //     categoryName: { $ne: products.category },
-            //   });
+            console.log("cat from loadproductedit", category);
             if (products && category) {
                 res.render("admin/editProduct", { message: "", products, id, category });
             } else {
@@ -147,6 +149,7 @@ module.exports = {
 
         } catch (error) {
             console.log("error form loadedit ", error.message);
+            res.render("admin/500")
         }
     },
 
@@ -195,6 +198,7 @@ module.exports = {
             console.log(error.message);
             // Handle the error appropriately
             res.status(500).send("Error updating product");
+            res.render("admin/500")
         }
     },
 
@@ -209,6 +213,7 @@ module.exports = {
             }
         }catch(error){
             console.log(error.message);
+            res.render("admin/500")
         }
     },
     
@@ -221,6 +226,7 @@ module.exports = {
             }
         }catch(error){
             console.log(error.message);
+            res.render("admin/500")
         }
     },
     
@@ -245,48 +251,12 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
             // Handle the error, perhaps send an error response
-            res.status(500).send({ error: 'Internal Server Error' });
+            // res.status(500).send({ message: 'Internal Server Error' });
+            res.render("admin/500", { message: 'Internal Server Error' })
         }
     }
     
 
 
 
-
-
-
-    // async deleteImgDelete (req, res){
-    //     const id = req.params.id
-    //     const imageId = req.params.imageId
-    //     console.log(id + "here" + imageId);
-    //     try {
-    //         const deleteimg = await Product.findByIdAndUpdate(
-    //             { _id: id },
-    //             { $pull: { "images": { _id: imageId } } },
-    //             { new: true }
-    //         );
-      
-    //         // 650c7fbf086081c38a
-    //         if (deleteimg) {
-      
-    //             console.log("Imaged deleted ",deleteimg)
-    //             return res.redirect(`/admin/products/${req.params.id}/Edit`);
-    //         } else {
-    //             console.log("image not updated")
-    //         }
-    //     } catch (error) {
-    //         console.log(error.message)
-    //     }
-    //   },   
-
-      
-
-
-
-
-    // res.render('user/shop-grid')
-
-    // module.exports = {
-    //     loadAddProduct,
-    //     addProduct
 };

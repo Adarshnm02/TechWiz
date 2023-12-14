@@ -1,83 +1,86 @@
 <%- include('../partials/admin/adminHeader') %>
+  <style>
+    .tableData {
+      padding-top: 75px !important;
+    }
 
-<div class="col-lg-10 grid-margin stretch-card">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title">category's</h4>
-      <div class="form-group">
-        <label for="productSearch">Search:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="productSearch"
-          placeholder="Search products"
-        />
-      </div>
-      <div class="table-responsive">
-        <table id="productTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Image</th>
-              <th>Category Name</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody class="table-content">
-            <% category.forEach((category,i)=>{ %>
-            <tr>
-              <td><%= i %></td>
-              <td>
-                <img
-                  src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
-                  class="category-image"
-                />
-              </td>
-              <td><%= category.categoryName %></td>
+    .tableDataBtn {
+      padding-top: 46px !important;
+    }
+  </style>
 
-              <% if(category.is_disable ===true){ %>
-              <td>
-                <label class="text-danger">Deactive</label>
-              </td>
-              <td>
-                <a
-                  href="/admin/category/<%= category._id %>/edit"
-                  class="btn btn-primary"
-                  >Edit</a
-                >
-                <a
-                  href="/admin/category/activate/<%= category._id %>"
-                  class="btn btn-primary"
-                  >active</a
-                >
-              </td>
-              <% }else{ %>
-              <td>
-                <label class="text-success">Activate</label>
-              </td>
-              <td>
-                <a
-                  href="/admin/category/<%= category._id %>/edit"
-                  class="btn btn-primary"
-                  >Edit</a
-                >
-                <a
-                  href="/admin/category/deactivate/<%= category._id %>"
-                  class="btn btn-danger"
-                  >Deactivate</a
-                >
-              </td>
-              <% } %>
-            </tr>
-            <% }) %>
+  <div class="col-lg-10 grid-margin stretch-card container-fluid ">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">Categories</h5>
+        <div class="form-group">
+          <label for="productSearch">Search:</label>
+          <input type="text" class="form-control" id="productSearch" placeholder="Search categories" />
+        </div>
+        <div class="table-responsive">
+          <table id="categoryTable" class="table table-striped">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Image</th>
+                <th>Category Name</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% category.forEach((category, i)=> { %>
+                <tr>
+                  <td>
+                    <%= i + 1 %>
+                  </td>
+                  <td>
+                    <% if(category.image && category.image.contentType && category.image.data) { %>
+                      <img
+                        src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                        class="category-image" />
+                      <% } else { %>
+                        <p>No image available</p>
+                        <% } %>
+                  </td>
 
-          </tbody>
+                  <td class="tableData">
+                    <%= category.categoryName %>
+                  </td>
 
-        </table>
+                  <% if (category.is_disable===true) { %>
+                    <td class="tableData">
+                      <label class="text-danger">Deactivated</label>
+                    </td>
+
+                    <td class="tableDataBtn">
+                      <a href="/admin/category/<%= category._id %>/edit" class="btn btn-primary">
+                        Edit
+                      </a>
+                      <a href="/admin/category/activate/<%= category._id %>" class="btn btn-primary">
+                        Activate
+                      </a>
+                    </td>
+                    <% } else { %>
+                      <td class="tableData">
+                        <label class="text-success">Activated</label>
+                      </td>
+                      <td class="tableDataBtn">
+                        <a href="/admin/category/<%= category._id %>/edit" class="btn btn-primary">
+                          Edit
+                        </a>
+                        <a href="/admin/category/deactivate/<%= category._id %>" class="btn btn-danger">
+                          Deactivate
+                        </a>
+                      </td>
+                      <% } %>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<%- include('../partials/admin/adminFooter') %>
+  <%- include('../partials/admin/adminFooter') %>
