@@ -27,6 +27,24 @@ const userSchema = new mongoose.Schema({
     is_Admin:{
         type:Boolean,
         default:false
+    },
+    cart:[{
+        product:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Product"
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        },
+        totalAmount:{
+            type:Number
+        }
+
+    }],
+    grandTotal:{
+        type: Number,
+        default: 0
     }
 })
 

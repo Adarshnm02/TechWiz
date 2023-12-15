@@ -68,15 +68,6 @@ module.exports = {
         res.render('user/otpVerification', { id })
     },
 
-
-    load_cart(req, res) {
-        try {
-            res.render('user/shoping-cart', { session: req.session.user })
-        } catch (err) {
-            res.render('admin/500')
-        }
-    },
-
     async insertUser(req, res) {
         try {
             console.log("Form req.body Body", req.body);

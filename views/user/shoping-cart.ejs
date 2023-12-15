@@ -1,16 +1,16 @@
 <%- include('../partials/user/header') %>
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
+
+
+
+
+
+
+
+
+
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-section set-bg">
+    <!-- <section class="breadcrumb-section set-bg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- Breadcrumb Section End -->
 
     <!-- Shoping Cart Section Begin -->
@@ -44,72 +44,51 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-1.jpg" alt="">
-                                        <h5>Vegetable’s Package</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $55.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
+
+
+                                <% cart.forEach((element)=> { %>
+                                    <tr id="delete_<%element.product._id%>">
+                                        <td class="shoping__cart__item" >
+                                            <% if (element.product.image.length> 0 && element.product.image[0].data) {
+                                                %>
+                                                <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
+                                                    alt="" style=width:150px height="205px ">
+                                                <% } else { %>
+                                                    <p>No Image</p>
+                                                    <% } %>
+                                                        <h5>
+                                                            <%= element.product.product_name %>
+                                                        </h5>
+                                        </td>
+
+                                        <td class="shoping__cart__price">
+                                            <%= element.product.price %>
+                                        </td>
+
+                                        <td class="shoping__cart__quantity">
+                                            <div class="quantity">
+                                                <div class="pro-qty">
+                                                    <input type="text" value="<%= element.quantity %>">
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $110.00
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-2.jpg" alt="">
-                                        <h5>Fresh Garden Vegetable</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $39.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $39.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-3.jpg" alt="">
-                                        <h5>Organic Bananas</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $69.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $69.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
+                                        </td>
+
+                                        <td class="shoping__cart__total">
+                                            <%= element.totalAmount %>
+                                        </td>
+
+
+                                        <td class="shoping__cart__item__close">
+                                            <a class="icon_close" onclick="removeProduct('<%=element.product._id%>')"
+                                                id="removeButton_<%=element.product._id%>"></a>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+
+
+
+
+
                             </tbody>
                         </table>
                     </div>
@@ -118,7 +97,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
-                        <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                        <a href="/" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
                         <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>
                             Upadate Cart</a>
                     </div>
@@ -151,7 +130,59 @@
 
 
 
+    <script>
+        function removeProduct(productId) {
+            const delet = document.getElementById(`delete_${productId}`);
+            const data = { product: productId };
+            fetch("/removeFromCart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Success:", data);
+                    document.getElementById("grandTotal").innerHTML = `${data.grandTotal}`;
+                    console.log(data);
+                    showToast("Product removed from cart!");
+                    data.remove()
+                    delet.remove();
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    showToast("Failed to remove Product.", "error");
+                });
+        }
+    </script>
 
 
 
-<%- include('../partials/user/footer') %>
+    <%- include('../partials/user/footer') %>
+
+
+
+        // <!-- 
+// <tr>
+//     <td class="shoping__cart__item">
+//         <img src="img/cart/cart-1.jpg" alt="">
+//         <h5>Vegetable’s Package</h5>
+//     </td>
+//     <td class="shoping__cart__price">
+//         $55.00
+//     </td>
+//     <td class="shoping__cart__quantity">
+//         <div class="quantity">
+//             <div class="pro-qty">
+//                 <input type="text" value="1">
+//             </div>
+//         </div>
+//     </td>
+//     <td class="shoping__cart__total">
+//         $110.00
+//     </td>
+//     <td class="shoping__cart__item__close">
+//         <span class="icon_close"></span>
+//     </td>
+// </tr> -->
