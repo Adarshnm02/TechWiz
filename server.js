@@ -4,6 +4,7 @@ const app = express()
 const path = require('path')
 
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const flash = require("connect-flash");
 const morgan = require('morgan')
@@ -28,7 +29,11 @@ app.use(express.static("public"));
 app.use(session({
   secret: 'your-secret-key',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  // store: new MongoStore({
+  //   mongoUrl: process.env.MONGO_URL,
+  //   collection: 'sessions',
+  // }),  
 }));
 
 app.use(flash());

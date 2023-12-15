@@ -11,8 +11,9 @@ const userOTPVerificationSchema = new mongoose.Schema({
         require:true,
     },
     otp:String,
-    createAt:Date,
-    expireAt:Date
+    // createAt:Date,
+    // expireAt:Date
+    expiresAt: {type: Date, default: Date.now, expires: 5 }
 
 })
 

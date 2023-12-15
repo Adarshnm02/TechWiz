@@ -60,8 +60,13 @@
                 </ul>
             </div>
             <div class="header__top__right__auth">
-                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                <% if (session) { %>
+                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                <% } else { %>
+                <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                <% } %>
             </div>
+            
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
@@ -129,11 +134,13 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <%if(session){ %>
-                                    <a href="/logout">Logout</a>
-                                    <% } else { %>
-                                        <a href="/login"><i class="fa fa-user"></i> Login</a>
-                                        <% }%>
+                                <% if (session) { %>
+                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                <% } else { %>
+                                <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                                <% } %>
+                            </div>
+                               
                             </div>
                         </div>
                     </div>
