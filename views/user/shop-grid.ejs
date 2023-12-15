@@ -1,25 +1,29 @@
 <%- include('../partials/user/header') %>
 
+    <style>
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
 
+        .pagination-container a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-
-    <!-- Breadcrumb Section Begin -->
-    <!-- <section class="breadcrumb-section set-bg" data-setbg="/user/img/breadcrumb.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="breadcrumb__text">
-                        <h2>Organi Shop</h2>
-                        <div class="breadcrumb__option">
-                            <a href="/index">Home</a>
-                            <span>Shop</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- Breadcrumb Section End -->
+        .pagination-container a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
 
 
     <!-- Product Section Begin -->
@@ -289,7 +293,8 @@
                                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                                         <li><a href="#"><i class="fa fa-retweet"></i></a>
                                                         </li>
-                                                        <li><a onclick="addToCart('<%= element._id %>')"><i class="fa fa-shopping-cart"></i></a>
+                                                        <li><a onclick="addToCart('<%= element._id %>')"><i
+                                                                    class="fa fa-shopping-cart"></i></a>
                                                         </li>
                                                     </ul>
                                     </div>
@@ -305,19 +310,31 @@
                             <% }); %>
 
                     </div>
+                    <div class="pagination-container">
+                        <% if (currentPage> 1) { %>
+                            <a href="/shop-grid?page=1">First</a>
+                            <a href="/shop-grid?page=<%= currentPage - 1 %>">Previous</a>
+                            <% } %>
 
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <a href="/shop-grid?page=<%= i %>"
+                                        class="<%= currentPage === i ? 'active' : '' %>">
+                                        <%= i %>
+                                    </a>
+                                    <% } %>
 
-                    <div class="product__pagination">
-                        <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="/shop-grid?page=<%= currentPage + 1 %>">Next</a>
+                                            <a href="/shop-grid?page=<%= totalPages %>">Last</a>
+                                            <% } %>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </section>
-    <!-- Product Section End -->
+
 
 
 

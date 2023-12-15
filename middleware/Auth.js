@@ -49,11 +49,6 @@ async logouting (req,res,next) {
     req.session.destroy()
     res.redirect('/login')
 
-
-    // await req.session.destroy(); // Clear session data
-    // await mongoose.connection.collection('sessions').deleteOne({ _id: sessionID }); // Delete from database
-    // res.send({ message: 'Logged out successfully' });
-    // }
 }
 
 

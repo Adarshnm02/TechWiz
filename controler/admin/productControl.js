@@ -76,26 +76,33 @@ module.exports = {
         }
     },
 
-
     async loadShop(req, res) {
-        //Fetching Product
         try {
             const session = req.session.user;
+            const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
+            const limit = 12; // Set the number of products per page
+            const skip = (page - 1) * limit;
+    
+            // Query products with pagination
             const products = await Product
-                .find({is_delete:false})
-            console.log(products, "Product");
-            res.render('user/shop-grid', { products, session })
-
+                .find({ is_delete: false })
+                .skip(skip)
+                .limit(limit);
+    
+            // Count total products for pagination calculation
+            const totalCount = await Product.countDocuments({ is_delete: false });
+    
+            // Calculate total pages
+            const totalPages = Math.ceil(totalCount / limit);
+    
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages });
+    
         } catch (err) {
             console.log(err);
-            res.render("admin/500")
+            res.render("/500");
         }
-
-
     },
-
-
-
+    
     async productDetails(req, res) {
         try {
             const session = req.session.user;
@@ -117,22 +124,46 @@ module.exports = {
 
     },
 
-    async loadProductList(req, res) {
+    // async loadProductList(req, res) {
+    //     try {
+    //         const products = await Product.find();
+
+
+    //         // console.log(products);
+    //         if (products) {
+    //             res.render("admin/products", { products });
+    //         } else {
+    //             console.log("product not found");
+    //         }
+    //     } catch (error) {
+    //         console.log(error.message);
+    //         res.render("admin/500")
+    //     }
+    // },
+    async  loadProductList(req, res) {
+        const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
+        const limit = 10; // Set a limit for the number of products per page
+        const skip = (page - 1) * limit;
+    
         try {
-            const products = await Product.find();
-
-
-            // console.log(products);
-            if (products) {
-                res.render("admin/products", { products });
-            } else {
-                console.log("product not found");
-            }
+            const products = await Product.find()
+                .skip(skip)
+                .limit(limit);
+    
+            const totalCount = await Product.countDocuments();
+    
+            res.render("admin/products", {
+                products,
+                totalCount,
+                currentPage: page,
+                totalPages: Math.ceil(totalCount / limit)
+            });
         } catch (error) {
             console.log(error.message);
-            res.render("admin/500")
+            res.render("admin/500", { error });
         }
     },
+    
 
 
     async loadedit(req, res) {
