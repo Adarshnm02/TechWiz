@@ -5,6 +5,7 @@ const user_Route = require('express').Router()
 const  userControle = require('../controler/user/userControle')
 const productControl = require('../controler/admin/productControl')
 const cartCtrl = require('../controler/user/cartController')
+const checkoutCtrl = require('../controler/user/checkoutControler')
 const Auth = require('../middleware/Auth')
 // const UserOTPVerification = require("../models/userOTPVerification")
 
@@ -42,9 +43,8 @@ user_Route.post('/addToCart', cartCtrl.addToCart)
 user_Route.post('/removeFromCart', cartCtrl.deleteFromCart)
 
 
-
-
-
+//checkout
+user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 
 
 module.exports = user_Route;

@@ -40,6 +40,7 @@ module.exports = {
         console.log(req.session.user);
         try{
             res.render('user/index', { session: req.session.user})
+            
         } catch{
             res.render('user/500')
         }
@@ -108,9 +109,9 @@ module.exports = {
                 console.log("All fields are required");
             }
         } catch (error) {
-            // Handle error more appropriately, either send an error response or use error middleware
+           
             console.log(error);
-            res.render('/user/500')
+            res.render('user/500')
         }
     },
 
@@ -149,7 +150,7 @@ module.exports = {
             return res.redirect('/')
         } catch (error) {
             console.log(error.message);
-            res.render('/user/500')
+            res.render('user/500')
         }
 
     },
@@ -180,6 +181,7 @@ module.exports = {
                         req.session.user = verifiedUser._id
                         console.log("Login Successful");
                         return res.redirect("/index")
+                        
                     }
                 } else {
                     console.log("error from userLogin else");
@@ -188,7 +190,7 @@ module.exports = {
             }
         } catch (error) {
             console.log(error);
-            res.render('/user/500')
+            res.render('user/500')
         }
     },
 
@@ -200,7 +202,7 @@ module.exports = {
 
         } catch (err) {
             console.log(err);
-            res.render('/user/500')
+            res.render('user/500')
         }
     },
 

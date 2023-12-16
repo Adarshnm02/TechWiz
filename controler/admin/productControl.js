@@ -9,6 +9,25 @@ const Category = require("../../models/categoryModel")
 module.exports = {
 
 
+    // async loadAddProduct(req, res) {
+    //     try {
+    //         const productsWithCategory = await Product.find().populate({
+    //             path: 'category',
+    //             select: 'categoryName' // Select only the categoryName field from the Category model
+    //         });
+    
+    //         if (productsWithCategory) {
+    //             res.render('admin/addProduct', { productsWithCategory });
+    //         } else {
+    //             console.log("Products with Category not found");
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //         res.render("admin/500");
+    //     }
+    // }
+    
+    
     async loadAddProduct(req, res) {
         try {
             const category = await Category.find()
@@ -22,7 +41,7 @@ module.exports = {
             res.render("admin/500")
         }
     },
-
+    
     async addProduct(req, res) {
         console.log(req.body);
         try {
@@ -83,11 +102,16 @@ module.exports = {
             const limit = 12; // Set the number of products per page
             const skip = (page - 1) * limit;
     
-            // Query products with pagination
+            // Query products with pagination and category condition
             const products = await Product
                 .find({ is_delete: false })
+                .populate({
+                    path: 'category',
+                    match: { is_disable: false } // Filter based on the category's is_disabled field
+                })
                 .skip(skip)
-                .limit(limit);
+                .limit(limit)
+                .sort({ _id: -1 });
     
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
@@ -95,13 +119,14 @@ module.exports = {
             // Calculate total pages
             const totalPages = Math.ceil(totalCount / limit);
     
-            res.render('user/shop-grid', { products, session, currentPage: page, totalPages });
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount });
     
         } catch (err) {
             console.log(err);
             res.render("/500");
         }
     },
+    
     
     async productDetails(req, res) {
         try {

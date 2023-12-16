@@ -67,7 +67,7 @@
                                 <th>Product Name</th>
                                 <th>Brand</th>
                                 <th>Product Offer</th>
-                                <th>Category</th>
+                                <!-- <th>Category</th> -->
                                 <th>Price (MRP)</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
@@ -102,30 +102,36 @@
                                         <% } else { %>
                                             <td>0</td>
                                             <% } %>
-                                                <td>
-                                                    <%= product.categoryName %>
-                                                </td>
-                                                <td>
-                                                    <%= product.price %>
-                                                </td>
-                                                <td>
-                                                    <%= product.stock_count %>
-                                                </td>
-                                                <td>
-                                                    <% if(product.is_delete===true) { %>
-                                                        <label class="text-danger">Deactive</label>
-                                                        <% } else { %>
-                                                            <label class="text-success">Activate</label>
-                                                            <% } %>
-                                                </td>
-                                                <td>
-                                                    <a href="/admin/products/<%= product._id %>/edit"
-                                                        class="btn btn-primary">Edit</a>
-                                                    <a href="<%= product.is_delete === true ? '/admin/products/activate/' + product._id : '/admin/products/deactive/' + product._id %>"
-                                                        class="btn <%= product.is_delete === true ? 'btn-primary' : 'btn-danger' %>">
-                                                        <%= product.is_delete===true ? 'Activate' : 'Deactivate' %>
-                                                    </a>
-                                                </td>
+                                            
+
+
+
+
+
+
+
+                                                <%console.log(product)%>
+                                                    <td>
+                                                        <%= product.price %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.stock_count %>
+                                                    </td>
+                                                    <td>
+                                                        <% if(product.is_delete===true) { %>
+                                                            <label class="text-danger">Deactive</label>
+                                                            <% } else { %>
+                                                                <label class="text-success">Activate</label>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/admin/products/<%= product._id %>/edit"
+                                                            class="btn btn-primary">Edit</a>
+                                                        <a href="<%= product.is_delete === true ? '/admin/products/activate/' + product._id : '/admin/products/deactive/' + product._id %>"
+                                                            class="btn <%= product.is_delete === true ? 'btn-primary' : 'btn-danger' %>">
+                                                            <%= product.is_delete===true ? 'Activate' : 'Deactivate' %>
+                                                        </a>
+                                                    </td>
                                 </tr>
                                 <% }) %>
                         </tbody>

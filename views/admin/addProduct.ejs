@@ -15,7 +15,7 @@
                                 <label for="productName" class="form-label mt-4">Product Name</label>
                                 <input type="text" name="productName" class="form-control" id="productName"
                                     placeholder="Product Name">
-                                <p class="text-danger" id="name_error"></p>
+                                <p class="text-red" id="name_error"></p>
                             </div>
                         </div>
 
@@ -24,7 +24,7 @@
                                 <label for="brandName" class="form-label mt-4">Product Brand</label>
                                 <input type="text" name="brandName" class="form-control" id="brandName"
                                     placeholder="Product Brand">
-                                <p class="text-danger" id="brandName_error"></p>
+                                <p class="text-red" id="brandName_error"></p>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                                 <label for="description" class="form-label mt-4">Product Description</label>
                                 <textarea class="form-control" name="description" id="description" cols="30" rows="3"
                                     placeholder="Product Description"></textarea>
-                                <p class="text-danger" id="description_error"></p>
+                                <p class="text-red" id="description_error"></p>
                             </div>
                         </div>
 
@@ -44,7 +44,7 @@
                                 <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
                                 <input type="number" name="stockCount" class="form-control" id="stockCount"
                                     placeholder="Stock Quantity">
-                                <p class="text-danger" id="stockCount_error"></p>
+                                <p class="text-red" id="stockCount_error"></p>
                             </div>
                         </div>
 
@@ -92,7 +92,7 @@
                                 <label for="colorTypes" class="form-label mt-4">Color Types</label>
                                 <input type="text" name="color" class="form-control" id="colorTypes"
                                     placeholder="Color Types">
-                                <p class="text-danger" id="colorTypes_error"></p>
+                                <p class="text-red" id="colorTypes_error"></p>
                             </div>
                         </div>
                     </div>
@@ -131,9 +131,9 @@
             if (productName.value.trim() === "") {
                 name_error.innerHTML = "Please enter the Product Name!";
                 return false;
-            } else if (!nameRegex.test(productName.value)) {
-                name_error.innerHTML = "Please enter a valid Product Name.";
-                return false;
+            // } else if (!nameRegex.test(productName.value)) {
+            //     name_error.innerHTML = "Please enter a valid Product Name.";
+            //     return false;
             } else {
                 name_error.innerHTML = "";
                 return true;
@@ -156,11 +156,12 @@
 
         function description_Validation() {
 
-            if (!/^[A-Za-z\s]+$/.test(description.value.trim())) {
-                description_error.innerHTML = "Description must contain only words (non-numeric characters).";
-                return false;
+            // if (!/^[A-Za-z\s]+$/.test(description.value.trim())) {
+            //     description_error.innerHTML = "Description must contain only words (non-numeric characters).";
+            //     return false;
 
-            } else if (description.value.trim().length <= 15) {
+            // } else 
+            if (description.value.trim().length <= 15) {
                 description_error.innerHTML = "Description must be at least 15 characters long.";
                 return false;
 
@@ -190,11 +191,11 @@
                 colorTypes_validation()
             ];
 
-            const hasErrors = validations.some(validation => validation === false); // Corrected typo here
+            const hasErrors = validations.some(validation => validation === false); 
             console.log(hasErrors);
 
             if (!hasErrors) {
-                productEditingForm.submit(); // Trigger the form submission
+                productEditingForm.submit(); 
             }
         });
     </script>
