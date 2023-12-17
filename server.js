@@ -49,3 +49,6 @@ app.all("/*",(req,res)=>res.render("404",{url:req.url}))
 
 const PORT = process.env.PORT;
 app.listen(PORT, ()=> console.log("Server id Running on Port ", PORT))
+
+
+TODO: "clean the template "
