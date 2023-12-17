@@ -1,6 +1,15 @@
 <%- include('../partials/user/header') %>
 
-
+<style>
+    .quantity{
+        width: 63px;
+    }
+    .btn-qunty{
+        border: 0;
+        height: 30px;
+        width: 30px;
+    }
+</style>
 
 
 
@@ -48,7 +57,7 @@
 
                                 <% cart.forEach((element)=> { %>
                                     <tr id="delete_<%element.product._id%>">
-                                        <td class="shoping__cart__item" >
+                                        <td class="shoping__cart__item">
                                             <% if (element.product.image.length> 0 && element.product.image[0].data) {
                                                 %>
                                                 <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
@@ -66,12 +75,12 @@
                                         </td>
 
                                         <td class="shoping__cart__quantity">
-                                            <div class="quantity">
-                                                <div class="pro-qty">
-                                                    <input type="text" value="<%= element.quantity %>">
-                                                </div>
-                                            </div>
+                                            <button href="/cart/decrement/<% ele" class="btn-qunty" type="decrement">-</button>
+                                            <input class="quantity text-center" type="text" value=" <%=element.quantity%>">
+                                            <button href="/cart/increment/" class="btn-qunty" type="increment">+</button>
                                         </td>
+
+
 
                                         <td class="shoping__cart__total">
                                             <%= element.totalAmount %>
@@ -79,8 +88,9 @@
 
 
                                         <td class="shoping__cart__item__close">
-                                            <a class="icon_close" onclick="removeProduct('<%=element.product._id%>')"
-                                                id="removeButton_<%=element.product._id%>"></a>
+                                            <button class="btn-qunty text-danger"
+                                                onclick="removeProduct('<%=element.product._id%>')"
+                                                id="removeButton_<%=element.product._id%>">X</button>
                                         </td>
                                     </tr>
                                     <% }) %>
@@ -146,7 +156,7 @@
                     console.log("Success:", data);
                     document.getElementById("grandTotal").innerHTML = `${data.grandTotal}`;
                     console.log(data);
-                    showToast("Product removed from cart!");
+                    // showToast("Product removed from cart!");
                     data.remove()
                     delet.remove();
                 })
@@ -186,3 +196,12 @@
 //         <span class="icon_close"></span>
 //     </td>
 // </tr> -->
+
+
+        // <td class="shoping__cart__quantity">
+        //     <div class="quantity">
+        //         <div class="pro-qty">
+        //             <input type="text" value=" element.quantity%>">
+        //             </div>
+        //         </div>
+        //     </td>

@@ -180,7 +180,9 @@ module.exports = {
                     } else {
                         req.session.user = verifiedUser._id
                         console.log("Login Successful");
-                        return res.redirect("/index")
+
+                        const url=req.session?.url?req.session.url:"/index"
+                        return res.redirect(url)
                         
                     }
                 } else {

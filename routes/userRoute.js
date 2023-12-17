@@ -41,6 +41,8 @@ user_Route.get('/product/Details/:id', Auth.isLogedout, productControl.productDe
 user_Route.get('/cart', Auth.isLogedout, cartCtrl.load_cart)
 user_Route.post('/addToCart', cartCtrl.addToCart)
 user_Route.post('/removeFromCart', cartCtrl.deleteFromCart)
+user_Route.post('/cart/increment/:id', Auth.isLogedout, cartCtrl.qntUpdate)
+user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
 
 
 //checkout

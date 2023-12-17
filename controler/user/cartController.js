@@ -63,7 +63,7 @@ async addToCart (req,res) {
         }
     }catch(error){
         console.log("Error in adding the product to the cart", error);
-        res.render('/user/500')
+        res.render('user/500')
     }
     
 },
@@ -96,6 +96,50 @@ async deleteFromCart (req, res){
     }
 },
 
+async qntUpdate (req,res){
+    try{
+        let user = await User.findById(req.session.user)
+        let cart = await user.cart.find(items => items.product._id.toString() === req.params.id)
+        if(cart){
+            const product = await cart.product.findById(cart.product)
+            if(req.body.type === "increment"){
+                if(cart.quantity + 1 > product.stock_count){
+                    return res.send("Insufficient Stock")
+
+                }else{
+                    cart.quantity += 1;
+                    cart.totalAmount = product.price * cart.quantity;
+                }
+            }else if (req.body.type === "decrement"){
+                if(cart.quantity - 1 >= 0){
+                    cart.quantity -= 1;
+                    cart.totalAmount = product.price * cart.quantity;
+                }
+            } 
+
+            let grandTotal = user.cart.forEach(item => totalCartAmount += item.totalAmount )
+            user.grandTotal = totalCartAmount
+
+            await user.save()
+
+            return res.status(200).json({
+                message: "susses",
+                quantity: cart.quantity,
+                totalAmount: cart.totalAmount,
+                grandTotal: cart.grandTotal
+            })
+
+
+        }else{
+            console.log("cart is not found");
+            res.render('user/500')
+        }
+
+    }catch(err){
+        console.log(err);
+        res.render('user/500')
+    }
+}
 
 
 
