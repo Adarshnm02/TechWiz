@@ -39,14 +39,14 @@ user_Route.get('/product/Details/:id', Auth.isLogedout, productControl.productDe
 
 //Cart
 user_Route.get('/cart', Auth.isLogedout, cartCtrl.load_cart)
-user_Route.post('/addToCart', cartCtrl.addToCart)
+user_Route.post('/addToCart', Auth.isLogedout, cartCtrl.addToCart)
 user_Route.post('/removeFromCart', cartCtrl.deleteFromCart)
-user_Route.post('/cart/increment/:id', Auth.isLogedout, cartCtrl.qntUpdate)
-user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
+user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
+// user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
 
 
 //checkout
 user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 
-console.log("from head {checking}");q
+
 module.exports = user_Route;

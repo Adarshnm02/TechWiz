@@ -1,15 +1,19 @@
 <%- include('../partials/user/header') %>
 
-<style>
-    .quantity{
-        width: 63px;
-    }
-    .btn-qunty{
-        border: 0;
-        height: 30px;
-        width: 30px;
-    }
-</style>
+    <style>
+        .quantity {
+            width: 63px;
+        }
+
+        .btn-qunty {
+            border: 0;
+            height: 30px;
+            width: 30px;
+        }
+        .delButton{
+            border: 0;
+        }
+    </style>
 
 
 
@@ -61,7 +65,7 @@
                                             <% if (element.product.image.length> 0 && element.product.image[0].data) {
                                                 %>
                                                 <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
-                                                    alt="" style=width:150px height="205px ">
+                                                    alt="" style="width: 150px; height: 205px">
                                                 <% } else { %>
                                                     <p>No Image</p>
                                                     <% } %>
@@ -75,23 +79,32 @@
                                         </td>
 
                                         <td class="shoping__cart__quantity">
-                                            <button href="/cart/decrement/<% ele" class="btn-qunty" type="decrement">-</button>
-                                            <input class="quantity text-center" type="text" value=" <%=element.quantity%>">
-                                            <button href="/cart/increment/" class="btn-qunty" type="increment">+</button>
+                                            <button onclick="updateQuantity('decrement','<%=element.product._id%>')"
+                                                class="btn-qunty" type="button">-</button>
+
+                                            <span id="quantity-<%=element.product._id%>" class="text-center" style="width: 63px !important;">
+                                                <%=element.quantity%>
+                                            </span>
+
+                                            <button onclick="updateQuantity('increment','<%=element.product._id%>')"
+                                                class="btn-qunty" type="button">+</button>
                                         </td>
 
 
-
                                         <td class="shoping__cart__total">
-                                            <%= element.totalAmount %>
+                                            <span id="totalAmount-<%=element.product._id%>">
+                                                <%= element.totalAmount %>
+                                            </span>
                                         </td>
 
 
                                         <td class="shoping__cart__item__close">
-                                            <button class="btn-qunty text-danger"
+                                            <button class="btn-qunty delButton"
                                                 onclick="removeProduct('<%=element.product._id%>')"
-                                                id="removeButton_<%=element.product._id%>">X</button>
+                                                id="removeItem-<%=element.product._id%>">X</button>
                                         </td>
+
+
                                     </tr>
                                     <% }) %>
 
@@ -141,30 +154,69 @@
 
 
     <script>
+        function updateQuantity(action, productId) {
+            fetch('/cart/qntUpdate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    action: action
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Update the quantity displayed on the page
+                    const quantityElement = document.querySelector(`#quantity-${productId}`);
+                    const totalAmountElement = document.querySelector(`#totalAmount-${productId}`);
+
+
+                    if (quantityElement) {
+                        quantityElement.textContent = data.quantity;
+                    }
+
+                    if (totalAmountElement) {
+                        totalAmountElement.textContent = data.totalAmount;
+                    }
+
+
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+
+
+
         function removeProduct(productId) {
-            const delet = document.getElementById(`delete_${productId}`);
-            const data = { product: productId };
             fetch("/removeFromCart", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    product: productId,
+                }),
             })
                 .then((response) => response.json())
                 .then((data) => {
                     console.log("Success:", data);
-                    document.getElementById("grandTotal").innerHTML = `${data.grandTotal}`;
-                    console.log(data);
-                    // showToast("Product removed from cart!");
-                    data.remove()
-                    delet.remove();
+                   
+                    const deletedItem = document.getElementById(`delete_${productId}`);
+                    if (deletedItem) {
+                        deletedItem.remove();
+                    }
                 })
                 .catch((error) => {
                     console.error("Error:", error);
-                    showToast("Failed to remove Product.", "error");
                 });
         }
+
+
     </script>
 
 
@@ -199,9 +251,9 @@
 
 
         // <td class="shoping__cart__quantity">
-        //     <div class="quantity">
-        //         <div class="pro-qty">
-        //             <input type="text" value=" element.quantity%>">
-        //             </div>
-        //         </div>
-        //     </td>
+            // <div class="quantity">
+                // <div class="pro-qty">
+                    // <input type="text" value=" element.quantity%>">
+                    // </div>
+                // </div>
+            // </td>
