@@ -48,5 +48,5 @@ user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
 //checkout
 user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 
-
+console.log("from head {checking}");q
 module.exports = user_Route;
