@@ -243,7 +243,7 @@
 
 
                         <div class="product__details__pic__slider owl-carousel">
-                            <% if (details.image) { %>
+                            <% if (details.image && details.image[1]) { %>
                                 <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
                                     alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
                                 <% } %>
@@ -293,7 +293,7 @@
                             </div>
                         </div>
 
-                        <a href="#" class="primary-btn">ADD TO CARD</a>
+                        <button class="primary-btn" onclick="addToCart('<%= details._id %>')">ADD TO CARD</button>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
 
                         <ul>
