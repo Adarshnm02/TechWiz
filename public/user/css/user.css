@@ -74,3 +74,11 @@
         padding: 10px 25px;
     }
 }
+
+
+/* header user avatar */
+
+.user_avathar{
+    width: 26px ;
+    margin-left: 5px;
+}

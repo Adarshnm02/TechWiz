@@ -28,6 +28,9 @@ user_Route.post('/signup', userControle.insertUser)
 user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
 user_Route.post('/verification', userControle.otpVerification) 
 
+//profile
+user_Route.get("/profile", Auth.isLogedout, userControle.loadProfile)
+
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
@@ -47,6 +50,8 @@ user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
 
 //checkout
 user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
+
+
 
 
 module.exports = user_Route;

@@ -1,10 +1,11 @@
 const express = require('express')
 // const UserOTPVerification = require("../../models/userOTPVerification")
-const User = require('../../models/userModel')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const sendMail = require('../../util/sendMail')
+const User = require('../../models/userModel')
 const userOTP = require('../../models/userOtpModel')
+const Product = require('../../models/productModel')
 
 
 
@@ -36,24 +37,21 @@ generateSalt()
 module.exports = {
 
 
-    loadHome(req, res) {
-        console.log(req.session.user);
-        try{
-            res.render('user/index', { session: req.session.user})
-            
-        } catch{
-            res.render('user/500')
-        }
+    // loadHome(req, res) {
+    //     console.log(req.session.user);
 
-    },
+    //     try{
+    //         res.render('user/index', { session: req.session.user})
+            
+    //     } catch{
+    //         res.render('user/500')
+    //     }
+
+    // },
     login(req, res) {
         res.render('user/user_login', { session: req.session.user })
     },
 
-
-    loadBlog(req, res) {
-        res.render('user/blog')
-    },
 
     loadSignup(req, res) {
         try {
@@ -63,10 +61,62 @@ module.exports = {
         }
     },
 
+    loadBlog(req, res) {
+        res.render('user/blog')
+    },
+
+
     load_otp(req, res) {
         // res.render('user/forDelete')
         const id = '123';
         res.render('user/otpVerification', { id })
+    },
+
+    logout (req, res) {
+        try {
+            req.session.destroy();
+            res.redirect('/')
+
+        } catch (err) {
+            console.log(err);
+            res.render('user/500')
+        }
+    },
+
+    async loadHome(req, res) {
+        try {
+            const session = req.session.user;
+            const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
+            const limit = 12; // Set the number of products per page
+            const skip = (page - 1) * limit;
+    
+            const products = await Product
+                .find({ is_delete: false })
+                .populate({
+                    path: 'category',
+                    match: { is_disable: false } 
+                })
+                .skip(skip)
+                .limit(limit)
+                .sort({ _id: -1 });
+
+            const latestPrd = await Product
+                .find({is_delete : false})
+                .limit(limit)
+                .sort({_id: 1})
+    
+            // Count total products for pagination calculation
+            const totalCount = await Product.countDocuments({ is_delete: false });
+    
+            // Calculate total pages
+            const totalPages = Math.ceil(totalCount / limit);
+    
+            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd  });
+    
+        } catch (err) {
+            console.log("Error From loadHome",err);
+            res.render("user/500");
+        }
     },
 
     async insertUser(req, res) {
@@ -196,18 +246,20 @@ module.exports = {
         }
     },
 
-
-    logout (req, res) {
-        try {
-            req.session.destroy();
-            res.redirect('/')
-
-        } catch (err) {
-            console.log(err);
-            res.render('user/500')
+    loadProfile (req,res){
+        try{
+            session = req.session.user
+            console.log("from profile", session)
+            res.render('user/user_profile', {session})
+            
+        }catch(err){
+            console.log("Profile loading error ", err);
+            res.render("user/500")
         }
-    },
+    }
 
+
+    
 
 
 

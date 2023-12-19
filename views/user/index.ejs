@@ -1,4 +1,3 @@
-
 <%- include('../partials/user/header') %>
 
 
@@ -53,7 +52,7 @@
                             <li data-filter=".oranges">Mobile</li>
                             <li data-filter=".fresh-meat">Laptop</li>
                             <li data-filter=".vegetables">Camera</li>
-                            <li data-filter=".fastfood">Accessories/li>
+                            <li data-filter=".fastfood">Accessories</li>
                         </ul>
                     </div>
                 </div>
@@ -61,134 +60,52 @@
 
 
 
-            <div class="row featured__filter">
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new6.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
+            <div class="row">
 
 
+                <% products.forEach(product=> { %>
 
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new2.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new3.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new4.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
+
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="product__item">
+
+                            <div class="product__item__pic set-bg" style="display: flex; justify-content: center;">
+                                <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
+                                    <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
+                                        alt="IMG-PRODUCT" style="height: 260.34px" />
+                                    <% } else { %>
+                                        <p>No image available</p>
+                                        <% } %>
+                                            <ul class="product__item__pic__hover">
+                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-retweet"></i></a>
+                                                </li>
+                                                <li><a onclick="addToCart('<%= product._id %>')"><i
+                                                            class="fa fa-shopping-cart"></i></a>
+                                                </li>
+                                            </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="/product/Details/<%= product._id%>">
+                                        <%= product.product_name %>
+                                    </a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new2.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new6.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new3.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new2.jpeg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
+
+                    <% }); %>
+
             </div>
         </div>
     </section>
     <!-- Featured Section End -->
+
+
+
+
+
+
 
     <!-- Banner Begin -->
     <div class="banner">
@@ -210,6 +127,7 @@
     <!-- Banner End -->
 
     <!-- Latest Product Section Begin -->
+
     <section class="latest-product spad">
         <div class="container">
             <div class="row">
@@ -217,17 +135,60 @@
                     <div class="latest-product__text">
                         <h4>Latest Products</h4>
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="/user/img/mobile/new7.jpeg" alt="">
+                            
+                            <% latestPrd.forEach( product=> { %>
+                            <% let count=0 %>
+                                <% if(count < 3 ) { %>
+                                    <% count++ %>
+                                    <div class="latest-prdouct__slider__item">
+
+
+                                            <a href="#" class="latest-product__item">
+                                                <div class="latest-product__item__pic">
+                                                    <img src="/user/img/mobile/new7.jpeg" alt="">
+                                                </div>
+                                                <div class="latest-product__item__text">
+                                                    <h6>
+                                                        <%= product.product_name %>
+                                                    </h6>
+                                                    <span>
+                                                        <%= product.price %>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                           
+
                                     </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
+                                    <% } else if(count < 6){ %>
+                                        <% count++ %>
+                                        <div class="latest-prdouct__slider__item">
+                                            
+                                            <a href="#" class="latest-product__item">
+                                                <div class="latest-product__item__pic">
+                                                    <img src="/user/img/mobile/new7.jpeg" alt="">
+                                                </div>
+                                                <div class="latest-product__item__text">
+                                                    <h6>
+                                                        <%= product.product_name %>
+                                                    </h6>
+                                                    <span>
+                                                        <%= product.price %>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            
+                                            
+                                        </div>
+                                        <% } %>
+
+                                    <% }); %>
+
+
+
+
+
+
+                                                <!-- <a href="#" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="/user/img/mobile/new8.jpeg" alt="">
                                     </div>
@@ -244,10 +205,10 @@
                                         <h6>Crab Pool Security</h6>
                                         <span>$30.00</span>
                                     </div>
-                                </a>
-                            </div>
+                                </a> -->
+                                                <!-- </div> -->
 
-                            <!-- <div class="latest-prdouct__slider__item">
+                                                <!-- <div class="latest-prdouct__slider__item">
                                 <a href="#" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="/user/img/latest-product/lp-1.jpg" alt="">
@@ -288,7 +249,7 @@
                                     <div class="latest-product__item__pic">
                                         <img src="/user/img/mobile/new6.jpeg alt="">
                                     </div>
-                                    <div class="latest-product__item__text">
+                                    <div class=" latest-product__item__text">
                                         <h6>Crab Pool Security</h6>
                                         <span>$30.00</span>
                                     </div>
@@ -475,5 +436,22 @@
     </section> -->
     <!-- Blog Section End -->
 
-  
-<%- include('../partials/user/footer') %>
+
+    <%- include('../partials/user/footer') %>
+
+
+
+        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
+        <div class="featured__item">
+            <div class="featured__item__pic set-bg" data-setbg="/user/img/mobile/new2.jpeg">
+                <ul class="featured__item__pic__hover">
+                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                </ul>
+            </div>
+            <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>50000000</h5>
+            </div>
+        </div>
+    </div> -->

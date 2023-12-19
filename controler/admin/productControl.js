@@ -102,12 +102,11 @@ module.exports = {
             const limit = 12; // Set the number of products per page
             const skip = (page - 1) * limit;
     
-            // Query products with pagination and category condition
             const products = await Product
                 .find({ is_delete: false })
                 .populate({
                     path: 'category',
-                    match: { is_disable: false } // Filter based on the category's is_disabled field
+                    match: { is_disable: false } 
                 })
                 .skip(skip)
                 .limit(limit)
