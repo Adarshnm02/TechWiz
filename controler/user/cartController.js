@@ -61,7 +61,7 @@ module.exports = {
                         }
                     }
                 );
-                return res.join({ message: "Product added to Cart" })
+                return res.json({ message: "Product added to Cart" })
             }
         } catch (error) {
             console.log("Error in adding the product to the cart", error);

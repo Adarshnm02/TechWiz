@@ -82,3 +82,70 @@
     width: 26px ;
     margin-left: 5px;
 }
+
+
+/* checkout  */
+
+/* General styling for the coupon section */
+.coupon-section {
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Style for coupon input */
+.coupon-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* Style for coupon button */
+.coupon-btn {
+    width: 100px;
+    height: 40px;
+    background-color: #7dab36;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Style for order list */
+.checkout__order__list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+/* Style for payment options */
+.checkout__payment-options {
+    margin-top: 20px;
+}
+
+/* Style for checkbox */
+.checkout__input__checkbox {
+    margin-bottom: 10px;
+}
+
+/* Style for PLACE ORDER button */
+.checkout__place-order-btn {
+    width: 100%;
+    height: 50px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.scrollable-list {
+    height: 200px; /* Set your desired height */
+    overflow-y: auto;
+    border: 1px solid #ddd; /* Optional: Add a border for styling */
+    padding: 10px;
+    margin-bottom: 10px; /* Optional: Add margin for spacing */
+}
