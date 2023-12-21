@@ -2,11 +2,12 @@ const user_Route = require('express').Router()
 
 
 // const {loadHome,login,loadShop,loadBlog,loadOTPpage,checkOTPValid,resedOtp,loadSignup }  = require('../controler/user/userControle')
-const  userControle = require('../controler/user/userControle')
+const userControle = require('../controler/user/userControle')
 const productControl = require('../controler/admin/productControl')
 const cartCtrl = require('../controler/user/cartController')
 const checkoutCtrl = require('../controler/user/checkoutControler')
 const Auth = require('../middleware/Auth')
+const profileCtrl = require('../controler/user/profileController')
 // const UserOTPVerification = require("../models/userOTPVerification")
 
 // userRot = require('./views/user')
@@ -29,7 +30,7 @@ user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
 user_Route.post('/verification', userControle.otpVerification) 
 
 //profile
-user_Route.get("/profile", Auth.isLogedout, userControle.loadProfile)
+user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
 
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
@@ -51,7 +52,11 @@ user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
 //checkout
 user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 
-
+//Address
+user_Route.get('/addAddress', Auth.isLogedout, profileCtrl.loadAddAddress)
+user_Route.post('/addAddress', Auth.isLogedout, profileCtrl.addAddress)
+user_Route.get('/editAddress', Auth.isLogedout, profileCtrl.loadEditAddress)
+user_Route.post('/editAddress', Auth.isLogedout, profileCtrl.loadEditAddress)
 
 
 module.exports = user_Route;

@@ -246,17 +246,7 @@ module.exports = {
         }
     },
 
-    loadProfile (req,res){
-        try{
-            session = req.session.user
-            console.log("from profile", session)
-            res.render('user/user_profile', {session})
-            
-        }catch(err){
-            console.log("Profile loading error ", err);
-            res.render("user/500")
-        }
-    }
+
 
 
     

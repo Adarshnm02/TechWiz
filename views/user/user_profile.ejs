@@ -1,335 +1,166 @@
-<!DOCTYPE html>
-<html lang="zxx">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Ogani Template" />
-    <meta name="keywords" content="Ogani, unica, creative, html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>TechWiz</title>
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
-        rel="stylesheet" />
-
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="/user/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/font-awesome.min.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/elegant-icons.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/nice-select.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/jquery-ui.min.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/owl.carousel.min.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/slicknav.min.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/style.css" type="text/css" />
-    <link rel="stylesheet" href="/user/css/user.css" type="text/css" />
-
-    <!-- Slick Carousel stylesheets -->
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-
-    <!-- jQuery and Slick Carousel scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-
+<%- include('../partials/user/shortHeader') %>
 
     <style>
-        .profile-subBtn{
-            width: 200px;
+        /* Custom CSS for enhanced design */
+        /* You can add these styles to your existing CSS file */
+
+        /* Sidebar Styles */
+        .sidenav {
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 15px;
+        }
+
+        .details {
+            color: #333;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .job {
+            color: #666;
+        }
+
+        .sidenav-links a {
+            display: block;
+            color: #444;
+            padding: 8px 0;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .sidenav-links a.active {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .sidenav-links a:hover {
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Main Content Styles */
+        .main {
+            margin-top: 20px;
+        }
+
+        .main h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .table td {
+            border-top: none;
+            padding: 8px 0;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
     </style>
-</head>
 
-<body>
-    <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <!-- Sidebar -->
+                <div class="sidenav">
+                    <div class="profile">
+                        <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="Profile Image"
+                            width="100" height="100">
+                        <div class="details">
+                            <div class="name">fdsgsdfgdfg</div>
+                            <div class="job">Web Developer</div>
+                        </div>
+                    </div>
+                    <div class="sidenav-links">
+                        <a href="#profile" class="active">Profile</a>
+                        <a href="#settings">Settings</a>
+                    </div>
+                </div>
+                <!-- End Sidebar -->
+            </div>
+
+
+
+
+            <div class="col-md-8">
+                <!-- Main Content -->
+                <div class="main">
+                    <h2>IDENTITY</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <i class="fa fa-pen fa-xs edit"></i>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>:</td>
+                                        <td>ImDezCode</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>:</td>
+                                        <td>imdezcode@gmail.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td>:</td>
+                                        <td>Bali, Indonesia</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hobbies</td>
+                                        <td>:</td>
+                                        <td>Diving, Reading Book</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Job</td>
+                                        <td>:</td>
+                                        <td>Web Developer</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Skill</td>
+                                        <td>:</td>
+                                        <td>PHP, HTML, CSS, Java</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Main Content -->
+            </div>
+        </div>
     </div>
 
-    <!-- Humberger Begin -->
-
-    <div class="humberger__menu__overlay"></div>
-    <div class="humberger__menu__wrapper">
-        <div class="humberger__menu__logo">
-            <a href="#"><img src="/user/img/logo.png" alt="" /></a>
-        </div>
-        <div class="humberger__menu__cart">
-            <ul>
-                <li>
-                    <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                </li>
-                <li>
-                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
-                </li>
-            </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
-        </div>
-        <div class="humberger__menu__widget">
-            <div class="header__top__right__language">
-                <img src="/user/img/language.png" alt="" />
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
-            </div>
-            <div class="header__top__right__auth">
-                <% if (session) { %>
-                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
-                    <% } else { %>
-                        <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
-                        <% } %>
-            </div>
-        </div>
-        <nav class="humberger__menu__nav mobile-menu">
-            <ul>
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/shop-grid">Shop</a></li>
-                <li>
-                    <a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="/cart">Shoping Cart</a></li>
-                        <li><a href="/checkout">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-            </ul>
-        </nav>
-        <div id="mobile-menu-wrap"></div>
-        <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-        </div>
-        <div class="humberger__menu__contact">
-            <ul>
-                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                <li>Free Shipping for all Order of $99</li>
-            </ul>
-        </div>
-    </div>
-    <!-- Humberger End -->
-
-
-
-    <!-- Header Section Begin -->
-    <header class="header">
-        <div class="header__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__left">
-                            <ul>
-                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                <li>Free Shipping for all Order of $99</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__right">
-                            <div class="header__top__right__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                            </div>
-                            <div class="header__top__right__language">
-                                <img src="/user/img/language.png" alt="" />
-                                <div>English</div>
-                                <span class="arrow_carrot-down"></span>
-                                <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
-                                </ul>
-                            </div>
-                            <div class="header__top__right__auth">
-                                <% if (session) { %>
-                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
-                                 <% } else { %>
-                                        <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="/"><img src="/user/img/new-logo.png" alt="" style="max-width: 50%;" /></a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <nav class="header__menu">
-                        <ul>
-                            <li class="active"><a href="/">Home</a></li>
-                            <li><a href="/shop-grid">Shop</a></li>
-                            <li>
-                                <a href="#">Pages</a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="/cart">Shoping Cart</a></li>
-                                    <li><a href="/checkout">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="/blog">Blog</a></li>
-                            <li><a href="./contact.html">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3">
-                    <div class="header__cart">
-                        <ul>
-                            <li>
-                                <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                            </li>
-                            <li>
-                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
-                            </li>
-                        </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="humberger__open">
-                <i class="fa fa-bars"></i>
-            </div>
-        </div>
-    </header>
-    <!-- Header Section End -->
-
-
-
-
-
-
-
-        <!-- Checkout Section Begin -->
-        <section class="checkout spad" style="padding-top: 0%;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h6><span class=""></span></h6>
-                    </div>
-                </div>
-                <div class="checkout__form">
-                    <h4>Profile Details</h4>
-                    <form action="#">
-                        <div class="row">
-
-                            <div class="col-lg-4 col-md-6">
-                                <div class="checkout__order">
-                                    <h4>Profile Photo</h4>
-                                    
-                                    <div><img class="" src="/user/img/user-1.jpg" alt="user-avathar"></div>
-                                  
-                                    <button type="submit" class="site-btn">PLACE ORDER</button>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="col-lg-8 col-md-6">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="checkout__input">
-                                            <p>Fist Name<span>*</span></p>
-                                            <input type="text" placeholder="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="checkout__input">
-                                            <p>Last Name<span>*</span></p>
-                                            <input type="text">
-                                        </div>
-                                    </div>
-                                   
-                                </div>
-                                <div class="checkout__input">
-                                    <p>Country<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                                <div class="checkout__input">
-                                    <p>Address<span>*</span></p>
-                                    <input type="text" placeholder="Street Address" class="checkout__input__add">
-                                    <input type="text" placeholder="Apartment, suite, unite ect (optinal)">
-                                </div>
-                                <div class="checkout__input">
-                                    <p>Town/City<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                                <div class="checkout__input">
-                                    <p>Country/State<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                                <div class="checkout__input">
-                                    <p>Postcode / ZIP<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="checkout__input">
-                                            <p>Phone<span>*</span></p>
-                                            <input type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="checkout__input">
-                                            <p>Email<span>*</span></p>
-                                            <input type="text" placeholder="">
-                                        </div>
-                                    </div>
-                                </div>
-<!--                                 
-                                <div class="checkout__input__checkbox">
-                                    <label for="acc">
-                                        Create an account?
-                                        <input type="checkbox" id="acc">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <p>Create an account by entering the information below. If you are a returning customer
-                                    please login at the top of the page</p>
-                                <div class="checkout__input">
-                                    <p>Account Password<span>*</span></p>
-                                    <input type="text">
-                                </div>
-                                <div class="checkout__input__checkbox">
-                                    <label for="diff-acc">
-                                        Ship to a different address?
-                                        <input type="checkbox" id="diff-acc">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div> -->
-
-                                <div class="checkout__input">
-                                    <p>Order notes<span>*</span></p>
-                                    <input type="text"
-                                        placeholder="Notes about your order, e.g. special notes for delivery.">
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div class="profile-subBtn"><button type="submit" class="site-btn">SUBMIT</button></div>
-                        
-                    </form>
-                </div>
-            </div>
-        </section>
 
 
 
@@ -341,5 +172,4 @@
 
 
 
-
-<%- include('../partials/user/footer') %>
+    <%- include('../partials/user/footer') %>

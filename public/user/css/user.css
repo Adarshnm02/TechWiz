@@ -149,3 +149,52 @@
     padding: 10px;
     margin-bottom: 10px; /* Optional: Add margin for spacing */
 }
+
+
+
+/* checkout button */
+
+.edit-address {
+    text-align: right; /* Aligns content to the right */
+    margin-top: 20px; /* Adjust the margin as needed */
+}
+
+.edit-address button {
+    padding: 10px 20px; /* Adjust padding to modify button size */
+    background-color: #28a745; /* Button background color */
+    color: white; /* Text color */
+    border: none; /* Remove default button border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+    /* Add any other styles or hover effects as desired */
+}
+
+
+
+
+
+
+.address-section {
+    margin-bottom: 20px;
+}
+
+.address {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.address-actions {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+
+}
+
+.address-actions button {
+    margin-left: 10px;
+}
+
+/* Adjust styles as needed */
