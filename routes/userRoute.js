@@ -31,6 +31,7 @@ user_Route.post('/verification', userControle.otpVerification)
 
 //profile
 user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
+user_Route.get("/profile/address", Auth.isLogedout, profileCtrl.loadProfileAddress)
 
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
@@ -51,12 +52,18 @@ user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
 
 //checkout
 user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
+user_Route.post('/checkout', Auth.isLogedout, checkoutCtrl.saveOrder)
+user_Route.post('/checkStock', Auth.isLogedout, checkoutCtrl.checkStock)
+user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
+
+// order
+user_Route.get('/order', profileCtrl.loadOrder)
 
 //Address
 user_Route.get('/addAddress', Auth.isLogedout, profileCtrl.loadAddAddress)
 user_Route.post('/addAddress', Auth.isLogedout, profileCtrl.addAddress)
-user_Route.get('/editAddress', Auth.isLogedout, profileCtrl.loadEditAddress)
-user_Route.post('/editAddress', Auth.isLogedout, profileCtrl.loadEditAddress)
+user_Route.get('/editAddress/:id', Auth.isLogedout, profileCtrl.loadEditAddress)
+user_Route.post('/editAddress/:id', Auth.isLogedout, profileCtrl.editAddress)
 
 
 module.exports = user_Route;

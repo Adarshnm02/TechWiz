@@ -2,17 +2,19 @@ const express = require('express')
 const User = require('../../models/userModel')
 const Product = require('../../models/productModel')
 const Address = require('../../models/addressModel')
+const Order = require('../../models/orderModel')
 const { render } = require('ejs')
 
 module.exports = {
 
     async loadProfile (req,res){
         try{
-            const userId = req.session.user
+            // const userId = req.session.user
             const session = req.session.user
             
-            const user = await User.findById(userId)
-            const address = await Address.findById(userId)
+            const address = await Address.find({userId: req.session.user})
+            console.log(address);
+            const user = await User.findById(req.session.user)
             // console.log("from profile", session)
             res.render('user/user_profile', {user, address, session})
             
@@ -21,12 +23,32 @@ module.exports = {
             res.render("user/500")
         }
     },
+    async loadProfileAddress (req,res){
+        try{
+            // const userId = req.session.user
+            const session = req.session.user
+            
+            const address = await Address.find({userId: req.session.user})
+            console.log(address);
+            const user = await User.findById(req.session.user)
+            // console.log("from profile", session)
+            res.render('user/profile_address', {user, address, session})
+            
+        }catch(err){
+            console.log("Profile loading error ", err);
+            res.render("user/500")
+        }
+    },
 
 
-    loadEditAddress(req, res) {
+    async loadEditAddress(req, res) {
         try {
             let session = req.session.user
-            return res.render('user/editAddress', { session })
+            const addressId = req.params.id
+            const address = await Address.findOne({_id:addressId}).populate('userId')
+            console.log("from adderere " , address);
+            console.log("form params ", req.params);
+            return res.render('user/editAddress', { session , address})
 
         } catch (err) {
             console.log(err);
@@ -68,8 +90,11 @@ module.exports = {
                     await newAddress.save();
                     res.redirect('/profile')
 
+                }else{
+                    console.log("Address limit exceeded");
                 }
-            }
+                
+                }
         } catch (error) {
             console.log(error);
             res.render('user/500')
@@ -80,45 +105,70 @@ module.exports = {
 
 
     async editAddress(req, res) {
-        console.log("sdsdsd");
-        const { name, email, place, post, mobile, pincode, house, district, state } = req.body;
-        console.log("sdsdsd");
+        
+        const { userName, mobile, email, address, city, district, state, country, postCode } = req.body;
         try {
 
 
             const result = await Address.updateOne(
-                { _id: req.body.addressId },
+                { _id: req.params.id },
                 {
                     $set: {
-                        userName: name,
+                        userName: userName,
                         email: email,
                         mobile: mobile,
-                        houseName: house,
-                        place: place,
-                        post: post,
-                        postCode: pincode,
+                        houseName: address,
+                        city: city,
                         district: district,
-                        state: state
+                        postCode: postCode,
+                        state: state,
+                        country: country,
+
                     }
                 }
             );
-            console.log("sdsdsd" + req.body.addressId);
             if (result) {
-                console.log(result);
-                // The update was successful, redirect to the appropriate page
+                console.log("updated result ", result);
                 res.redirect('/profile');
             } else {
-                // Handle the case where the address with the given ID was not found
+               
                 res.status(404).send('Address not found');
             }
         } catch (error) {
             console.log(error.message);
-            // Handle other potential errors here
             res.status(500).send('Internal Server Error');
         }
     },
+   async loadOrder(req,res) {
+        try{
+            // const userId = req.session.user
+            const session = req.session.user
+            
+            const address = await Address.find({userId: req.session.user})
+            const orders = await Order.find({user: req.session.user}).populate('products.product')
+            console.log(address);
+            const user = await User.findById(req.session.user)
+            // console.log("from profile", session)
+            res.render('user/orders', {user, address, session, orders})
+            
+        }catch(err){
+            console.log("Profile loading error ", err);
+            res.render("user/500")
+        }
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 // async loadEditAddress(req,res) {
 //     const session = req.session.user;

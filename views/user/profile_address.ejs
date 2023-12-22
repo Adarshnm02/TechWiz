@@ -129,14 +129,16 @@
             <div class="col-md-8">
                 <!-- Main Content -->
                 <div class="main">
-                    <h2>DETAILS</h2>
+                    <h2>ADDRESS</h2>
+                    <a href="/addAddress"><button class="btn btn-sm btn-primary mr-2">Add New Address</button></a>
                     <div class="card">
+                       <% address.forEach((address) => { %>
                         <div class="card-body border-bottom">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4></h4>
+                                <h4>Details</h4>
                                 <div class="edit-delete-buttons">
-                                    <a href="/"><button class="btn btn-sm btn-primary mr-2">Edit</button></a>
-                                    <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                    <a href="/editAddress/<%=address._id %>"><button class="btn btn-sm btn-primary mr-2">Edit</button></a>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
                                 </div>
                             </div>
                             <table class="table">
@@ -144,24 +146,50 @@
                                     <tr>
                                         <td>Name</td>
                                         <td>:</td>
-                                        <td><%=user.userName %></td>
+                                        <td><%=address.userName %></td>
                                     </tr>
                                     <tr>
                                         <td>Email</td>
                                         <td>:</td>
-                                        <td><%=user.email%></td>
+                                        <td><%=address.email%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>House Name</td>
+                                        <td>:</td>
+                                        <td><%=address.houseName %></td>
+                                    </tr>
+                                    <tr>
+                                        <td>City</td>
+                                        <td>:</td>
+                                        <td><%=address.city%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>District</td>
+                                        <td>:</td>
+                                        <td><%=address.district%></td>
                                     </tr>
                                     <tr>
                                         <td>State</td>
                                         <td>:</td>
-                                        <td><%=address[0].state%></td>
+                                        <td><%=address.state%></td>
                                     </tr>
-            
+                                    <tr>
+                                        <td>Country</td>
+                                        <td>:</td>
+                                        <td><%=address.country%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pin Code</td>
+                                        <td>:</td>
+                                        <td><%=address.postCode%></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
+                       <%  }) %>
                     </div>
                 </div>
+                <!-- End Main Content -->
             </div>
         </div>
     </div>
