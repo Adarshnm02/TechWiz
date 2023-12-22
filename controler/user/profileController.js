@@ -66,7 +66,6 @@ module.exports = {
         }
     },
 
-
     async addAddress(req, res) {
         try {
             // let session = req.session.user
@@ -146,7 +145,7 @@ module.exports = {
             
             const address = await Address.find({userId: req.session.user})
             const orders = await Order.find({user: req.session.user}).populate('products.product')
-            console.log(address);
+            console.log("from back address:-",address, "orders from back", orders);
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
             res.render('user/orders', {user, address, session, orders})

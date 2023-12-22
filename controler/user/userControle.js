@@ -42,7 +42,7 @@ module.exports = {
 
     //     try{
     //         res.render('user/index', { session: req.session.user})
-            
+
     //     } catch{
     //         res.render('user/500')
     //     }
@@ -72,7 +72,7 @@ module.exports = {
         res.render('user/otpVerification', { id })
     },
 
-    logout (req, res) {
+    logout(req, res) {
         try {
             req.session.destroy();
             res.redirect('/')
@@ -89,32 +89,32 @@ module.exports = {
             const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
             const limit = 12; // Set the number of products per page
             const skip = (page - 1) * limit;
-    
+
             const products = await Product
                 .find({ is_delete: false })
                 .populate({
                     path: 'category',
-                    match: { is_disable: false } 
+                    match: { is_disable: false }
                 })
                 .skip(skip)
                 .limit(limit)
                 .sort({ _id: -1 });
 
             const latestPrd = await Product
-                .find({is_delete : false})
+                .find({ is_delete: false })
                 .limit(limit)
-                .sort({_id: 1})
-    
+                .sort({ _id: 1 })
+
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
-    
+
             // Calculate total pages
             const totalPages = Math.ceil(totalCount / limit);
-    
-            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd  });
-    
+
+            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
+
         } catch (err) {
-            console.log("Error From loadHome",err);
+            console.log("Error From loadHome", err);
             res.render("user/500");
         }
     },
@@ -159,7 +159,7 @@ module.exports = {
                 console.log("All fields are required");
             }
         } catch (error) {
-           
+
             console.log(error);
             res.render('user/500')
         }
@@ -189,7 +189,7 @@ module.exports = {
             const isvalid = await bcrypt.compare(OTP, otp);
 
             console.log(isvalid);
-            console.log("11  "+OTP+"   helo   "+otp);
+            console.log("11  " + OTP + "   helo   " + otp);
 
             if (!isvalid) {
                 return res.render('user/otpVerification', { message: 'The entered OTP is invalid', id: ID })
@@ -231,9 +231,9 @@ module.exports = {
                         req.session.user = verifiedUser._id
                         console.log("Login Successful");
 
-                        const url=req.session?.url?req.session.url:"/index"
+                        const url = req.session?.url ? req.session.url : "/index"
                         return res.redirect(url)
-                        
+
                     }
                 } else {
                     console.log("error from userLogin else");
@@ -249,7 +249,155 @@ module.exports = {
 
 
 
+    //forget password
+
+    loadForgetPass(req, res) {
+        try {
+            res.render('user/forgotPassword')
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+
+
+    async forgetPassword(req, res) {
+        try {
+            const { email } = req.body;
+            if (!email) {
+                res.render("user/forgotPassword", { message: "enter email id" })
+            } else {
+                const findUser = await User.findOne({ email });
+                // console.log(findUser);
+                if (!findUser) {
+                    res.render("user/forgotPassword", { message: "User not found" })
+                } else {
+                    if (findUser.email === req.body.email) {
+                        const otp = `${Math.floor(1000 + Math.random() * 9000)}`
+                        console.log("jjjjjjjjjjjj", otp);
+                        const mailOptions = {
+                            from: process.env.USER,
+                            to: findUser.email,
+                            subject: "Verify Your Email",
+                            html: `<p>Enter <b>${otp}</b> in the website verify your email address to forget password process</p>
+                    <p>This code <b>expire in 1 minutes</b>.</p>`,
+                        }
+                        const saltRounds = 10
+                        const hashedOTP = await bcrypt.hash(otp, saltRounds)
+                        const newUserOPTVerification = await new userOTP({
+                            userId: findUser._id,
+                            otp: hashedOTP,
+                            createAt: Date.now(),
+                            //5minuts will expair
+                            expireAt: Date.now() + 300000,
+
+                        })
+
+                        const userId = await newUserOPTVerification.save()
+                        // await transporter.sendMail(mailOptions)
+                        // sendMail(req, res, savedUser._id, false)
+
+                        sendMail(req, res, userId._id, email)
+
+                        res.redirect(`/verifyOTPForgetPass?userId=${findUser._id}`)
+                    }
+
+
+
+                }
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+
+
+    async loadOTPForgetPassPage(req, res) {
+
+        try {
+
+            res.render("user/forgetPassOTP", { userId: req.query.userId })
+
+        } catch (error) {
+            console.log(error.message);
+        }
+
+    },
+
+    async verifyOTPForgetPassPage(req, res) {
+        try {
+            let { otp, userId } = req.body;
+            if (!otp || !userId) {
+                console.log(userId);
+                console.log(otp);
+                res.render('user/forgetPassOTP', { message: "Empty details are not allowed", userId })
+            } else {
+                const UserOTPVerificationRecords = await userOTP.find({ userId })
+                if (UserOTPVerificationRecords.length <= 0) {
+                    //no record found
+                    res.render("user/forgetPassOTP", { message: "Account does not exist", userId })
+
+                } else {
+                    //user otp records exists
+                    const { expireAt } = UserOTPVerificationRecords[0]
+                    const hashedOTP = UserOTPVerificationRecords[0].otp
+
+                    if (expireAt < Date.now()) {
+                        //user otp records has expires
+                        await userOTP.deleteMany({ userId })
+                        res.render("user/forgetPassOTP", { message: "Code has expires. Please request again.", userId })
+
+                    } else {
+                        console.log("hereeee");
+                        console.log(hashedOTP);
+                        console.log(otp);
+                        const validOTP = bcrypt.compare(otp, hashedOTP)
+
+                        console.log(validOTP);
+                        if (!validOTP) {
+                            //supplied otp is wrong
+                            res.render("user/forgetPassOTP", { message: "Invalid OTP. Check your Email.", userId })
+
+                        } else {
+                            //success
+                            await userOTP.deleteMany({ userId })
+                            res.render("user/changePassword", { userId })
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+
+    async changepass  (req,res) {
+        try{
+            let {userId,password} =req.body
+            if(!userId || !password){
+                res.render('user/changePassword',{message:`Empty password is not allowed`, userId})
+            }else{
+                const UserOTPVerificationRecords = await User.find({ _id:userId })
     
+                if(UserOTPVerificationRecords.length <= 0){
+                    //no record found
+                    res.render("user/changePassword",{message:`Account record doesn't exist . Please sign up`, userId})
+                }else{
+                    //success
+                    const spassword = await securePassword(password)
+                    await User.updateOne({_id:userId},{$set: {password:spassword}})
+                    await userOTP.deleteMany({userId})
+                    res.render("user/userLogin",{ message:"password changed"})
+                }
+            }
+        }catch(error){
+            console.log(error.message);
+        }
+    }
+
+
+
+
+
 
 
 

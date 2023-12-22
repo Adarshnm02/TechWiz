@@ -88,6 +88,15 @@
         .table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
+        .border-bottom {
+            border-bottom: 4px solid #c8c8c8!important;
+        }
+
+        .address-div{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
     </style>
 
 
@@ -100,6 +109,7 @@
                 <!-- Sidebar -->
                 <div class="sidenav">
                     <div class="profile">
+                        <% if(user && user.image && user.image.contentType) { %>
 
                             <!-- <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="Profile Image"
                         width="100" height="100"> -->
@@ -123,7 +133,7 @@
                         </button>
                         <a href="/profile" class="btn btn-success btn-block mt-3">Profile</a>
                         <a href="/profile/address" class="btn btn-success btn-block mt-3">My Address</a>
-                        <a href="/cart" class="btn btn-success btn-block mt-3">My Orders</a>
+                        <a href="/order" class="btn btn-success btn-block mt-3">My Orders</a>
                         <a href="/user/wallet" class="btn btn-success btn-block mt-3">Change Password</a>
                         <a href="/coupons" class="btn btn-success btn-block mt-3">coupons</a>
                     </div>
@@ -141,22 +151,28 @@
                     <div class="card">
                         <div class="card-body border-bottom">
                             <% orders.forEach(order =>{ %>
+                            <div class="border-bottom address-div">
+
+                                <% console.log("jadshfasdihfasdhfioh", order.deliveryAddress) %>
+
                                 <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100" height="100">
                                     <h4></h4>
                                     <div class="edit-delete-buttons">
-                                        <a href="/"><button class="btn btn-sm btn-primary mr-2">Edit</button></a>
+                                        <a href="/"><button class="btn btn-sm btn-danger mr-2">Cancel</button></a>
                                         <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
                                     </div>
+                                    
                                 </div>
                                 <table class="table">
-                                    <tbody>
+                                    <tbody class="border-bottom">
                                         <!-- Display limited rows -->
                                         <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
                                             aria-controls="expandableRows">
                                             <td>Product</td>
                                             <td>:</td>
                                             <td>
-                                                <%=order.products[0].product.product_name %>
+                                                <!-- %=order.products[0].product.product_name %> -->
                                             </td>
                                         </tr>
                                         <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
@@ -164,7 +180,7 @@
                                             <td>Quantity</td>
                                             <td>:</td>
                                             <td>
-                                                <%=user.email%>
+                                                <%=order.deliveryAddress.email%>
                                             </td>
                                         </tr>
                                         <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
@@ -177,11 +193,9 @@
                                         </tr>
                                         <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
                                             aria-controls="expandableRows">
-                                            <td>Price</td>
+                                            <td>Email</td>
                                             <td>:</td>
-                                            <td>
-                                                <%=address[0].state%>
-                                            </td>
+                                            <td><%= order.deliveryAddress.email %></td>
                                         </tr>
                                         <!-- Collapsible rows -->
                                         <tr id="expandableRows" class="collapse">
@@ -201,6 +215,7 @@
                                         <!-- Add more collapsible rows as needed -->
                                     </tbody>
                                 </table>
+                            </div>
                             <%})%>
                         </div>
                     </div>

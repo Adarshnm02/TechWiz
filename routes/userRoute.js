@@ -33,6 +33,21 @@ user_Route.post('/verification', userControle.otpVerification)
 user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
 user_Route.get("/profile/address", Auth.isLogedout, profileCtrl.loadProfileAddress)
 
+// //forgot Password
+// user_Route.get("/profile/forgotPass", userControle.loadForgetPass)
+// user_Route.post("/profile/forgotPass", userControle.forgetPassword)
+
+
+
+//forget password
+user_Route.get('/forgetPassword', userControle.loadForgetPass)
+user_Route.post('/forgetPassword', userControle.forgetPassword)
+user_Route.get('/verifyOTPForgetPass', userControle.loadOTPForgetPassPage)
+user_Route.post('/verifyOTPForgetPass', userControle.verifyOTPForgetPassPage)
+user_Route.post('/changePass', userControle.changepass)
+
+
+
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
