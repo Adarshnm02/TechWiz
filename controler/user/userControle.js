@@ -1,4 +1,5 @@
 const express = require('express')
+const { mongoose, Types } = require('mongoose')
 // const UserOTPVerification = require("../../models/userOTPVerification")
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
@@ -30,6 +31,18 @@ generateSalt()
 
 
 
+const securePassword = async (password) => {
+
+    try {
+
+        const passwordHash = await bcrypt.hash(password, 10)
+        return passwordHash;
+
+    } catch (error) {
+        res.render("error/internalError", { error })
+    }
+
+}
 
 
 
@@ -83,35 +96,97 @@ module.exports = {
         }
     },
 
+    // async loadHome(req, res) {
+    //     try {
+    //         const session = req.session.user;
+
+
+    //         const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
+    //         const limit = 12; // Set the number of products per page
+    //         const skip = (page - 1) * limit;
+
+    //         let products;
+    //         if (req.query.query) {
+    //             products = await Product.find({
+    //                 product_name: { $regex: ".*" + req.query.query + ".*", $options: "i" },
+    //                 is_delete: false
+    //             }).skip(skip).limit(pageSize);
+
+    //         } else {
+
+    //             products = await Product
+    //             .find({ is_delete: false })
+    //             .populate({
+    //                 path: 'category',
+    //                 match: { is_disable: false }
+    //             })
+    //             .skip(skip)
+    //             .limit(limit)
+    //             .sort({ _id: -1 });
+
+    //         const latestPrd = await Product
+    //             .find({ is_delete: false })
+    //             .limit(limit)
+    //             .sort({ _id: 1 })
+    //         }
+
+    //         // Count total products for pagination calculation
+    //         const totalCount = await Product.countDocuments({ is_delete: false });
+
+    //         // Calculate total pages
+    //         const totalPages = Math.ceil(totalCount / limit);
+
+    //         res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
+
+    //     } catch (err) {
+    //         console.log("Error From loadHome", err);
+    //         res.render("user/500");
+    //     }
+    // },
+
+
+
     async loadHome(req, res) {
         try {
             const session = req.session.user;
-            const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-            const limit = 12; // Set the number of products per page
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
             const skip = (page - 1) * limit;
 
-            const products = await Product
-                .find({ is_delete: false })
-                .populate({
-                    path: 'category',
-                    match: { is_disable: false }
-                })
-                .skip(skip)
-                .limit(limit)
-                .sort({ _id: -1 });
+            let products;
+            let latestPrd = [];
 
-            const latestPrd = await Product
-                .find({ is_delete: false })
-                .limit(limit)
-                .sort({ _id: 1 })
+            if (req.query.query) {
+                products = await Product.find({
+                    product_name: { $regex: ".*" + req.query.query + ".*", $options: "i" },
+                    is_delete: false
+                }).skip(skip).limit(limit).sort({ _id: -1 });
+            } else {
+                products = await Product
+                    .find({ is_delete: false })
+                    .populate({
+                        path: 'category',
+                        match: { is_disable: false }
+                    })
+                    .skip(skip)
+                    .limit(limit)
+                    .sort({ _id: -1 });
+
+                latestPrd = await Product
+                    .find({ is_delete: false })
+                    .limit(limit)
+                    .sort({ _id: 1 })
+            }
+
+            console.log(latestPrd,"fsdgsdgsdfgsdfg",products);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
-
-            // Calculate total pages
             const totalPages = Math.ceil(totalCount / limit);
 
+            // res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
             res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
+
 
         } catch (err) {
             console.log("Error From loadHome", err);
@@ -129,7 +204,7 @@ module.exports = {
 
                 if (foundUser) {
                     // User already exists
-                    res.render('user/userSignup', { message: "User already exist" });
+                    res.render('user/userSignup');
                 } else {
                     if (password === confirmPassword) {
                         const hashPassword = await bcrypt.hash(password, salt)
@@ -145,7 +220,7 @@ module.exports = {
                         console.log("User saved successfully");
 
                         const savedUser = await User.findOne({ userName: username })
-                        sendMail(req, res, savedUser._id, false)
+                        sendMail(req, res, savedUser._id, email)
 
                     } else {
                         // Passwords don't match
@@ -263,48 +338,30 @@ module.exports = {
     async forgetPassword(req, res) {
         try {
             const { email } = req.body;
+            const userId = req.session.user
             if (!email) {
                 res.render("user/forgotPassword", { message: "enter email id" })
             } else {
                 const findUser = await User.findOne({ email });
-                // console.log(findUser);
+                console.log("sdafsdagsdg", findUser);
                 if (!findUser) {
                     res.render("user/forgotPassword", { message: "User not found" })
-                } else {
-                    if (findUser.email === req.body.email) {
-                        const otp = `${Math.floor(1000 + Math.random() * 9000)}`
-                        console.log("jjjjjjjjjjjj", otp);
-                        const mailOptions = {
-                            from: process.env.USER,
-                            to: findUser.email,
-                            subject: "Verify Your Email",
-                            html: `<p>Enter <b>${otp}</b> in the website verify your email address to forget password process</p>
-                    <p>This code <b>expire in 1 minutes</b>.</p>`,
-                        }
-                        const saltRounds = 10
-                        const hashedOTP = await bcrypt.hash(otp, saltRounds)
-                        const newUserOPTVerification = await new userOTP({
-                            userId: findUser._id,
-                            otp: hashedOTP,
-                            createAt: Date.now(),
-                            //5minuts will expair
-                            expireAt: Date.now() + 300000,
-
-                        })
-
-                        const userId = await newUserOPTVerification.save()
-                        // await transporter.sendMail(mailOptions)
-                        // sendMail(req, res, savedUser._id, false)
-
-                        sendMail(req, res, userId._id, email)
-
-                        res.redirect(`/verifyOTPForgetPass?userId=${findUser._id}`)
-                    }
-
-
-
                 }
+                // newUserOPTVerification
+
+                // const userOTPE = await newUserOPTVeri.save()
+                // await transporter.sendMail(mailOptions)
+                // sendMail(req, res, savedUser._id, false)
+
+
+                sendMail(req, res, userId, email)
+
+                res.redirect(`/verifyOTPForgetPass?userId=${findUser._id}`)
+
+
+
             }
+
         } catch (error) {
             console.log(error.message);
         }
@@ -326,12 +383,16 @@ module.exports = {
     async verifyOTPForgetPassPage(req, res) {
         try {
             let { otp, userId } = req.body;
+            console.log("OTP and userId :-", otp, userId);
+
             if (!otp || !userId) {
                 console.log(userId);
                 console.log(otp);
                 res.render('user/forgetPassOTP', { message: "Empty details are not allowed", userId })
             } else {
-                const UserOTPVerificationRecords = await userOTP.find({ userId })
+                const UserOTPVerificationRecords = await userOTP.find({ userId: new Types.ObjectId(userId) })
+                console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length)
+
                 if (UserOTPVerificationRecords.length <= 0) {
                     //no record found
                     res.render("user/forgetPassOTP", { message: "Account does not exist", userId })
@@ -350,15 +411,17 @@ module.exports = {
                         console.log("hereeee");
                         console.log(hashedOTP);
                         console.log(otp);
-                        const validOTP = bcrypt.compare(otp, hashedOTP)
+                        const validOTP = await bcrypt.compare(otp, hashedOTP)
 
-                        console.log(validOTP);
+
+                        console.log("otp comparing:- ", validOTP);
                         if (!validOTP) {
                             //supplied otp is wrong
                             res.render("user/forgetPassOTP", { message: "Invalid OTP. Check your Email.", userId })
 
                         } else {
                             //success
+                            console.log("rendering to changePassword");
                             await userOTP.deleteMany({ userId })
                             res.render("user/changePassword", { userId })
                         }
@@ -370,26 +433,31 @@ module.exports = {
         }
     },
 
-    async changepass  (req,res) {
-        try{
-            let {userId,password} =req.body
-            if(!userId || !password){
-                res.render('user/changePassword',{message:`Empty password is not allowed`, userId})
-            }else{
-                const UserOTPVerificationRecords = await User.find({ _id:userId })
-    
-                if(UserOTPVerificationRecords.length <= 0){
+    async changepass(req, res) {
+        try {
+            let { userId, password } = req.body
+            if (!userId || !password) {
+                res.render('user/changePassword', { message: `Empty password is not allowed`, userId })
+            } else {
+                const UserOTPVerificationRecords = await User.findById(userId)
+                // const UserOTPVerificationRecords = await userOTP.find( {userId: new Types.ObjectId(userId)} )
+
+                console.log("OTP verific from changepass:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length);
+
+                if (UserOTPVerificationRecords.length <= 0) {
                     //no record found
-                    res.render("user/changePassword",{message:`Account record doesn't exist . Please sign up`, userId})
-                }else{
+                    res.render("user/changePassword", { message: `Account record doesn't exist . Please sign up`, userId })
+                } else {
                     //success
                     const spassword = await securePassword(password)
-                    await User.updateOne({_id:userId},{$set: {password:spassword}})
-                    await userOTP.deleteMany({userId})
-                    res.render("user/userLogin",{ message:"password changed"})
+                    await User.updateOne({ _id: userId }, { $set: { password: spassword } })
+                    await userOTP.deleteMany({ userId })
+
+                    console.log("success");
+                    res.render("user/user_login", { message: "password changed" })
                 }
             }
-        }catch(error){
+        } catch (error) {
             console.log(error.message);
         }
     }

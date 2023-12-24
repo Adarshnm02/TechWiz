@@ -98,6 +98,8 @@ module.exports = {
     },
     async createId(req,res){
         try{
+
+            
             const user = await User.findOne({ _id: req.session.user });
         
 

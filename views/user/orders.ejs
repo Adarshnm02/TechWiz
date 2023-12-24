@@ -90,10 +90,10 @@
         }
 
         .border-bottom {
-            border-bottom: 4px solid #c8c8c8!important;
+            border-bottom: 4px solid #c8c8c8 !important;
         }
 
-        .address-div{
+        .address-div {
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -150,73 +150,84 @@
                     <h2>My Orders</h2>
                     <div class="card">
                         <div class="card-body border-bottom">
-                            <% orders.forEach(order =>{ %>
-                            <div class="border-bottom address-div">
+                            <% orders.forEach(order=>{ %>
+                                <div class="border-bottom address-div">
 
-                                <% console.log("jadshfasdihfasdhfioh", order.deliveryAddress) %>
+                                    <% console.log("jadshfasdihfasdhfioh", order.deliveryAddress) %>
+                                        <% order.deliveryAddress.forEach(address=> { %>
 
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100" height="100">
-                                    <h4></h4>
-                                    <div class="edit-delete-buttons">
-                                        <a href="/"><button class="btn btn-sm btn-danger mr-2">Cancel</button></a>
-                                        <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
-                                    </div>
-                                    
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100"
+                                                    height="100">
+                                                <h4></h4>
+                                                <div class="edit-delete-buttons">
+                                                    <%if(order.status==="Cancelled" ) {%>
+                                                        <p class="text-danger">Canceled</p>
+                                                        <%} else {%>
+                                                            <a class="btn btn-sm btn-danger mr-2" id="<%= order.orderId %>"
+                                                                    onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
+                                                            <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                                            <%}%>
+                                                </div>
+                                            </div>
+                                            <table class="table">
+                                                <tbody class="border-bottom">
+                                                    <!-- Display limited rows -->
+                                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                                        aria-expanded="false" aria-controls="expandableRows">
+                                                        <td>Product</td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <!-- %=order.products[0].product.product_name %> -->
+                                                            <%= address.userName%>
+                                                        </td>
+                                                    </tr>
+                                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                                        aria-expanded="false" aria-controls="expandableRows">
+                                                        <td>Quantity</td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <%=order.deliveryAddress.email%>
+                                                        </td>
+                                                    </tr>
+                                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                                        aria-expanded="false" aria-controls="expandableRows">
+                                                        <td>Price</td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <%=address.state%>
+                                                        </td>
+                                                    </tr>
+                                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                                        aria-expanded="false" aria-controls="expandableRows">
+                                                        <td>Email</td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <%= order.deliveryAddress.email %>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Collapsible rows -->
+                                                    <tr id="expandableRows" class="collapse">
+                                                        <!-- Include additional rows here -->
+                                                        <td>Status</td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <%=address.state%>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="expandableRows" class="collapse">
+                                                        <!-- Include additional rows here -->
+                                                        <td>Address</td>
+                                                        <td>:</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <!-- Add more collapsible rows as needed -->
+                                                </tbody>
+                                            </table>
+
+                                            <%})%>
                                 </div>
-                                <table class="table">
-                                    <tbody class="border-bottom">
-                                        <!-- Display limited rows -->
-                                        <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
-                                            aria-controls="expandableRows">
-                                            <td>Product</td>
-                                            <td>:</td>
-                                            <td>
-                                                <!-- %=order.products[0].product.product_name %> -->
-                                            </td>
-                                        </tr>
-                                        <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
-                                            aria-controls="expandableRows">
-                                            <td>Quantity</td>
-                                            <td>:</td>
-                                            <td>
-                                                <%=order.deliveryAddress.email%>
-                                            </td>
-                                        </tr>
-                                        <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
-                                            aria-controls="expandableRows">
-                                            <td>Price</td>
-                                            <td>:</td>
-                                            <td>
-                                                <%=address[0].state%>
-                                            </td>
-                                        </tr>
-                                        <tr data-toggle="collapse" data-target="#expandableRows" aria-expanded="false"
-                                            aria-controls="expandableRows">
-                                            <td>Email</td>
-                                            <td>:</td>
-                                            <td><%= order.deliveryAddress.email %></td>
-                                        </tr>
-                                        <!-- Collapsible rows -->
-                                        <tr id="expandableRows" class="collapse">
-                                            <!-- Include additional rows here -->
-                                            <td>Status</td>
-                                            <td>:</td>
-                                            <td>
-                                                <%=address[0].state%>
-                                            </td>
-                                        </tr>
-                                        <tr id="expandableRows" class="collapse">
-                                            <!-- Include additional rows here -->
-                                            <td>Address</td>
-                                            <td>:</td>
-                                            <td></td>
-                                        </tr>
-                                        <!-- Add more collapsible rows as needed -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <%})%>
+                                <%})%>
                         </div>
                     </div>
                 </div>
@@ -226,6 +237,85 @@
 
         </div>
     </div>
+
+
+
+    <script>
+        function cancelOrder(orderid) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this order!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Select a reason for cancellation',
+                        input: 'select',
+                        inputOptions: {
+
+                            'Not needed anymore': 'Not needed anymore',
+                            'Found a better deal': 'Found a better deal',
+                            'Changed my mind': 'Changed my mind',
+                            'Placed By Mistake': 'Placed By Mistake',
+                            'i dont have Money': 'i dont have Money',
+                            'Other': 'Other',
+                        },
+                        inputPlaceholder: 'Select a reason',
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirm',
+                        cancelButtonText: 'Cancel'
+                    }).then((reasonResult) => {
+                        if (reasonResult.isConfirmed) {
+                            const cancellationReason = reasonResult.value;
+                            fetch(`/cancelOrder/${orderid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ orderID: orderid, reason: cancellationReason }),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Cancelled!',
+                                            text: 'The order has been cancelled.',
+                                            icon: 'success',
+                                        });
+                                        // const statusElement = document.getElementById(`orderStatus_${orderid}`);
+                                        // const button = document.getElementById(`${orderid}`);
+                                        // statusElement.textContent = 'Cancelled';
+                                        // statusElement.classList.remove('text-orange-300');
+                                        // statusElement.classList.add('text-red-500');
+                                        // button.classList.add('hidden');
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Failed to cancel the order. Please try again.',
+                                            icon: 'error',
+                                        });
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An unexpected error occurred. Please try again.',
+                                        icon: 'error',
+                                    });
+                                });
+
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire('Cancelled', 'Your order is safe :)', 'info');
+                }
+            });
+        }
+    </script>
 
 
 

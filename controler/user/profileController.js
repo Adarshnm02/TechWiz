@@ -7,34 +7,34 @@ const { render } = require('ejs')
 
 module.exports = {
 
-    async loadProfile (req,res){
-        try{
+    async loadProfile(req, res) {
+        try {
             // const userId = req.session.user
             const session = req.session.user
-            
-            const address = await Address.find({userId: req.session.user})
+
+            const address = await Address.find({ userId: req.session.user })
             console.log(address);
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
-            res.render('user/user_profile', {user, address, session})
-            
-        }catch(err){
+            res.render('user/user_profile', { user, address, session })
+
+        } catch (err) {
             console.log("Profile loading error ", err);
             res.render("user/500")
         }
     },
-    async loadProfileAddress (req,res){
-        try{
+    async loadProfileAddress(req, res) {
+        try {
             // const userId = req.session.user
             const session = req.session.user
-            
-            const address = await Address.find({userId: req.session.user})
+
+            const address = await Address.find({ userId: req.session.user })
             console.log(address);
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
-            res.render('user/profile_address', {user, address, session})
-            
-        }catch(err){
+            res.render('user/profile_address', { user, address, session })
+
+        } catch (err) {
             console.log("Profile loading error ", err);
             res.render("user/500")
         }
@@ -45,10 +45,10 @@ module.exports = {
         try {
             let session = req.session.user
             const addressId = req.params.id
-            const address = await Address.findOne({_id:addressId}).populate('userId')
-            console.log("from adderere " , address);
+            const address = await Address.findOne({ _id: addressId }).populate('userId')
+            console.log("from adderere ", address);
             console.log("form params ", req.params);
-            return res.render('user/editAddress', { session , address})
+            return res.render('user/editAddress', { session, address })
 
         } catch (err) {
             console.log(err);
@@ -72,6 +72,7 @@ module.exports = {
             const { userName, email, mobile, city, postCode, district, state, country, houseName } = req.body
             if (userName && email && mobile && city && postCode && district && state && country) {
                 const otherAddress = await Address.find({ userId: req.session.user })
+                
                 if (otherAddress.length < 3) {
                     const newAddress = new Address({
                         userId: req.session.user,
@@ -89,11 +90,12 @@ module.exports = {
                     await newAddress.save();
                     res.redirect('/profile')
 
-                }else{
+                } else {
+                    res.send({ status: 'fail' , message:'You can only have up to three addresses.'})
                     console.log("Address limit exceeded");
                 }
-                
-                }
+
+            }
         } catch (error) {
             console.log(error);
             res.render('user/500')
@@ -104,7 +106,7 @@ module.exports = {
 
 
     async editAddress(req, res) {
-        
+
         const { userName, mobile, email, address, city, district, state, country, postCode } = req.body;
         try {
 
@@ -130,7 +132,7 @@ module.exports = {
                 console.log("updated result ", result);
                 res.redirect('/profile');
             } else {
-               
+
                 res.status(404).send('Address not found');
             }
         } catch (error) {
@@ -138,23 +140,53 @@ module.exports = {
             res.status(500).send('Internal Server Error');
         }
     },
-   async loadOrder(req,res) {
-        try{
+    async loadOrder(req, res) {
+        try {
             // const userId = req.session.user
             const session = req.session.user
-            
-            const address = await Address.find({userId: req.session.user})
-            const orders = await Order.find({user: req.session.user}).populate('products.product')
-            console.log("from back address:-",address, "orders from back", orders);
+
+            const address = await Address.find({ userId: req.session.user })
+            const orders = await Order.find({ user: req.session.user }).populate('products.product')
+            console.log("from back address:-", address, "orders from back", orders);
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
-            res.render('user/orders', {user, address, session, orders})
-            
-        }catch(err){
+
+            console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].deliveryAddress[0].email)
+            res.render('user/orders', { user, address, session, orders })
+
+        } catch (err) {
             console.log("Profile loading error ", err);
             res.render("user/500")
         }
-    }
+    },
+
+    // cancelorder
+    async cancelOrder(req, res) {
+        let { id } = req.params;
+        const { reason } = req.body;
+        console.log(id, reason);
+        try {
+            const order = await Order.findOne({ orderId: id });
+
+        
+            // await order.save();
+
+            const result = await Order.findOneAndUpdate(
+                { orderId: id },
+                { $set: { status: 'Cancelled', cancelReason: reason } },
+                { new: true }
+            );
+
+
+
+            return res.json({ success: true, message: 'Order cancelled successfully.', result });
+        } catch (err) {
+            console.error('Error cancelling order:', err);
+            return res.status(500).json({ success: false, message: 'Failed to cancel order. Please try again.' });
+        }
+    },
+
+
 
 }
 

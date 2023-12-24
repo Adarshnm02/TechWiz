@@ -9,21 +9,29 @@ module.exports = {
     async load_cart(req, res) {
         try {
             if (req.session.user) {
+                const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
+                const limit = 6; // Set the number of products per page
+                const skip = (page - 1) * limit;
                 const userId = req.session.user;
-                const user = await User.findById(userId).populate('cart.product')
+                const user = await User.findById(userId).populate({
+                    path: 'cart.product',
+                    options: { skip, limit }
+                });
+                // Count total products for pagination calculation
+                // const totalCount = await Product.countDocuments({ is_delete: false });
                 const cart = user.cart;
+                const totalCount = cart.length; // Total items in the cart
+                const totalPages = Math.ceil(totalCount / limit);
 
-                console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.product}`)
-                res.render('user/shoping-cart', { cart, user, session: req.session.user })
+                console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
+                res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount })
             }
         } catch (err) {
             console.log(err);
             res.render('user/500')
         }
     },
-
-
-
+    
 
     async addToCart(req, res) {
         const userId = req.session.user;
@@ -74,20 +82,20 @@ module.exports = {
     async deleteFromCart(req, res) {
         const { product } = req.body;
         const userId = req.session.user;
-    
+
         try {
             const user = await User.findById(userId).populate('cart.product');
             const removedItem = await user.cart.find(cartItem => cartItem.product.equals(product));
-    
+
             if (removedItem) {
                 const reductionAmount = removedItem.totalAmount;
-    
+
                 await User.updateOne({ _id: userId }, { $pull: { cart: { product: product } } });
-    
+
                 const updatedGrandTotal = user.grandTotal - reductionAmount;
-    
+
                 await User.updateOne({ _id: userId }, { grandTotal: updatedGrandTotal });
-    
+
                 res.json({ message: `Item with ID=${product} removed`, grandTotal: updatedGrandTotal });
             } else {
                 return res.status(404).json({ message: 'Item not found in the cart' });
@@ -101,13 +109,13 @@ module.exports = {
 
     async qntUpdate(req, res) {
         try {
-            const user = await User.findById(req.session.user); 
+            const user = await User.findById(req.session.user);
 
-          
+
             const cartItem = user.cart.find(item => item.product.toString() === req.body.productId);
 
             if (cartItem) {
-                const product = await Product.findById(cartItem.product); 
+                const product = await Product.findById(cartItem.product);
 
                 if (req.body.action === "increment") {
                     if (cartItem.quantity + 1 > product.stock_count) {
@@ -129,7 +137,7 @@ module.exports = {
                 });
                 user.grandTotal = totalCartAmount;
 
-                await user.save(); 
+                await user.save();
 
                 return res.status(200).json({
                     message: "Success",

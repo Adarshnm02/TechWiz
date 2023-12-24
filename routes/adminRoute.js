@@ -50,4 +50,8 @@ adminRoute.get('/userList', authCtrl.isLogedout, adminCtrl.loadUserList)
 adminRoute.get('/userList/Unblock/:id', authCtrl.isLogedout, adminCtrl.unblock_user)
 adminRoute.get('/userList/Block/:id', authCtrl.isLogedout, adminCtrl.block_user)
 
+
+// order List
+adminRoute.get('/orderList', adminCtrl.loadOrderList)
+
 module.exports = adminRoute;

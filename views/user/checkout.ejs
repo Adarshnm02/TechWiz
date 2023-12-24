@@ -78,7 +78,8 @@
                                                     </p>
                                                 </div>
                                                 <div class="address-actions">
-                                                    <button onclick="editAddress('address1')">Edit</button>
+                                                    <a href="/editAddress/<%=address._id %>">Edit</a>
+                                                    <!-- onclick="editAddress('address1')" -->
                                                     <button onclick="deleteAddress('address1')">Delete</button>
                                                 </div>
                                             </div>
@@ -109,7 +110,7 @@
                                     </div>
 
                                     <div class="edit-address">
-                                        <button>Add New Address</button>
+                                       <a href="/addAddress"><button>Add New Address</button></a> 
                                     </div>
 
                                 </div>
@@ -313,9 +314,10 @@
                             text: 'Good job!',
                             icon: 'success'
                         }).then(() => {
-                            window.location.href = '/orderSuccess';
+                            window.location.href = '/';
+                            // /orderSuccess
                         });
-                    } else {
+                    } else 
                         Swal.fire({
                             title: 'Insufficient Stock',
                             text: 'The stock for some products is insufficient. Please review your order.',

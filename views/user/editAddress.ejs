@@ -13,7 +13,7 @@
         </div>
         <div class="checkout__form">
             <h4>Edit Address</h4>
-            <form action="/editAddress/<%=address._id %>" method="post">
+            <form action="/editAddress/<%=address._id %>" method="post" id="editAddressForm">
                 <div class="row d-flex justify-content-center align-items-center ">
                     <div class="col-lg-8 col-md-6">
 
@@ -32,7 +32,8 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Email<span>*</span></p>
-                                    <input type="email" name="email" value="<%= address.email %>">
+                                    <input type="email" name="email" id="email2" value="<%= address.email %>">
+                                    <p id="emailError"></p>
                                 </div>
                             </div>
                         </div>
@@ -79,6 +80,45 @@
         </div>
     </div>
 </section>
+
+<script>
+    const couponForm = document.getElementById("editAddressForm");
+
+    const emailInput = document.getElementById("email2");
+    const emailError = document.getElementById("emailError");
+
+
+
+    function emailValidation() {
+        if (emailInput.value.trim() === "") {
+            emailError.innerHTML = "Please enter your Email Address!";
+            return false;
+        } else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
+            emailError.innerHTML = "Please enter a valid Email address.";
+            return false;
+        } else {
+            emailError.innerHTML = "";
+            return true;
+        }
+    }
+
+
+
+
+    couponForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+			const validations = [
+				emailValidation()
+				
+			];
+			const hasErrors = validations.some(validation => validation === false);
+			if (!hasErrors) {
+				couponForm.submit(); 
+			}
+		});
+
+        
+</script>
 
 
 <%- include('../partials/user/footer') %>

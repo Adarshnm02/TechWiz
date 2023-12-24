@@ -1,6 +1,8 @@
 const express = require('express')
 const User = require('../../models/userModel')
-
+const Product = require('../../models/productModel')
+const Address = require('../../models/addressModel')
+const Order = require('../../models/orderModel')
 
 module.exports = {
 
@@ -81,6 +83,51 @@ module.exports = {
             res.render("admin/500")
         }
     },
+    async loadOrderList(req, res) {
+        try {
+            // const userId = req.session.user
+            const session = req.session.user
+
+            // const address = await Address.find({ userId: req.session.user })
+            // const orders = await Order.find({ user: req.session.user }).populate('products.product')
+            // console.log("from back address:-", address, "orders from back", orders);
+            // const user = await User.findById(req.session.user)
+            // // console.log("from profile", session)
+
+            // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].deliveryAddress[0].email)
+            res.render('admin/orderList', {  session })
+            // user, address,, orders
+
+        } catch (err) {
+            console.log("Profile loading error ", err);
+            res.render("user/500")
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     // async pagein(req, res){
     //     const page = parseInt(req.query.page) || 1; // Extract the page number from the query string

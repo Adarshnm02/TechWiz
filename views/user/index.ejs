@@ -1,5 +1,28 @@
 <%- include('../partials/user/header') %>
+<style>
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
 
+    .pagination-container a {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 4px;
+        text-decoration: none;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .pagination-container a.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+</style>
 
 
     <!-- Categories Section Begin -->
@@ -78,7 +101,6 @@
                                         <% } %>
                                             <ul class="product__item__pic__hover">
                                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a>
                                                 </li>
                                                 <li><a onclick="addToCart('<%= product._id %>')"><i
                                                             class="fa fa-shopping-cart"></i></a>
@@ -100,7 +122,23 @@
         </div>
     </section>
     <!-- Featured Section End -->
+    <div class="pagination-container">
+        <% if (currentPage> 1) { %>
+            <a href="/index?page=1">First</a>
+            <a href="/index?page=<%= currentPage - 1 %>">Previous</a>
+            <% } %>
 
+                <% for (let i=1; i <=totalPages; i++) { %>
+                    <a href="/index?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
+
+                        <% if (currentPage < totalPages) { %>
+                            <a href="/index?page=<%= currentPage + 1 %>">Next</a>
+                            <a href="/index?page=<%= totalPages %>">Last</a>
+                            <% } %>
+    </div>
 
 
 
@@ -133,6 +171,7 @@
                         <h4>Latest Products</h4>
                         <div class="latest-product__slider owl-carousel">
                             <% for(let i=0;i < latestPrd.length;i+=3){%>
+                               
                                 <div class="latest-prdouct__slider__item">
                                     <a href="#" class="latest-product__item">
                                         <div class="latest-product__item__pic">
@@ -312,7 +351,7 @@
             </div>
 
 
-            
+
         </div>
     </section>
     <!-- Latest Product Section End -->
@@ -320,6 +359,7 @@
     <!-- Blog Section Begin -->
 
     <!-- Blog Section End -->
+   
 
 
     <%- include('../partials/user/footer') %>

@@ -1,0 +1,97 @@
+<%- include('../partials/admin/adminHeader') %>
+  <style>
+    .tableData {
+      padding-top: 75px !important;
+    }
+
+    .tableDataBtn {
+      padding-top: 46px !important;
+    }
+  </style>
+
+  <div class="col-lg-10 grid-margin stretch-card container-fluid ">
+    <div class="card">
+        <div class="card-body border-bottom">
+            <!-- % orders.forEach(order=>{ %> -->
+                <div class="border-bottom address-div">
+
+                    <!-- % console.log("jadshfasdihfasdhfioh", order.deliveryAddress) %> -->
+                        <!-- % order.deliveryAddress.forEach(address=> { %> -->
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100"
+                                    height="100">
+                                <h4></h4>
+                                <div class="edit-delete-buttons">
+                                    <!-- %if(order.status==="Cancelled" ) {%> -->
+                                        <p class="text-danger">Canceled</p>
+                                        <!-- %} else {%> -->
+                                            <!-- <a class="btn btn-sm btn-danger mr-2" id="%= order.orderId %>"
+                                                    onclick="cancelOrder('%=order.orderId%>')">Cancel</a> -->
+                                            <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                            <!-- %}%> -->
+                                </div>
+                            </div>
+                            <table class="table">
+                                <tbody class="border-bottom">
+                                    <!-- Display limited rows -->
+                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                        aria-expanded="false" aria-controls="expandableRows">
+                                        <td>Product</td>
+                                        <td>:</td>
+                                        <td>
+                                            <!-- %=order.products[0].product.product_name %> -->
+                                            <!-- %= address.userName%> -->
+                                        </td>
+                                    </tr>
+                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                        aria-expanded="false" aria-controls="expandableRows">
+                                        <td>Quantity</td>
+                                        <td>:</td>
+                                        <td>
+                                            <!-- %=order.deliveryAddress.email%> -->
+                                        </td>
+                                    </tr>
+                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                        aria-expanded="false" aria-controls="expandableRows">
+                                        <td>Price</td>
+                                        <td>:</td>
+                                        <td>
+                                            <!-- %=address.state%> -->
+                                        </td>
+                                    </tr>
+                                    <tr data-toggle="collapse" data-target="#expandableRows"
+                                        aria-expanded="false" aria-controls="expandableRows">
+                                        <td>Email</td>
+                                        <td>:</td>
+                                        <td>
+                                            <!-- %= order.deliveryAddress.email %> -->
+                                        </td>
+                                    </tr>
+                                    <!-- Collapsible rows -->
+                                    <tr id="expandableRows" class="collapse">
+                                        <!-- Include additional rows here -->
+                                        <td>Status</td>
+                                        <td>:</td>
+                                        <td>
+                                            <!-- %=address.state%> -->
+                                        </td>
+                                    </tr>
+                                    <tr id="expandableRows" class="collapse">
+                                        <!-- Include additional rows here -->
+                                        <td>Address</td>
+                                        <td>:</td>
+                                        <td></td>
+                                    </tr>
+                                    <!-- Add more collapsible rows as needed -->
+                                </tbody>
+                            </table>
+
+                            <!-- %})%> -->
+                </div>
+                <!-- %})%> -->
+        </div>
+    </div>
+  </div>
+
+  <%- include('../partials/admin/adminFooter') %>

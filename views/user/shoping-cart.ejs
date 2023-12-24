@@ -10,8 +10,32 @@
             height: 30px;
             width: 30px;
         }
-        .delButton{
+
+        .delButton {
             border: 0;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination-container a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .pagination-container a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
         }
     </style>
 
@@ -60,63 +84,89 @@
 
 
                                 <% cart.forEach((element)=> { %>
-                                    <tr id="delete_<%element.product._id%>">
-                                        <td class="shoping__cart__item">
-                                            <% if (element.product.image.length> 0 && element.product.image[0].data) {
-                                                %>
-                                                <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
-                                                    alt="" style="width: 150px; height: 205px">
-                                                <% } else { %>
-                                                    <p>No Image</p>
-                                                    <% } %>
-                                                        <h5>
-                                                            <%= element.product.product_name %>
-                                                        </h5>
-                                        </td>
+                                    <% if (element.product && element.product._id) { %>
+                                        <tr id="<%=element.product._id%>">
+                                            <td class="shoping__cart__item">
+                                                <% if (element.product.image.length> 0 && element.product.image[0].data)
+                                                    {
+                                                    %>
+                                                    <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
+                                                        alt="" style="width: 150px; height: 205px">
+                                                    <% } else { %>
+                                                        <p>No Image</p>
+                                                        <% } %>
+                                                            <h5>
+                                                                <%= element.product.product_name %>
+                                                            </h5>
+                                            </td>
 
-                                        <td class="shoping__cart__price">
-                                            <%= element.product.price %>
-                                        </td>
+                                            <td class="shoping__cart__price">
+                                                <%= element.product.price %>
+                                            </td>
 
-                                        <td class="shoping__cart__quantity">
-                                            <button onclick="updateQuantity('decrement','<%=element.product._id%>')"
-                                                class="btn-qunty" type="button">-</button>
+                                            <td class="shoping__cart__quantity">
+                                                <button onclick="updateQuantity('decrement','<%=element.product._id%>')"
+                                                    class="btn-qunty" type="button">-</button>
 
-                                            <span id="quantity-<%=element.product._id%>" class="text-center" style="width: 63px !important;">
-                                                <%=element.quantity%>
-                                            </span>
+                                                <span id="quantity-<%=element.product._id%>" class="text-center"
+                                                    style="width: 63px !important;">
+                                                    <%=element.quantity%>
+                                                </span>
 
-                                            <button onclick="updateQuantity('increment','<%=element.product._id%>')"
-                                                class="btn-qunty" type="button">+</button>
-                                        </td>
-
-
-                                        <td class="shoping__cart__total">
-                                            <span id="totalAmount-<%=element.product._id%>">
-                                                <%= element.totalAmount %>
-                                            </span>
-                                        </td>
+                                                <button onclick="updateQuantity('increment','<%=element.product._id%>')"
+                                                    class="btn-qunty" type="button">+</button>
+                                            </td>
 
 
-                                        <td class="shoping__cart__item__close">
-                                            <button class="btn-qunty delButton"
-                                                onclick="removeProduct('<%=element.product._id%>')"
-                                                id="removeItem-<%=element.product._id%>">X</button>
-                                        </td>
+                                            <td class="shoping__cart__total">
+                                                <span class="totalAmount" id="totalAmount-<%=element.product._id%>">
+                                                    <%= element.totalAmount %>
+                                                </span>
+                                            </td>
 
 
-                                    </tr>
-                                    <% }) %>
+                                            <td class="shoping__cart__item__close">
+                                                <button class="btn-qunty delButton"
+                                                    onclick="removeProduct('<%=element.product._id%>')"
+                                                    id="removeItem-<%=element.product._id%>">X</button>
+                                            </td>
 
 
-
-
+                                        </tr>
+                                        <% } %>
+                                            <% }) %>
 
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
+
+
+
+            <div class="pagination-container">
+                <% if (currentPage> 1) { %>
+                    <a href="/cart?page=1">First</a>
+                    <a href="/cart?page=<%= currentPage - 1 %>">Previous</a>
+                    <% } %>
+
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <a href="/cart?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                                <%= i %>
+                            </a>
+                            <% } %>
+
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="/cart?page=<%= currentPage + 1 %>">Next</a>
+                                    <a href="/cart?page=<%= totalPages %>">Last</a>
+                                    <% } %>
+            </div>
+
+
+
+
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
@@ -127,23 +177,19 @@
                 </div>
 
                 <div class="col-lg-6">
-                    <div class="shoping__continue">
-                        <div class="shoping__discount">
-                            <h5>Discount Codes</h5>
-                            <form action="#">
-                                <input type="text" placeholder="Enter your coupon code">
-                                <button type="submit" class="site-btn">APPLY COUPON</button>
-                            </form>
-                        </div>
-                    </div>
+                    
                 </div>
-                
+
                 <div class="col-lg-6">
                     <div class="shoping__checkout">
                         <h5>Cart Total</h5>
                         <ul>
-                            <li>Subtotal<span><%= user.grandTotal %></span></li>
-                            <li>Total <span><%= user.grandTotal %></span></li>
+                            <li>Subtotal<span id="grandTtl">
+                                    <%= user.grandTotal %>
+                                </span></li>
+                            <li>Total <span id="grandTtl">
+                                    <%= user.grandTotal %>
+                                </span></li>
                         </ul>
                         <a href="/checkout" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
@@ -153,6 +199,27 @@
     </section>
     <!-- Shoping Cart Section End -->
 
+
+    <script>
+        function showTotalAmount(){
+            const totalAmount = document.querySelectorAll('.totalAmount')
+            const grandTtl = document.getElementById('grandTtl')
+
+            console.log("gasdgfashdfkskdlf",totalAmount);
+            let totalAmont = 0;
+            totalAmount.forEach(e => {
+                totalAmont += parseInt(e.textContent)
+                
+            })
+
+            console.log(totalAmont, "fsdaff");
+            
+            grandTtl.innerHTML = totalAmont;
+
+        }
+
+        
+    </script>
 
 
     <script>
@@ -170,6 +237,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
+                    showTotalAmount()
                     // Update the quantity displayed on the page
                     const quantityElement = document.querySelector(`#quantity-${productId}`);
                     const totalAmountElement = document.querySelector(`#totalAmount-${productId}`);
@@ -207,11 +275,12 @@
                 .then((response) => response.json())
                 .then((data) => {
                     console.log("Success:", data);
-                   
-                    const deletedItem = document.getElementById(`delete_${productId}`);
+
+                    const deletedItem = document.getElementById(productId); 
                     if (deletedItem) {
                         deletedItem.remove();
                     }
+                    console.log(deletedItem);
                 })
                 .catch((error) => {
                     console.error("Error:", error);
@@ -253,9 +322,23 @@
 
 
         // <td class="shoping__cart__quantity">
-            // <div class="quantity">
-                // <div class="pro-qty">
-                    // <input type="text" value=" element.quantity%>">
-                    // </div>
-                // </div>
-            // </td>
+        //     <div class="quantity">
+        //         <div class="pro-qty">
+        //             <input type="text" value=" element.quantity%>">
+        //             </div>
+        //         </div>
+        //     </td>
+
+
+
+            // <div class="col-lg-6">
+            //         <div class="shoping__continue">
+            //             <div class="shoping__discount">
+            //                 <h5>Discount Codes</h5>
+            //                 <form action="#">
+            //                     <input type="text" placeholder="Enter your coupon code">
+            //                     <button type="submit" class="site-btn">APPLY COUPON</button>
+            //                 </form>
+            //             </div>
+            //         </div>
+            //     </div>
