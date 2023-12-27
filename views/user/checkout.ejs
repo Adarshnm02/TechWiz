@@ -317,7 +317,7 @@
                             window.location.href = '/';
                             // /orderSuccess
                         });
-                    } else 
+                    } else { 
                         Swal.fire({
                             title: 'Insufficient Stock',
                             text: 'The stock for some products is insufficient. Please review your order.',
@@ -325,6 +325,7 @@
                         });
                     }
                 }
+            
 
 
             } catch (error) {
@@ -333,23 +334,25 @@
         }
 
 
-
-        // // Reference to the PLACE ORDER button
-        // const placeOrderButton = document.getElementById('placeOrderBtn');
-
-        // // Event listener for the button click
-        // placeOrderButton.addEventListener('click', () => {
-        //     // Trigger the SweetAlert
-        //     Swal.fire({
-        //         title: 'Order Placed!',
-        //         text: 'Thank you for your purchase!',
-        //         icon: 'success',
-        //         confirmButtonText: 'Okay'
-        //     });
-        // });
-
-
     </script>
+
+        
+        <!-- // Reference to the PLACE ORDER button
+        const placeOrderButton = document.getElementById('placeOrderBtn');
+        
+        // Event listener for the button click
+        placeOrderButton.addEventListener('click', () => {
+                // Trigger the SweetAlert
+                Swal.fire({
+                        title: 'Order Placed!',
+                        text: 'Thank you for your purchase!',
+                        icon: 'success',
+                        confirmButtonText: 'Okay'
+                    });
+                }); -->
+                
+        
+
 
     <!-- <button id="rzp-button1">Pay with Razorpay</button> -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

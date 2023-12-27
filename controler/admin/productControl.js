@@ -126,27 +126,6 @@ module.exports = {
         }
     },
     
-    
-    async productDetails(req, res) {
-        try {
-            const session = req.session.user;
-            console.log("Session from product details ", session);
-            const { id } = req.params;
-            const details = await Product.findById({ _id: id })
-            console.log("from details", details);
-            if (details) {
-                console.log("Product Details Rendering");
-                res.render('user/productDetails', { details, session, id })
-            }
-            console.log("gdfg", details.category);
-            console.log("dsdsddddddddd");
-
-        } catch (error) {
-            console.log(error.message);
-            res.render("admin/500")
-        }
-
-    },
 
     // async loadProductList(req, res) {
     //     try {

@@ -22,44 +22,12 @@
         color: white;
         border-color: #007bff;
     }
+    .link {
+    cursor: pointer;
+}
+
 </style>
 
-
-    <!-- Categories Section Begin -->
-    <!-- <section class="categories">
-        <div class="container">
-            <div class="row">
-                <div class="categories__slider owl-carousel">
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="/user/img/categories/cat-1.jpg">
-                            <h5><a href="#">Fresh Fruit</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="/user/img/categories/cat-2.jpg">
-                            <h5><a href="#">Dried Fruit</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="/user/img/categories/cat-3.jpg">
-                            <h5><a href="#">Vegetables</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="/user/img/categories/cat-4.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="/user/img/categories/cat-5.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- Categories Section End -->
 
     <!-- Featured Section Begin -->
     <section class="featured spad">
@@ -71,7 +39,7 @@
                     </div>
                     <div class="featured__controls">
                         <ul>
-                            <li class="active" data-filter="*">All</li>
+                            <li class="active link" data-filter="*">All</li>
                             <li data-filter=".oranges">Mobile</li>
                             <li data-filter=".fresh-meat">Laptop</li>
                             <li data-filter=".vegetables">Camera</li>
@@ -89,7 +57,7 @@
                 <% products.forEach(product=> { %>
 
 
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="col-lg-4 col-md-6 col-sm-6" onclick="productDetails('<%= product._id %>')">
                         <div class="product__item">
 
                             <div class="product__item__pic set-bg" style="display: flex; justify-content: center;">
@@ -107,11 +75,12 @@
                                                 </li>
                                             </ul>
                             </div>
-                            <div class="product__item__text">
-                                <h6><a href="/product/Details/<%= product._id%>">
+                            <div class="product__item__text link">
+                                <h6><a>
                                         <%= product.product_name %>
                                     </a>
                                 </h6>
+                                <h6>₹<%= product.price %></h6>
                             </div>
                         </div>
                     </div>
@@ -354,12 +323,13 @@
 
         </div>
     </section>
-    <!-- Latest Product Section End -->
 
-    <!-- Blog Section Begin -->
 
-    <!-- Blog Section End -->
-   
+    <script>
+        function productDetails(Id) {
+            window.location.replace(`/product/Details/${Id}`)
+        }
+    </script>
 
 
     <%- include('../partials/user/footer') %>
@@ -379,4 +349,5 @@
                 <h5>50000000</h5>
             </div>
         </div>
+        href="/product/Details/%= product._id%>
     </div> -->

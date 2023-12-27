@@ -153,7 +153,37 @@ module.exports = {
             console.log(err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
-    }
+    },
+
+    async productDetails(req, res) {
+        try {
+            const session = req.session.user;
+            console.log("Session from product details ", session);
+            const { id } = req.params;
+            const details = await Product.findById({ _id: id })
+            console.log("from details", details);
+
+            const user = await User.findById(req.session.user).populate({
+                path: 'cart.product',
+
+            })
+            
+            cart = user.cart
+            console.log(details);
+            
+            if (details) {
+                console.log("Product Details Rendering");
+                res.render('user/productDetails', { details, session, id, cart})
+            }
+            console.log("gdfg", details.category);
+            console.log("dsdsddddddddd");
+
+        } catch (error) {
+            console.log(error.message);
+            res.render("admin/500")
+        }
+
+    },
 };
 
 

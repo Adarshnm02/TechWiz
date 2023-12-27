@@ -53,7 +53,7 @@ user_Route.get('/shop-grid', productControl.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
 
 
-user_Route.get('/product/Details/:id', Auth.isLogedout, productControl.productDetails)
+user_Route.get('/product/Details/:id', Auth.isLogedout, cartCtrl.productDetails)
 // user_Route.get('/productDetails', productControl.productDetails)
 // user_Route.get("/logindel", userControle.loadDel)
 
