@@ -32,6 +32,8 @@ user_Route.post('/verification', userControle.otpVerification)
 //profile
 user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
 user_Route.get("/profile/address", Auth.isLogedout, profileCtrl.loadProfileAddress)
+user_Route.get("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.loadEditProfile)
+user_Route.post("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.updateProfile)
 
 // //forgot Password
 // user_Route.get("/profile/forgotPass", userControle.loadForgetPass)
@@ -81,6 +83,7 @@ user_Route.get('/addAddress', Auth.isLogedout, profileCtrl.loadAddAddress)
 user_Route.post('/addAddress', Auth.isLogedout, profileCtrl.addAddress)
 user_Route.get('/editAddress/:id', Auth.isLogedout, profileCtrl.loadEditAddress)
 user_Route.post('/editAddress/:id', Auth.isLogedout, profileCtrl.editAddress)
+user_Route.post('/removeAddress/:id', Auth.isLogedout, profileCtrl.removeAddress)
 
 
 module.exports = user_Route;

@@ -116,7 +116,7 @@
                         <a href="/profile" class="btn btn-success btn-block mt-3">Profile</a>
                         <a href="/profile/address" class="btn btn-success btn-block mt-3">My Address</a>
                         <a href="/order" class="btn btn-success btn-block mt-3">My Orders</a>
-                        <a href="/user/wallet" class="btn btn-success btn-block mt-3">Change Password</a>
+                        <a href="/forgetPassword" class="btn btn-success btn-block mt-3">Change Password</a>
                         <a href="/coupons" class="btn btn-success btn-block mt-3">coupons</a>
                     </div>
                 </div>
@@ -133,12 +133,12 @@
                     <a href="/addAddress"><button class="btn btn-sm btn-primary mr-2">Add New Address</button></a>
                     <div class="card">
                        <% address.forEach((address) => { %>
-                        <div class="card-body border-bottom">
+                        <div class="card-body border-bottom" id="<%= address._id%>" >
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>Details</h4>
                                 <div class="edit-delete-buttons">
                                     <a href="/editAddress/<%=address._id %>"><button class="btn btn-sm btn-primary mr-2">Edit</button></a>
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                    <button onclick="removeAddress('<%=address._id%>')" class="btn btn-sm btn-danger">Delete</button>
                                 </div>
                             </div>
                             <table class="table">
@@ -193,7 +193,35 @@
             </div>
         </div>
     </div>
+\
 
+<script>
+    function removeAddress(addressId) {
+        fetch(`/removeAddress/${addressId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                addressId: addressId,
+            }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Success:", data);
+
+            const deletedItem = document.getElementById(addressId);
+            if (deletedItem) {
+                deletedItem.remove();
+            }
+            console.log(deletedItem);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+    }
+
+</script>
 
 
 

@@ -30,6 +30,13 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Edit Category</h3>
+                        <% if (typeof message !="undefined" ) {%>
+
+                            <p class="mt-3 text-danger">
+                                <%= message %>
+                            </p>
+    
+                            <%} %>
                         <form class="forms-sample" method="post" action="/admin/category/edit/<%= category._id %>" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<%= category._id %>">
 

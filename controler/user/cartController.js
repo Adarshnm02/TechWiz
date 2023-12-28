@@ -117,14 +117,15 @@ module.exports = {
             if (cartItem) {
                 const product = await Product.findById(cartItem.product);
 
-                if (req.body.action === "increment") {
-                    if (cartItem.quantity + 1 > product.stock_count) {
+                if (req.body.action === "increment" && cartItem.quantity <= product.stock_count) {
+                    if (cartItem.quantity  > product.stock_count) {
+                        console.log("from qnt exeed ", cartItem.quantity);
                         return res.status(400).json({ message: "Insufficient Stock" });
                     } else {
                         cartItem.quantity += 1;
                         cartItem.totalAmount = product.price * cartItem.quantity;
                     }
-                } else if (req.body.action === "decrement") {
+                } else if (req.body.action === "decrement" && cartItem.quantity > 1) {
                     if (cartItem.quantity - 1 >= 0) {
                         cartItem.quantity -= 1;
                         cartItem.totalAmount = product.price * cartItem.quantity;

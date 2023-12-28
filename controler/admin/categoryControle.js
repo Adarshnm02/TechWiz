@@ -60,14 +60,18 @@ module.exports = {
                     }
                 });
 
+                if (category) {
 
-                await category.save();
-                console.log("Category Saved", category);
-                return res.render("admin/addCategory", {message: "Category insert successfully"})
+                    await category.save();
+                    console.log("Category Saved", category);
+                }
+
+
+                return res.render("admin/addCategory", { message: "Category insert successfully" })
 
             } else {
                 console.log("This Category is already exist");
-                return res.render("admin/addCategory", {message: "This Category is already exist"})
+                return res.render("admin/addCategory", { message: "This Category is already exist" })
             }
         } catch (error) {
             console.log(error.message);
@@ -115,37 +119,48 @@ module.exports = {
     async updateCategory(req, res) {
         try {
             const { id } = req.params;
-            const { categoryName, description } = req.body;
+            const { description } = req.body;
 
-            const data = {
-                categoryName: categoryName,
-                description: description
-            };
+            const category = await productCategory.findById(id);
+            const editCategoryName = req.body.categoryName.charAt(0).toUpperCase() + req.body.categoryName.slice(1).toLowerCase();
+            const exist = await productCategory.findOne({
+                categoryName: editCategoryName
+            });
+            if (exist) {
+                console.log("exist");
+                res.render('admin/editCategory', { category, message: "categrory exist" })
+            } else {
 
-            // Check if a file was uploaded
-            if (req.file) {
-                const category = await productCategory.findById(id);
-                if (category) {
-                    // Update the category's image if a file was provided
-                    category.image = {
-                        data: req.file.buffer,
-                        contentType: req.file.mimetype
-                    };
-                    await category.save();
-                } else {
-                    console.log("Category not found");
-                    return res.status(404).send("Category not found");
+                const data = {
+                    categoryName: editCategoryName,
+                    description: description
+                };
+
+                // Check if a file was uploaded
+                if (req.file) {
+
+                    if (category) {
+                        // Update the category's image if a file was provided
+                        category.image = {
+                            data: req.file.buffer,
+                            contentType: req.file.mimetype
+                        };
+                        await category.save();
+                    } else {
+                        console.log("Category not found");
+                        return res.status(404).send("Category not found");
+                    }
                 }
+
+                // Update other category details
+                const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
+
+                console.log(updatedCategory);
+                return res.redirect('/admin/category');
             }
-
-            // Update other category details
-            const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
-
-            console.log(updatedCategory);
-            return res.redirect('/admin/category');
         } catch (error) {
             console.log(error.message);
-            res.render('/admin/500')
+            res.render('admin/500')
         }
     },
 
@@ -173,7 +188,7 @@ module.exports = {
         } catch (error) {
             console.error("Error occurred during image deletion:", error);
             res.render('/admin/500')
-            
+
         }
     }
 

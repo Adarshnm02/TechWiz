@@ -41,6 +41,49 @@ module.exports = {
     },
 
 
+    async loadEditProfile(req, res) {
+        try {
+            const session = req.session.user;
+            const user = await User.findById(session)
+            res.render('user/editProfile', { user, session });
+    
+        } catch (err) {
+            console.log(err);
+            res.render('user/500');
+        }
+    },
+    
+        async updateProfile(req, res) {
+            try {
+                const userId = req.params.id; 
+        
+                const { userName, email, mobile } = req.body;
+        
+                if (userName && email) {
+                    const user = await User.findById(userId);
+        
+                    if (!user) {
+                        return res.status(404).render('user/404'); 
+                    }
+                    user.userName = userName;
+                    user.email = email;
+                    user.mobile = mobile;
+        
+                    await user.save();
+                    console.log(user, "form");
+        
+                    // res.json({ succes : true, user });
+                    res.redirect('/profile')
+                }
+        
+                // ;\ 
+        
+            } catch (err) {
+                console.log(err);
+                res.render('user/500');
+            }
+        },
+
     async loadEditAddress(req, res) {
         try {
             let session = req.session.user
@@ -88,7 +131,7 @@ module.exports = {
                         default: (otherAddress.length === 0) ? true : false
                     })
                     await newAddress.save();
-                    res.redirect('/profile')
+                    res.redirect('/profile/address')
 
                 } else {
                     res.send({ status: 'fail' , message:'You can only have up to three addresses.'})
@@ -140,6 +183,26 @@ module.exports = {
             res.status(500).send('Internal Server Error');
         }
     },
+    async removeAddress(req,res){
+        try {
+            const { addressId } = req.body;
+    
+            const result = await Address.findByIdAndDelete(addressId);
+    
+            if (result) {
+                console.log("Deleted address:", result);
+                res.json({success:true, result})
+            } 
+        } catch (error) {
+            console.error("Error:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    },
+
+
+
+
+
     async loadOrder(req, res) {
         try {
             // const userId = req.session.user
@@ -148,6 +211,12 @@ module.exports = {
             const address = await Address.find({ userId: req.session.user })
             const orders = await Order.find({ user: req.session.user }).populate('products.product')
             console.log("from back address:-", address, "orders from back", orders);
+                
+           
+
+
+
+
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
 

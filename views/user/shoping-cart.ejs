@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="col-lg-6">
-                    
+
                 </div>
 
                 <div class="col-lg-6">
@@ -187,7 +187,7 @@
                             <li>Subtotal<span id="grandTtl">
                                     <%= user.grandTotal %>
                                 </span></li>
-                            <li>Total <span id="grandTtl">
+                            <li>Total <span id="grandTtle">
                                     <%= user.grandTotal %>
                                 </span></li>
                         </ul>
@@ -201,24 +201,24 @@
 
 
     <script>
-        function showTotalAmount(){
+        function showTotalAmount() {
             const totalAmount = document.querySelectorAll('.totalAmount')
             const grandTtl = document.getElementById('grandTtl')
 
-            console.log("gasdgfashdfkskdlf",totalAmount);
+            console.log("gasdgfashdfkskdlf", totalAmount);
             let totalAmont = 0;
             totalAmount.forEach(e => {
-                totalAmont += parseInt(e.textContent)
-                
+                totalAmont += parseInt(e.innerHTML)
+
             })
 
             console.log(totalAmont, "fsdaff");
-            
+
             grandTtl.innerHTML = totalAmont;
 
         }
 
-        
+
     </script>
 
 
@@ -241,21 +241,31 @@
                     // Update the quantity displayed on the page
                     const quantityElement = document.querySelector(`#quantity-${productId}`);
                     const totalAmountElement = document.querySelector(`#totalAmount-${productId}`);
+                    const grandTotal = document.getElementById('grandTtl')
+                    const grandTtl = document.getElementById('grandTtle')
+                    
+                    
 
 
-                    if (quantityElement) {
-                        quantityElement.textContent = data.quantity;
+                    if (quantityElement && totalAmountElement && grandTotal) {
+                        quantityElement.textContent = `${data.quantity}`;
+                        totalAmountElement.innerHTML = `${data.totalAmount}`;
+                        grandTotal.innerHTML = `${data.grandTotal}`
+                        grandTtl.innerHTML = `${data.grandTotal}`
                     }
 
-                    if (totalAmountElement) {
-                        totalAmountElement.textContent = data.totalAmount;
-                    }
+
+                    // if (totalAmountElement) {
+                    //     totalAmountElement.textContent = data.totalAmount;
+                    // }
 
 
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                });
+                   
+
+                    });
         }
 
 
@@ -274,9 +284,13 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log("Success:", data);
+                    console.log("Success:", data.grandTotal);
+                    const grandTotal = document.getElementById('grandTtl')
+                    grandTotal.innerHTML = `${data.grandTotal}`
+                    const grandTtl = document.getElementById('grandTtle')
+                    grandTtl.innerHTML = `${data.grandTotal}`
 
-                    const deletedItem = document.getElementById(productId); 
+                    const deletedItem = document.getElementById(productId);
                     if (deletedItem) {
                         deletedItem.remove();
                     }
@@ -322,23 +336,23 @@
 
 
         // <td class="shoping__cart__quantity">
-        //     <div class="quantity">
-        //         <div class="pro-qty">
-        //             <input type="text" value=" element.quantity%>">
-        //             </div>
-        //         </div>
-        //     </td>
+            // <div class="quantity">
+                // <div class="pro-qty">
+                    // <input type="text" value=" element.quantity%>">
+                    // </div>
+                // </div>
+            // </td>
 
 
 
-            // <div class="col-lg-6">
-            //         <div class="shoping__continue">
-            //             <div class="shoping__discount">
-            //                 <h5>Discount Codes</h5>
-            //                 <form action="#">
-            //                     <input type="text" placeholder="Enter your coupon code">
-            //                     <button type="submit" class="site-btn">APPLY COUPON</button>
-            //                 </form>
-            //             </div>
-            //         </div>
-            //     </div>
+        // <div class="col-lg-6">
+            // <div class="shoping__continue">
+                // <div class="shoping__discount">
+                    // <h5>Discount Codes</h5>
+                    // <form action="#">
+                        // <input type="text" placeholder="Enter your coupon code">
+                        // <button type="submit" class="site-btn">APPLY COUPON</button>
+                        // </form>
+                    // </div>
+                // </div>
+            // </div>
