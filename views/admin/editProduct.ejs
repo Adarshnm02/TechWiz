@@ -20,6 +20,13 @@
                 <h3 class="card-title text-center mb-4">Add Product</h3>
                 <form class="forms-sample" method="post" action="/admin/products/edit/<%= products._id %>"
                     enctype="multipart/form-data"  id="productEditingForm1">
+                    <% if (typeof message !="undefined" ) {%>
+
+                        <p class="mt-3 text-danger">
+                            <%= message %>
+                        </p>
+
+                        <%} %>
 
 
                     <input type="hidden" name="id" value="<%= products._id %>">
@@ -40,7 +47,7 @@
 
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <select class="form-control">
+                        <select class="form-control" name="category">
                             <% category.forEach((category)=> { %>
                                 <option value="<%= category._id %>">
                                     <%= category.categoryName %>

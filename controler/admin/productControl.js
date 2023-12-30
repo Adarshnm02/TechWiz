@@ -46,7 +46,7 @@ module.exports = {
     },
     
     async addProduct(req, res) {
-        console.log(req.body);
+        // console.log(req.body);
         try {
             const {
                 productName,
@@ -78,10 +78,15 @@ module.exports = {
                 image: []
             });
             req.files.forEach((file) => {
+                if(isValidImage(file)){
                 createdProduct.image.push({
                     data: file.buffer,
                     contentType: file.mimetype
                 });
+            }else{
+                res.render('admin/addProduct',{message: "Image is not valid"})
+                console.log("this is not a image");
+            }
             })
 
             await createdProduct.save();
@@ -177,7 +182,7 @@ module.exports = {
             const id = req.params.id;
             const products = await Product.findById(id);
             const category = await Category.find()
-            console.log("cat from loadproductedit", category);
+            // console.log("cat from loadproductedit", category);
             if (products && category) {
                 res.render("admin/editProduct", { message: "", products, id, category });
             } else {
@@ -192,7 +197,8 @@ module.exports = {
 
 
     async editproduct(req, res) {
-        console.log("sdfgdfgsdfg")
+        console.log(req.body)
+        
         const {
             productName,
             brandName,
@@ -203,6 +209,9 @@ module.exports = {
             offer,
             id,
         } = req.body;
+      
+
+        // console.log(category)
 
         try {
             const productId = id;
@@ -223,11 +232,14 @@ module.exports = {
             if (req.files && req.files.length > 0) {
                 // Assuming 'req.files' contains the uploaded image files
                 req.files.forEach((file) => {
-                    
-                    updatedproduct.image.push({
-                        data: file.buffer,
-                        contentType: file.mimetype,
-                    });
+                    if(isValidImage(file)){
+                        updatedproduct.image.push({
+                            data: file.buffer,
+                            contentType: file.mimetype,
+                        });
+                    }else{
+                        console.log("Not a Image")
+                    }
                 });
             }
 

@@ -98,7 +98,7 @@
 
         const CategoryName = document.getElementById("exampleInputName1")
         const nameError = document.getElementById("Category-name-error")
-        const CategoryDescription = document.getElementById("exampleTextarea1")
+        // const CategoryDescription = document.getElementById("exampleTextarea1")
         const descriptionError = document.getElementById("description-error")
 
         function nameValidation() {
@@ -137,7 +137,7 @@
             event.preventDefault();
             const validations = [
                 nameValidation(),
-                descriptionValidation()
+                // descriptionValidation()
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {

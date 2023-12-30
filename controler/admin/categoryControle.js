@@ -1,6 +1,13 @@
 const express = require('express');
 const productCategory = require('../../models/categoryModel');
 
+function isValidImage(file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    const check = allowedTypes.includes(file.mimetype);
+    console.log("image", check);
+
+    return check
+}
 
 
 
@@ -65,7 +72,6 @@ module.exports = {
                     await category.save();
                     console.log("Category Saved", category);
                 }
-
 
                 return res.render("admin/addCategory", { message: "Category insert successfully" })
 
@@ -135,6 +141,9 @@ module.exports = {
                     categoryName: editCategoryName,
                     description: description
                 };
+                if( !isValidImage(req.file)){
+                    return res.render('admin/editCategory',{message: 'not a image',category})
+                }
 
                 // Check if a file was uploaded
                 if (req.file) {
