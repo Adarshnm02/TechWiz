@@ -67,7 +67,6 @@
                                 <th>Product Name</th>
                                 <th>Brand</th>
                                 <th>Product Offer</th>
-                                <!-- <th>Category</th> -->
                                 <th>Price (MRP)</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
@@ -75,11 +74,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% products.forEach((product,i)=>{ %>
+                            <% const usersPerPage = 10 %>
+                            <% const offset = (currentPage - 1) * usersPerPage; %>
+                            <% products.forEach((product, i)=>{ %>
                                 <tr>
-                                    <td>
-                                        <%= i + 1 %>
-                                    </td>
+                                    <td> <%= offset + i + 1 %> </td>
                                     <td>
                                         <% if(product.image[0] && product.image[0].contentType && product.image[0].data)
                                             { %>

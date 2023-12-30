@@ -101,4 +101,98 @@
     </div>
     </div>
 
+
+
+
+    <script>
+
+        const productEditingForm = document.getElementById("productEditingForm")
+
+        const productName = document.getElementById("productName")
+        const brandName = document.getElementById("brandName")
+        const description = document.getElementById("description")
+        const colorTypes = document.getElementById("colorTypes")
+
+        const name_error = document.getElementById("name_error")
+        const brandName_error = document.getElementById("brandName_error")
+        const description_error = document.getElementById("description_error")
+        const colorTypes_error = document.getElementById("colorTypes_error")
+
+
+        function nameValidation() {
+
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+            if (productName.value.trim() === "") {
+                name_error.innerHTML = "Please enter the Product Name!";
+                return false;
+            // } else if (!nameRegex.test(productName.value)) {
+            //     name_error.innerHTML = "Please enter a valid Product Name.";
+            //     return false;
+            } else {
+                name_error.innerHTML = "";
+                return true;
+            }
+        }
+        function brandName_validation() {
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+            if (brandName.value.trim() === "") {
+                brandName_error.innerHTML = "Please enter a valid Product Name.";
+                return false;
+
+            } else if (!nameRegex.test(brandName.value)) {
+                brandName_error.innerHTML = "Please enter a valid Product Name.";
+                return false;
+
+            } else {
+                return true
+            }
+        }
+
+        function description_Validation() {
+
+            // if (!/^[A-Za-z\s]+$/.test(description.value.trim())) {
+            //     description_error.innerHTML = "Description must contain only words (non-numeric characters).";
+            //     return false;
+
+            // } else 
+            if (description.value.trim().length <= 15) {
+                description_error.innerHTML = "Description must be at least 15 characters long.";
+                return false;
+
+            } else {
+                description_error.innerHTML = "";
+                return true;
+            }
+        }
+
+        function colorTypes_validation() {
+            if (!/^[A-Za-z\s]+$/.test(colorTypes.value.trim())) {
+                colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
+                return false;
+            }
+            colorTypes_error.innerHTML = ""; 
+            return true; 
+        }
+
+
+        productEditingForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const validations = [
+                nameValidation(),
+                brandName_validation(),
+                description_Validation(),
+                colorTypes_validation()
+            ];
+
+            const hasErrors = validations.some(validation => validation === false); 
+            console.log(hasErrors);
+
+            if (!hasErrors) {
+                productEditingForm.submit(); 
+            }
+        });
+    </script>
+
     <%- include('../partials/admin/adminFooter') %>

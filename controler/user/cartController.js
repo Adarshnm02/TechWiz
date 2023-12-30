@@ -117,8 +117,8 @@ module.exports = {
             if (cartItem) {
                 const product = await Product.findById(cartItem.product);
 
-                if (req.body.action === "increment" && cartItem.quantity <= product.stock_count) {
-                    if (cartItem.quantity  > product.stock_count) {
+                if (req.body.action === "increment" && cartItem.quantity <= product.stock_count - 1) {
+                    if (cartItem.quantity > product.stock_count) {
                         console.log("from qnt exeed ", cartItem.quantity);
                         return res.status(400).json({ message: "Insufficient Stock" });
                     } else {

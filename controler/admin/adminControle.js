@@ -86,15 +86,16 @@ module.exports = {
     async loadOrderList(req, res) {
         try {
             // const userId = req.session.user
-            const session = req.session.user
+            const session = req.session.admin
 
-            // const address = await Address.find({ userId: req.session.user })
-            // const orders = await Order.find({ user: req.session.user }).populate('products.product')
-            // console.log("from back address:-", address, "orders from back", orders);
-            // const user = await User.findById(req.session.user)
-            // // console.log("from profile", session)
+            const address = await Address.find({ userId: req.session.user })
+            const orders = await Order.find({ user: req.session.user }).populate('products.product')
+            console.log("from back address:-", address, "orders from back", orders);
+            const user = await User.findById(req.session.user)
+            console.log("from profile", session)
 
             // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].deliveryAddress[0].email)
+
             res.render('admin/orderList', {  session })
             // user, address,, orders
 
@@ -103,9 +104,41 @@ module.exports = {
             res.render("user/500")
         }
     },
+    async   loadOrder(req,res) {
+        try{
+            const session = req.session.admin
+
+            const orders = await Order.find().populate('products')
+
+            // console.log("fsdfdsl",orders[0]);
+            
+            res.render('admin/orders',{session, orders})
+            
+        }catch(err){
+            console.log(err)
+        }
+    },
+    // change status
+    async changeDeliveryStatus (req, res) {
+    const userId = req.params.userId;
+    const newStatus = req.body.newStatus;
+    console.log(req.body)
+    try {
+        const updatedUser = await Order.findByIdAndUpdate(userId, { status: newStatus }, { new: true });
+
+        if (updatedUser) {
+            res.status(200).json({ message: 'Success' });
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating user status:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
 
-
+ 
 
 
 

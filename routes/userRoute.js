@@ -1,7 +1,5 @@
 const user_Route = require('express').Router()
 
-
-// const {loadHome,login,loadShop,loadBlog,loadOTPpage,checkOTPValid,resedOtp,loadSignup }  = require('../controler/user/userControle')
 const userControle = require('../controler/user/userControle')
 const productControl = require('../controler/admin/productControl')
 const cartCtrl = require('../controler/user/cartController')

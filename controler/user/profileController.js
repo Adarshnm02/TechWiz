@@ -9,7 +9,7 @@ module.exports = {
 
     async loadProfile(req, res) {
         try {
-            // const userId = req.session.user
+            
             const session = req.session.user
 
             const address = await Address.find({ userId: req.session.user })
@@ -209,18 +209,15 @@ module.exports = {
             const session = req.session.user
 
             const address = await Address.find({ userId: req.session.user })
-            const orders = await Order.find({ user: req.session.user }).populate('products.product')
-            console.log("from back address:-", address, "orders from back", orders);
-                
-           
-
-
-
+            const orders = await Order.find({user:req.session.user}).populate('products.product').populate('user')
+            // console.log(orders[0].user.userName);
+            // console.log(orders[0].products[0].quantity);
+            // console.log("from back address:-", address, "orders from back", orders);
 
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
 
-            console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].deliveryAddress[0].email)
+            console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
             res.render('user/orders', { user, address, session, orders })
 
         } catch (err) {

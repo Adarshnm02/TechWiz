@@ -57,11 +57,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <% const usersPerPage = 10 %>
+                            <% const offset = (currentPage - 1) * usersPerPage; %>
                             <% users.forEach((user,i)=>{ %>
 
                                 <tr>
                                     <td>
-                                        <%= i + 1 %>
+                                        <%= offset + i + 1 %>
                                     </td>
                                     <td>
                                         <%= user.userName %>

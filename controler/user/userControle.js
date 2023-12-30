@@ -250,8 +250,6 @@ module.exports = {
             }
             const OTPrecord = await userOTP.findOne({ userId: ID })
 
-            // if(OTP === )
-
             if (!OTPrecord) {
                 return res.render('user/otpVerification', { message: "Enter valied OTP", id: ID })
             }
@@ -338,12 +336,12 @@ module.exports = {
     async forgetPassword(req, res) {
         try {
             const { email } = req.body;
-            const userId = req.session.user
+            // const userId = req.session.user
             if (!email) {
                 res.render("user/forgotPassword", { message: "enter email id" })
             } else {
                 const findUser = await User.findOne({ email });
-                console.log("sdafsdagsdg", findUser);
+                console.log("sdafsdagsdg", findUser._id);
                 if (!findUser) {
                     res.render("user/forgotPassword", { message: "User not found" })
                 }
@@ -354,7 +352,7 @@ module.exports = {
                 // sendMail(req, res, savedUser._id, false)
 
 
-                sendMail(req, res, userId, email)
+                sendMail(req, res, findUser._id, email)
 
                 res.redirect(`/verifyOTPForgetPass?userId=${findUser._id}`)
 
@@ -390,7 +388,8 @@ module.exports = {
                 console.log(otp);
                 res.render('user/forgetPassOTP', { message: "Empty details are not allowed", userId })
             } else {
-                const UserOTPVerificationRecords = await userOTP.find({ userId: new Types.ObjectId(userId) })
+                const UserOTPVerificationRecords = await userOTP.findOne({ userId: userId });
+
                 console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length)
 
                 if (UserOTPVerificationRecords.length <= 0) {
@@ -405,7 +404,7 @@ module.exports = {
                     if (expireAt < Date.now()) {
                         //user otp records has expires
                         await userOTP.deleteMany({ userId })
-                        res.render("user/forgetPassOTP", { message: "Code has expires. Please request again.", userId })
+                        res.render("user/forgotPassword", { message: "Code has expires. Please request again.", userId })
 
                     } else {
                         console.log("hereeee");

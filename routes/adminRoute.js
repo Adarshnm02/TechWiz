@@ -51,7 +51,10 @@ adminRoute.get('/userList/Unblock/:id', authCtrl.isLogedout, adminCtrl.unblock_u
 adminRoute.get('/userList/Block/:id', authCtrl.isLogedout, adminCtrl.block_user)
 
 
-// order List
+// orders
+
+adminRoute.get('/order', adminCtrl.loadOrder)
 adminRoute.get('/orderList', adminCtrl.loadOrderList)
+adminRoute.post('/userlist/updateStatus/:userId', adminCtrl.changeDeliveryStatus);
 
 module.exports = adminRoute;

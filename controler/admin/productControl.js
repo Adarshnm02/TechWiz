@@ -95,7 +95,7 @@ module.exports = {
         }
     },
 
-    async loadShop(req, res) {
+    async  loadShop(req, res) {
         try {
             const session = req.session.user;
             const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
