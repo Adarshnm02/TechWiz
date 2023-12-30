@@ -43,6 +43,10 @@ const securePassword = async (password) => {
     }
 
 }
+function isValidPassword(password) {
+    const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    return passwordRegex.test(password);
+}
 
 
 
@@ -95,6 +99,8 @@ module.exports = {
             res.render('user/500')
         }
     },
+
+    
 
     // async loadHome(req, res) {
     //     try {
@@ -178,7 +184,7 @@ module.exports = {
                     .sort({ _id: 1 })
             }
 
-            console.log(latestPrd,"fsdgsdgsdfgsdfg",products);
+            console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
@@ -392,7 +398,7 @@ module.exports = {
 
                 console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ")
 
-                if (!UserOTPVerificationRecords ) {
+                if (!UserOTPVerificationRecords) {
                     //no record found
                     res.render("user/forgetPassOTP", { message: "Account does not exist", userId })
 
@@ -461,7 +467,42 @@ module.exports = {
         }
     },
 
-    
+    async loadnewPassword(req, res) {
+        try {
+            const userId = req.session.user; // Assuming userId is the user ID you want to pass to the view
+            res.render('user/newPassword', { userId: userId }); // Passing userId as an object
+        } catch (err) {
+            console.log(err);
+            // Handle error here if needed
+        }
+    },
+    //ave edited password
+    async saveChangePassword(req, res){
+        const { Oldpassword, password, confirmPassword,userId } = req.body
+        console.log(req.body);
+
+        try {
+            
+            const user = await User.findOne({ _id: userId });
+            console.log("fsdaf",user)
+            if (await bcrypt.compare(Oldpassword, user.password)) {
+                if (password === confirmPassword) {
+                    
+                        user.password = await bcrypt.hash(password, 10)
+                        await user.save()
+                        res.redirect('/')
+                } else {
+                    res.render('user/newPassword',{userId})
+                }
+            } else {
+                res.render('user/newPassword',{userId})
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
 
 
 

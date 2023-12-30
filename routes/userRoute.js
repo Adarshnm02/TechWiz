@@ -83,5 +83,9 @@ user_Route.get('/editAddress/:id', Auth.isLogedout, profileCtrl.loadEditAddress)
 user_Route.post('/editAddress/:id', Auth.isLogedout, profileCtrl.editAddress)
 user_Route.post('/removeAddress/:id', Auth.isLogedout, profileCtrl.removeAddress)
 
+//new password
+user_Route.get('/newPassword', userControle.loadnewPassword)
+user_Route.post('/newPassword', userControle.saveChangePassword)
+
 
 module.exports = user_Route;

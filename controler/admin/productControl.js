@@ -3,7 +3,10 @@ const express = require('express')
 const Product = require("../../models/productModel")
 const Category = require("../../models/categoryModel")
 
-
+function isValidImage(file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    return allowedTypes.includes(file.mimetype);
+}
 
 
 module.exports = {
@@ -220,6 +223,7 @@ module.exports = {
             if (req.files && req.files.length > 0) {
                 // Assuming 'req.files' contains the uploaded image files
                 req.files.forEach((file) => {
+                    
                     updatedproduct.image.push({
                         data: file.buffer,
                         contentType: file.mimetype,

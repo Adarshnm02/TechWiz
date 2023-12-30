@@ -37,20 +37,22 @@
                             </p>
     
                             <%} %>
-                        <form class="forms-sample" method="post" action="/admin/category/edit/<%= category._id %>" enctype="multipart/form-data">
+                        <form class="forms-sample" method="post" id="category-form" action="/admin/category/edit/<%= category._id %>" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<%= category._id %>">
 
                             <div class="form-group">
                                 <label for="exampleInputName1">Category Name</label>
-                                <input type="text" name="categoryName" class="form-control" id="exampleInputName1"
+                                <input type="text" name="categoryName" class="form-control"id="exampleInputName1"
                                     placeholder="<%= category.categoryName %>" value="<%= category.categoryName %>">
+                                    <p class="text-danger" id="Category-name-error"></p>
                             </div>
                             <!-- Other form fields... -->
 
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="6"
+                                <textarea class="form-control" id="description" name="description" rows="6" id="exampleTextarea1"
                                     placeholder="Write about the Product"><%= category.description %></textarea>
+                                    <p class="text-danger" id="description-error"></p>
                             </div>
 
                             <div class="form-group">
@@ -90,5 +92,59 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const CategoryForm = document.getElementById("category-form")
+
+        const CategoryName = document.getElementById("exampleInputName1")
+        const nameError = document.getElementById("Category-name-error")
+        const CategoryDescription = document.getElementById("exampleTextarea1")
+        const descriptionError = document.getElementById("description-error")
+
+        function nameValidation() {
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
+            if (CategoryName.value.trim() === "") {
+                nameError.innerHTML = "Please enter the Category Name!";
+                return false;
+            } else if (!nameRegex.test(CategoryName.value)) {
+                nameError.innerHTML = "Please enter a valid Category Name.";
+                return false;
+            } else {
+                nameError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function descriptionValidation() {
+
+            if (!/^[A-Za-z\s]+$/.test(CategoryDescription.value.trim())) {
+                descriptionError.innerHTML = "Description must contain only words (non-numeric characters).";
+                return false;
+
+            } else if (CategoryDescription.value.trim().length <= 15) {
+                descriptionError.innerHTML = "Description must be at least 15 characters long.";
+                return false;
+
+            } else {
+                descriptionError.innerHTML = "";
+                return true;
+            }
+        }
+
+
+        CategoryForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const validations = [
+                nameValidation(),
+                descriptionValidation()
+            ];
+            const hasErrors = validations.some(validation => validation === false);
+            if (!hasErrors) {
+                CategoryForm.submit(); // Trigger the form submission
+            }
+        })
+    </script>
+
 
     <%- include('../partials/admin/adminFooter') %>
