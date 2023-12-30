@@ -1,16 +1,16 @@
 <%- include('../partials/admin/adminHeader') %>
-  <style>
-    .tableData {
-      padding-top: 75px !important;
-    }
+    <style>
+        .tableData {
+            padding-top: 75px !important;
+        }
 
-    .tableDataBtn {
-      padding-top: 46px !important;
-    }
+        .tableDataBtn {
+            padding-top: 46px !important;
+        }
 
 
 
-       .sidenav {
+        .sidenav {
             background-color: #f3f3f3;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -100,13 +100,13 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
-  </style>
+    </style>
 
-  <div class="col-lg-10 grid-margin stretch-card container-fluid ">
-    <div class="card">
-        <div class="card-body border-bottom">
-            <% orders.forEach(order=>{ %>
-                <div class="border-bottom address-div">
+    <div class="col-lg-10 grid-margin stretch-card container-fluid ">
+        <div class="card">
+            <div class="card-body border-bottom">
+                <% orders.forEach(order=>{ %>
+                    <div class="border-bottom address-div">
                         <% order.deliveryAddress.forEach(address=> { %>
 
                             <div class="d-flex justify-content-between align-items-center mb-3 link">
@@ -116,7 +116,7 @@
                                         <p class="text-danger">Canceled</p>
                                         <% } else {%>
                                             <a class="btn btn-sm btn-danger mr-2" id="<%= order.orderId %>"
-                                                    onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
+                                                onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
                                             <!-- <button class="btn btn-sm btn-danger">Delete</button>  -->
                                             <%}%>
                                 </div>
@@ -125,8 +125,8 @@
 
                             <table class="table link">
                                 <tbody class="border-bottom">
-                                    <tr data-toggle="collapse" data-target="#expandableRows1"
-                                        aria-expanded="false" aria-controls="expandableRows1">
+                                    <tr data-toggle="collapse" data-target="#expandableRows1" aria-expanded="false"
+                                        aria-controls="expandableRows1">
                                         <td>OrderId</td>
                                         <td>:</td>
                                         <td>
@@ -135,33 +135,39 @@
                                         <td>Status</td>
                                         <td>:</td>
                                         <td>
-                                            <% if (order.status === 'Cancelled') { %>
-                                              <p class="font-weight-bold text-danger">Cancelled</p>
-                                            <% } else { %>
-                                              <select class="form-select text-black status-dropdown" data-user-id="<%= order._id %>">
-                                                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-                                                <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
-                                                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                                <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
-                                              </select>
-                                            <% } %>
-                                            </td>
-                                          
+                                            <% if (order.status==='Cancelled' ) { %>
+                                                <p class="font-weight-bold text-danger">Cancelled</p>
+                                                <% } else { %>
+                                                    <select class="form-select text-black status-dropdown"
+                                                        data-user-id="<%= order._id %>">
+                                                        <option value="Pending" <%=order.status==='Pending' ? 'selected'
+                                                            : '' %>>Pending</option>
+                                                        <option value="Processing" <%=order.status==='Processing'
+                                                            ? 'selected' : '' %>>Processing</option>
+                                                        <option value="Shipped" <%=order.status==='Shipped' ? 'selected'
+                                                            : '' %>>Shipped</option>
+                                                        <option value="Delivered" <%=order.status==='Delivered'
+                                                            ? 'selected' : '' %>>Delivered</option>
+                                                    </select>
+                                                    <% } %>
+                                        </td>
+
                                     </tr>
-                                    <tr data-toggle="collapse" data-target="#expandableRows2"
-                                        aria-expanded="false" aria-controls="expandableRows2">
+                                    <tr data-toggle="collapse" data-target="#expandableRows2" aria-expanded="false"
+                                        aria-controls="expandableRows2">
                                         <td>Buyer</td>
                                         <td>:</td>
                                         <td>
                                             <%=address.userName%>
-                                        </td><td>Email</td>
+                                        </td>
+                                        <td>Email</td>
                                         <td>:</td>
                                         <td>
                                             <%=address.email%>
                                         </td>
                                     </tr>
-                                    <tr data-toggle="collapse" data-target="#expandableRows3"
-                                        aria-expanded="false" aria-controls="expandableRows3">
+                                    <tr data-toggle="collapse" data-target="#expandableRows3" aria-expanded="false"
+                                        aria-controls="expandableRows3">
                                         <td>Order Date</td>
                                         <td>:</td>
                                         <td>
@@ -173,8 +179,8 @@
                                             <%= address.mobile %>
                                         </td>
                                     </tr>
-                                    <tr data-toggle="collapse" data-target="#expandableRows4"
-                                        aria-expanded="false" aria-controls="expandableRows4">
+                                    <tr data-toggle="collapse" data-target="#expandableRows4" aria-expanded="false"
+                                        aria-controls="expandableRows4">
                                         <td>Total Price</td>
                                         <td>:</td>
                                         <td>
@@ -187,63 +193,69 @@
                                         </td>
                                     </tr>
                                     <% order.deliveryAddress.forEach(address=> { %>
-                                    <tr data-toggle="collapse" data-target="#expandableRows4"
-                                    aria-expanded="false" aria-controls="expandableRows4">
-                                    <td>Delivery Address</td>
-                                    <td>:</td>
-                                    <td>
-                                        <%=address.houseName%>, <%=address.city%>
-                                    </td>
-                                </tr>
+                                        <tr data-toggle="collapse" data-target="#expandableRows4" aria-expanded="false"
+                                            aria-controls="expandableRows4">
+                                            <td>Delivery Address</td>
+                                            <td>:</td>
+                                            <td>
+                                                <%=address.houseName%>, <%=address.city%>
+                                            </td>
+                                        </tr>
 
-                                    <% order.products.forEach((product) => { %> 
-                                    <tr  class="collapse" id="expandableRows" aria-labelledby="expandableRows%>">
-                                    <tr>
-                                        <td>Product Name</td>
-                                        <td>:</td>
-                                        <td>
-                                           <%= product.product.product_name %>
-                                        </td> 
-                                    </tr>
-                                    <%})%>
-                                    <%})%>
+                                        <!-- </tbody>% order.products.forEach( items => { %>
+                                            
+                                                <tr class="collapse" id="expandableRows"
+                                                    aria-labelledby="expandableRows%>">
+                                                <tr>
+                                                    <td>Product Name</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        </%= items.product_name  %>
+
+                                                    </td>
+                                                </tr>
+                                                </tr>
+                                            
+                                            </%})%> -->
+                                        <% }) %>
                                 </tbody>
                             </table>
 
                             <%})%>
-                </div>
-                <%})%>
+                    </div>
+                    <%})%>
+            </div>
         </div>
     </div>
-  </div>
 
 
 
 
-  <script>
-    const statusDropdowns = document.querySelectorAll('.status-dropdown');
-    const updateUserStatus = async (userId, newStatus) => {
-       try {
-          const response = await fetch(`/admin/userlist/updateStatus/${userId}`, {
-             method: 'POST',
-             headers: {
-                'Content-Type': 'application/json',
-             },
-             body: JSON.stringify({newStatus }),
-          });
-          const updatedUser = await response.json();
-          console.log('User status updated:', updatedUser);
-       } catch (error) {
-          console.error('Error updating user status:', error);
-       }
-    };
-    statusDropdowns.forEach((dropdown) => {
-       dropdown.addEventListener('change', (event) => {
-          const userId = event.target.dataset.userId;
-          const newStatus = event.target.value;
-          updateUserStatus(userId, newStatus);
-       });
-    });
+    <script>
+        const statusDropdowns = document.querySelectorAll('.status-dropdown');
+        const updateUserStatus = async (userId, newStatus) => {
+
+            try {
+                const response = await fetch(`/admin/userlist/updateStatus/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ newStatus }),
+                });
+                const updatedUser = await response.json();
+                console.log('User status updated:', updatedUser);
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        };
+        statusDropdowns.forEach((dropdown) => {
+            dropdown.addEventListener('change', (event) => {
+                const userId = event.target.dataset.userId;
+                const newStatus = event.target.value;
+                updateUserStatus(userId, newStatus);
+            });
+        });
     </script
 
   <%- include('../partials/admin/adminFooter') %>

@@ -189,6 +189,7 @@ module.exports = {
 
 
     async editproduct(req, res) {
+        console.log("sdfgdfgsdfg")
         const {
             productName,
             brandName,

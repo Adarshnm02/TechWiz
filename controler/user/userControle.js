@@ -390,16 +390,16 @@ module.exports = {
             } else {
                 const UserOTPVerificationRecords = await userOTP.findOne({ userId: userId });
 
-                console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length)
+                console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ")
 
-                if (UserOTPVerificationRecords.length <= 0) {
+                if (!UserOTPVerificationRecords ) {
                     //no record found
                     res.render("user/forgetPassOTP", { message: "Account does not exist", userId })
 
                 } else {
                     //user otp records exists
-                    const { expireAt } = UserOTPVerificationRecords[0]
-                    const hashedOTP = UserOTPVerificationRecords[0].otp
+                    const { expireAt } = UserOTPVerificationRecords
+                    const hashedOTP = UserOTPVerificationRecords.otp
 
                     if (expireAt < Date.now()) {
                         //user otp records has expires

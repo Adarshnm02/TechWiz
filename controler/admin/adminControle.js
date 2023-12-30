@@ -108,9 +108,15 @@ module.exports = {
         try{
             const session = req.session.admin
 
-            const orders = await Order.find().populate('products')
+            const orders = await Order.find().populate('products.product')
 
-            // console.log("fsdfdsl",orders[0]);
+            // orders.forEach(value =>{
+            //     value.forEach(item => {
+            //         console.log(item);
+            //     })
+            //     console.log(value.product.product_name);
+            // })
+        
             
             res.render('admin/orders',{session, orders})
             
