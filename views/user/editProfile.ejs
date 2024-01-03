@@ -35,7 +35,7 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="email" name="email" id="email1" value="<%= user.email %>">
+                                        <input type="text" name="email" id="email1" value="<%= user.email %>" required="false">
                                         <p id="emailError" class="text-danger"></p>
                                     </div>
                                 </div>
@@ -44,7 +44,8 @@
 
 
                             <div class="edit-address">
-                                <a onclick="emailValidation('<%=user._id%>')"><button type="submit">Submit</button></a>
+                                <a><button type="submit">Submit</button></a>
+                                <!-- onclick="emailValidation('</%=user._id%>')" -->
                             </div>
                         </div>
                     </div>
@@ -53,7 +54,7 @@
         </div>
     </section>
 
-    <script>
+    <!-- <script>
         const addressForm = document.getElementById("addAddressForm1");
 
         const nameInput = document.getElementById("full-name")
@@ -99,60 +100,112 @@
             }
         });
 
-    </script>
+    </script> -->
 
 
     <script>
         const couponForm = document.getElementById("addAddressForm1");
-        const emailInput = document.qetElementById("email1");
+        const emailInput = document.getElementById("email1");
         const emailError = document.getElementById("emailError");
+        const nameInput = document.getElementById("full-name");
+        const nameError = document.getElementById("nameError");
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
 
-        function emailValidation(userId) {
-            if (emailInput.value.trim() === "") {
+        function emailValidation() {
+            const emailValue = emailInput.value.trim();
+
+            if (emailValue === "") {
                 emailError.innerHTML = "Please enter your Email Address!";
                 return false;
-            } else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
-                emailError.innerHTML = "Please enter a valid Email address.";
-                return false;
-            } else {
-                emailError.innerHTML = "";
-                return true;
             }
 
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            couponForm.addEventListener("submit", function (event) {
-                event.preventDefault();
+            if (!emailRegex.test(emailValue)) {
+                emailError.innerHTML = "Please enter a valid Email address.";
+                return false;
+            }
 
-                const validations = [emailValidation(userId)];
-                const hasErrors = validations.some(validation => validation === false);
-
-                if (!hasErrors) {
-                    const formData = new FormData(couponForm);
-
-                    fetch(`/profile/editProfile/${userId}`, {
-                        method: 'POST',
-                        body: formData
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            // return response.json();
-                        })
-                        .then(data => {
-                            // Handle success, if needed
-                            // console.log(data);
-                            window.location.href = '/profile';
-                        })
-                        .catch(error => {
-                            console.error('There was an error!', error);
-
-                        });
-                }
-            });
-
+            emailError.innerHTML = "";
+            return true;
         }
+
+
+        function nameValidation() {
+            if (nameInput.value.trim() === "") {
+                nameError.innerHTML = "Please enter your Full Name!";
+                return false;
+            } else {
+                nameError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function phoneValidation() {
+            const phoneValue = phoneInput.value.trim();
+            if (phoneValue.length === 10 && /^0{10}$/.test(phoneValue)) {
+                phoneError.innerHTML = "Phone number should not consist of 10 consecutive zeros";
+                return false;
+            }
+            if (phoneValue.length !== 10 || isNaN(phoneValue)) {
+                if (phoneValue.length !== 10) {
+                    phoneError.innerHTML = "Phone number should be of length 10";
+                } else if (isNaN(phoneValue)) {
+                    phoneError.innerHTML = "Should not contain any non-numeric characters";
+                }
+                return false;
+            } else {
+                phoneError.innerHTML = "";
+                return true;
+            }
+        }
+
+        couponForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const validations = [emailValidation(), nameValidation(), phoneValidation()];
+            const hasErrors = validations.some(validation => validation === false);
+
+            if (!hasErrors) {
+                console.log("Validation is true");
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your Profile Updated",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setTimeout(() => {
+                    couponForm.submit();
+                }, 1000)
+
+                // const formData = new FormData(couponForm);
+                // console.log(formData);
+
+                //     fetch("/profile/editProfile/'</%= user._id %>'", {
+                //         method: 'POST',
+                //         body: formData
+                //     })
+                //         .then(response => {
+                //             if (!response.ok) {
+                //                 throw new Error('Network response was not ok');
+                //                 console.log("Response is not ok");
+                //             }
+                //             // return response.json();
+                //         })
+                //         .then(data => {
+                //             // Handle success, if needed
+                //             console.log(data);
+                //             window.location.href = '/profile';
+                //         })
+                //         .catch(error => {
+                //             console.error('There was an error!', error);
+                //         });
+            }
+        });
     </script>
+
 
 
 

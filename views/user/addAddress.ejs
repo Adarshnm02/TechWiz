@@ -252,7 +252,17 @@
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {
-                addressForm.submit();
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Your Address has been saved",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                setTimeout(() => {
+                    addressForm.submit();
+                }, 1500)
             }
         });
     </script>

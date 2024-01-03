@@ -236,6 +236,21 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Quantity Updated successfuly"
+                    })
                     console.log('Success:', data);
                     showTotalAmount()
                     // Update the quantity displayed on the page
@@ -243,8 +258,8 @@
                     const totalAmountElement = document.querySelector(`#totalAmount-${productId}`);
                     const grandTotal = document.getElementById('grandTtl')
                     const grandTtl = document.getElementById('grandTtle')
-                    
-                    
+
+
 
 
                     if (quantityElement && totalAmountElement && grandTotal) {
@@ -263,9 +278,9 @@
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                   
 
-                    });
+
+                });
         }
 
 

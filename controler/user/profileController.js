@@ -55,7 +55,8 @@ module.exports = {
     
         async updateProfile(req, res) {
             try {
-                const userId = req.params.id; 
+                const userId = req.session.user
+                console.log(userId)
         
                 const { userName, email, mobile } = req.body;
         

@@ -211,7 +211,7 @@ module.exports = {
         } = req.body;
       
 
-        // console.log(category)
+        console.log(category)
 
         try {
             const productId = id;

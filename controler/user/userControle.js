@@ -210,6 +210,7 @@ module.exports = {
 
                 if (foundUser) {
                     // User already exists
+                    console.log("user is exist")
                     res.render('user/userSignup');
                 } else {
                     if (password === confirmPassword) {
@@ -227,6 +228,7 @@ module.exports = {
 
                         const savedUser = await User.findOne({ userName: username })
                         sendMail(req, res, savedUser._id, email)
+                        
 
                     } else {
                         // Passwords don't match
