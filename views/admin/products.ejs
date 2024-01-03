@@ -1,114 +1,185 @@
 <%- include('../partials/admin/adminHeader') %>
 
-<style>
-    .product-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    /* Adjustments for smaller screens */
-    @media (max-width: 768px) {
+    <style>
         .product-image {
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
         }
-    }
 
-    /* Improve table layout */
-    th {
-        text-align: center;
-    }
+        /* Adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .product-image {
+                width: 30px;
+                height: 30px;
+            }
+        }
 
-    td {
-        vertical-align: middle;
-        text-align: center;
-    }
-</style>
+        /* Improve table layout */
+        th {
+            text-align: center;
+        }
 
-<div class="col-lg-10 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Products</h4>
-            <div class="form-group">
-                <label for="productSearch">Search:</label>
-                <input type="text" class="form-control" id="productSearch" placeholder="Search products">
+        td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination-container a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .pagination-container a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+
+    <div class="col-lg-10 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Products</h4>
+                <form action="products" method="GET">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="userSearch">Search:</label>
+                                <input type="text" name="query" class="form-control" id="userSearch" value="<%= query%>"
+                                    placeholder="Search User" style="margin-left: 50px">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary" style="margin-left: 23px; width: 133px;">Search</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table id="productTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Brand</th>
+                                <th>Product Offer</th>
+                                <th>Price (MRP)</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% const usersPerPage = 10 %>
+                            <% const offset = (currentPage - 1) * usersPerPage; %>
+                            <% products.forEach((product, i)=>{ %>
+                                <tr>
+                                    <td> <%= offset + i + 1 %> </td>
+                                    <td>
+                                        <% if(product.image[0] && product.image[0].contentType && product.image[0].data)
+                                            { %>
+                                            <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
+                                                alt="<%= product.price %>" class="product-image">
+                                            <% } else { %>
+                                                <p>No image available</p>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <%= product.product_name.substring(0, 20) + '...' %>
+                                    </td>
+                                    <td>
+                                        <%= product.brand_name %>
+                                    </td>
+                                    <% if(product.offer) { %>
+                                        <td>
+                                            <%= product.offer %>
+                                        </td>
+                                        <% } else { %>
+                                            <td>0</td>
+                                            <% } %>
+                                            
+
+
+
+
+
+
+
+                                                <%console.log(product)%>
+                                                    <td>
+                                                        <%= product.price %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.stock_count %>
+                                                    </td>
+                                                    <td>
+                                                        <% if(product.is_delete===true) { %>
+                                                            <label class="text-danger">Deactive</label>
+                                                            <% } else { %>
+                                                                <label class="text-success">Activate</label>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/admin/products/<%= product._id %>/edit"
+                                                            class="btn btn-primary">Edit</a>
+                                                        <a href="<%= product.is_delete === true ? '/admin/products/activate/' + product._id : '/admin/products/deactive/' + product._id %>"
+                                                            class="btn <%= product.is_delete === true ? 'btn-primary' : 'btn-danger' %>">
+                                                            <%= product.is_delete===true ? 'Activate' : 'Deactivate' %>
+                                                        </a>
+                                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table id="productTable" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Brand</th>
-                            <th>Product Offer</th>
-                            <th>Category</th>
-                            <th>Price (MRP)</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% products.forEach((product,i)=>{ %>
-                        <tr>
-                            <td><%= i + 1 %></td>
-                            <td>
-                                <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
-                                <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
-                                    alt="<%= product.price %>" class="product-image">
-                                <% } else { %>
-                                    <p>No image available</p>
-                                <% } %>
-                            </td>
-                            <td><%= product.product_name.substring(0, 20) + '...' %></td>
-                            <td><%= product.brand_name %></td>
-                            <% if(product.offer) { %>
-                            <td><%= product.offer %></td>
-                            <% } else { %>
-                            <td>0</td>
+            <div class="pagination-container">
+                <% if (currentPage> 1) { %>
+                    <a href="/admin/products?page=1">First</a>
+                    <a href="/admin/products?page=<%= currentPage - 1 %>">Previous</a>
+                    <% } %>
+
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <a href="/admin/products?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                                <%= i %>
+                            </a>
                             <% } %>
-                            <td><%= product.categoryName %></td>
-                            <td><%= product.price %></td>
-                            <td><%= product.stock_count %></td>
-                            <td>
-                                <% if(product.is_delete === true) { %>
-                                <label class="text-danger">Deactive</label>
-                                <% } else { %>
-                                <label class="text-success">Activate</label>
-                                <% } %>
-                            </td>
-                            <td>
-                                <a href="/admin/products/<%= product._id %>/edit" class="btn btn-primary">Edit</a>
-                                <a href="<%= product.is_delete === true ? '/admin/products/activate/' + product._id : '/admin/products/deactive/' + product._id %>"
-                                    class="btn <%= product.is_delete === true ? 'btn-primary' : 'btn-danger' %>">
-                                    <%= product.is_delete === true ? 'Activate' : 'Deactivate' %>
-                                </a>
-                            </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="/admin/products?page=<%= currentPage + 1 %>">Next</a>
+                                    <a href="/admin/products?page=<%= totalPages %>">Last</a>
+                                    <% } %>
             </div>
+
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function () {
-        // Initialize DataTable with your table's id
-        var dataTable = $('#productTable').DataTable({
-            responsive: true // Enable responsiveness
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                searching: true, // Enable search functionality
+                ordering: true, // Enable column sorting
+                paging: false // Disable pagination
+                // Other options...
+            });
         });
+    </script>
 
-        // Add an event listener for the search input
-        $('#productSearch').keyup(function () {
-            dataTable.search($(this).val()).draw();
-        });
-    });
-</script>
 
-<%- include('../partials/admin/adminFooter') %>
-</html>
+    <%- include('../partials/admin/adminFooter') %>
+
+        </html>

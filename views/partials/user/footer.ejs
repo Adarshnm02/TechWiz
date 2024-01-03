@@ -6,11 +6,11 @@
                 <div class="footer__about">
                     <div class="footer__about__logo">
                         <!-- <a href="./index.html"><img src="/user/img/logo.png" alt=""></a>  -->
-                        <a href="/"><img src="/user/img/new-logo.png" alt=""  style="max-width: 50%;" /></a>
+                        <a href="/"><img src="/user/img/new-logo.png" alt=""  style="max-width: 50% "; /></a>
                     </div>
                     <ul>
-                        <li>Address: 60-49 Road 11378 New York</li>
-                        <li>Phone: +65 11.188.888</li>
+                        <li>Address: 60-49 Road 11378 Calicut</li>
+                        <li>Phone: +91 96.188.888</li>
                         <li>Email: techwiz@gmail.com</li>
                     </ul>
                 </div>
@@ -77,6 +77,62 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="/user/js/owl.carousel.min.js"></script>
 <script src="/user/js/main.js"></script>
 
+<!-- <script src="path/to/bootstrap.min.js"></script> -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+<script>
+     function addToCart(productId) {
+    const data = { product: productId };
+    fetch('/addtocart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+
+        // Show SweetAlert toast notification on success
+        Swal.fire({
+            icon: 'success',
+            title: 'Product added to cart',
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            toast: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+
+        // Show SweetAlert error toast notification on failure
+        Swal.fire({
+            icon: 'error',
+            title: 'Failed to add product to cart',
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            toast: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    });
+}
+
+</script>
 
 
 </body>

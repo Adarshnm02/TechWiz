@@ -8,7 +8,11 @@ const userSchema = new mongoose.Schema({
     email:{
         type:String,
         require:true,
-        lowercase:true
+        lowercase:true,
+        unique: true
+    },
+    mobile:{
+        type:Number,
     },
     password:{
         type:String,
@@ -20,12 +24,30 @@ const userSchema = new mongoose.Schema({
         default:false
     },
     is_blocked:{
-        type:String,
+        type:Boolean,
         default:false
     },
     is_Admin:{
         type:Boolean,
         default:false
+    },
+    cart:[{
+        product:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Product"
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        },
+        totalAmount:{
+            type:Number
+        }
+
+    }],
+    grandTotal:{
+        type: Number,
+        default: 0
     }
 })
 

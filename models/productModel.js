@@ -21,9 +21,9 @@ const productSchema  = new mongoose.Schema({
         type : Number,
         require : true
     },
-    in_stock : {
-        type : Boolean
-    },
+    // in_stock : {
+    //     type : Boolean
+    // },
     price : {
         type : Number,
         // require : true

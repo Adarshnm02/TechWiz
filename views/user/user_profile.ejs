@@ -1,0 +1,150 @@
+<%- include('../partials/user/shortHeader') %>
+
+    <style>
+        /* Custom CSS for enhanced design */
+        /* You can add these styles to your existing CSS file */
+
+        /* Sidebar Styles */
+        .sidenav {
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 15px;
+        }
+
+        .details {
+            color: #333;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .job {
+            color: #666;
+        }
+
+        .sidenav-links a {
+            display: block;
+            color: #fefdfd;
+            padding: 8px 0;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .sidenav-links a.active {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .sidenav-links a:hover {
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Main Content Styles */
+        .main {
+            margin-top: 20px;
+        }
+
+        .main h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .table td {
+            border-top: none;
+            padding: 8px 0;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <!-- Sidebar -->
+                <%- include('../partials/user/profileSidebar') %>
+                <!-- End Sidebar -->
+            </div>
+
+
+
+
+            <div class="col-md-8">
+                <!-- Main Content -->
+                <div class="main">
+                    <h2>DETAILS</h2>
+                    <div class="card">
+                        <div class="card-body border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4></h4>
+                                <div class="edit-delete-buttons">
+                                    <a href="/profile/editProfile/<%= user._id %>"><button class="btn btn-sm btn-primary mr-2">Edit</button></a>
+                                    <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                </div>
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>:</td>
+                                        <td><%=user.userName %></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>:</td>
+                                        <td><%=user.email%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mobile</td>
+                                        <td>:</td>
+                                        <td><%=user.mobile%></td>
+                                    </tr>
+                                    <tr>
+                                        <td>State</td>
+                                        <td>:</td>
+                                        <td><%=address[0]?.state%></td>
+                                    </tr>
+            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <%- include('../partials/user/footer') %>

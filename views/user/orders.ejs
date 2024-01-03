@@ -1,0 +1,318 @@
+<%- include('../partials/user/shortHeader') %>
+
+
+
+    <style>
+        /* Custom CSS for enhanced design */
+        /* You can add these styles to your existing CSS file */
+
+        /* Sidebar Styles */
+        .sidenav {
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 15px;
+        }
+
+        .details {
+            color: #333;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .job {
+            color: #666;
+        }
+
+        .sidenav-links a {
+            display: block;
+            color: #fefdfd;
+            padding: 8px 0;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .sidenav-links a.active {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .sidenav-links a:hover {
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Main Content Styles */
+        .main {
+            margin-top: 20px;
+        }
+
+        .main h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .table td {
+            border-top: none;
+            padding: 8px 0;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .border-bottom {
+            border-bottom: 4px solid #c8c8c8 !important;
+        }
+
+        .address-div {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btnc {
+            background-color: #dc3545;
+            color: #fff !important;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 13px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnc:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+    
+    </style>
+
+
+
+
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <!-- Sidebar -->
+                <%- include('../partials/user/profileSidebar') %>
+                <!-- End Sidebar -->
+            </div>
+
+
+
+
+            <div class="col-md-8">
+                <!-- Main Content -->
+                <div class="main">
+                    <h2>My Orders</h2>
+                    <div class="card">
+                        <div class="card-body border-bottom">
+                            <% orders.forEach(order=>{ %>
+                                <div class="border-bottom address-div">
+                                    <% order.deliveryAddress.forEach(address=> { %>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <!-- <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100"
+                                                height="100"> -->
+                                            <h4></h4>
+                                            <div class="edit-delete-buttons">
+                                                <%if(order.status==="Cancelled" ) {%>
+                                                    <p class="text-danger">Canceled</p>
+                                                    <%} else {%>
+                                                        <a class="btnc btn-danger mr-2"  id="<%= order.orderId %>"
+                                                            onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
+                                                        <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                                        <%}%>
+                                            </div>
+                                        </div>
+
+                                        <table class="table">
+                                            <tbody class="border-bottom">
+                                                <!-- Display limited rows -->
+                                                <tr data-toggle="collapse" data-target="#expandableRows"
+                                                    aria-expanded="false" aria-controls="expandableRows">
+                                                    <td>Order Status</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <%= order.status %>
+                                                    </td>
+                                                </tr>
+                                                <tr data-toggle="collapse" data-target="#expandableRows"
+                                                    aria-expanded="false" aria-controls="expandableRows">
+                                                    <td>Order Date</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <%=order.orderDate.toLocaleDateString()%>
+                                                    </td>
+                                                </tr>
+                                                <tr data-toggle="collapse" data-target="#expandableRows"
+                                                    aria-expanded="false" aria-controls="expandableRows">
+                                                    <td>Total Price</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        ₹ <%=order.grandTotal%>
+                                                    </td>
+                                                </tr>
+                                                <tr data-toggle="collapse" data-target="#expandableRows"
+                                                    aria-expanded="false" aria-controls="expandableRows">
+                                                    <td>Email</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <%=address.email %>
+                                                    </td>
+                                                </tr>
+                                                <!-- Collapsible rows -->
+                                                <tr id="expandableRows" class="collapse">
+                                                    <!-- Include additional rows here -->
+                                                    <td>Address</td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        <%=address.houseName%>, <%=address.city%>, <%=address.district%>
+                                                                    
+                                                    </td>
+                                                </tr>
+                                                
+                                                <% order.products.forEach( (product, i)=>{ %>
+                                                    <tr id="expandableRows" class="collapse">
+                                                        <!-- Include additional rows here -->
+                                                        <td>Product <%=i+1%></td>
+                                                        <td>:</td>
+                                                        <td>
+                                                            <%=product.product.product_name%>
+                                                        </td>
+                                                        <tr id="expandableRows" class="collapse">
+                                                        <td>  </td>
+                                                        <td><span class="mr-3">Quantity  : </span><%= product.quantity %></td>
+                                                        <td><span class="mr-3">Total Price  : </span><%= product.totalAmount %></td>
+                                                        </tr>
+                                    
+                                                    </tr>
+                                                    <!-- Add more collapsible rows as needed -->
+
+                                                    <%})%>
+                                            </tbody>
+                                        </table>
+
+                                        <%})%>
+                                </div>
+                                <%})%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+    <script>
+        function cancelOrder(orderid) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this order!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Select a reason for cancellation',
+                        input: 'select',
+                        inputOptions: {
+
+                            'Not needed anymore': 'Not needed anymore',
+                            'Found a better deal': 'Found a better deal',
+                            'Changed my mind': 'Changed my mind',
+                            'Placed By Mistake': 'Placed By Mistake',
+                            'i dont have Money': 'i dont have Money',
+                            'Other': 'Other',
+                        },
+                        inputPlaceholder: 'Select a reason',
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirm',
+                        cancelButtonText: 'Cancel'
+                    }).then((reasonResult) => {
+                        if (reasonResult.isConfirmed) {
+                            const cancellationReason = reasonResult.value;
+                            fetch(`/cancelOrder/${orderid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ orderID: orderid, reason: cancellationReason }),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Cancelled!',
+                                            text: 'The order has been cancelled.',
+                                            icon: 'success',
+                                        });
+                                        // const statusElement = document.getElementById(`orderStatus_${orderid}`);
+                                        // const button = document.getElementById(`${orderid}`);
+                                        // statusElement.textContent = 'Cancelled';
+                                        // statusElement.classList.remove('text-orange-300');
+                                        // statusElement.classList.add('text-red-500');
+                                        // button.classList.add('hidden');
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Failed to cancel the order. Please try again.',
+                                            icon: 'error',
+                                        });
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An unexpected error occurred. Please try again.',
+                                        icon: 'error',
+                                    });
+                                });
+
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire('Cancelled', 'Your order is safe :)', 'info');
+                }
+            });
+        }
+    </script>
+
+
+
+    <%- include('../partials/user/footer') %>

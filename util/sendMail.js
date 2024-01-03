@@ -17,7 +17,7 @@ generateSalt();
 const sendToMail = (req,res, userId,email) =>{
     console.log("mailoption");
     console.log(email,"form sendMail");
-    console.log(userId);
+    console.log(userId, "userId");
     const transporter = nodeMailer.createTransport({
         service:'Gmail',
         auth:{
@@ -49,7 +49,7 @@ const sendToMail = (req,res, userId,email) =>{
         subject: 'OTP Verification',
         html: `<p> Your otp for varification is ${OTP} </p>`,
     }
-console.log(OTP);
+console.log(OTP, "otp");
     const sendMail = async (transporter,options) =>{
         try{
             const hashedOTP = await bcrypt.hash(OTP, salt)
@@ -67,7 +67,7 @@ console.log(OTP);
                 error:'',
                 id:userId
             })
-            console.log(email);
+            console.log(email ,"email");
         }catch(error){
             res.status(500).json({
                 status:"FAILED",

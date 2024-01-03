@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
         rel="stylesheet" />
 
+
     <!-- Css Styles -->
     <link rel="stylesheet" href="/user/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="/user/css/font-awesome.min.css" type="text/css" />
@@ -23,6 +24,43 @@
     <link rel="stylesheet" href="/user/css/slicknav.min.css" type="text/css" />
     <link rel="stylesheet" href="/user/css/style.css" type="text/css" />
     <link rel="stylesheet" href="/user/css/user.css" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+    <script>$(document).ready(function () {
+            $('.toggle-btn').on('click', function () {
+                $('.departments-list').slideToggle(); // Toggle visibility of departments list
+            });
+        });
+    </script>
+
+    <style>
+        /* Adjust the z-index and position of the departments list */
+        .hero__categories {
+            position: relative;
+            /* Ensure it's a positioned element for z-index to work */
+        }
+        .hero {
+            padding-bottom: 0;
+        }
+
+        .departments-list {
+            position: absolute;
+            top: 100%;
+            /* Position it below the "All departments" button */
+            left: 0;
+            background-color: white;
+            /* Set background color as needed */
+            z-index: 1000;
+            /* Set a higher z-index to overlap other content */
+            /* Additional styling */
+            width: 260px;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -36,7 +74,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="/user/img/logo.png" alt="" /></a>
+            <a href="#"><img src="/user/img/logo.png" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -44,10 +82,13 @@
                     <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                </li>
+                <li>
+                    <a href="/profile"><img src="/user/img/user-1.jpg" alt="user-avathar"></a>
                 </li>
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
+            <!-- <div class="header__cart__price">item: <span>$150.00</span></div> -->
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
@@ -60,8 +101,13 @@
                 </ul>
             </div>
             <div class="header__top__right__auth">
-                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                <% if (session) { %>
+                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                        <% } %>
             </div>
+
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
@@ -70,10 +116,10 @@
                 <li>
                     <a href="#">Pages</a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
+                        <!-- <li><a href="./shop-details.html">Shop Details</a></li> -->
+                        <li><a href="/cart">Shoping Cart</a></li>
+                        <li><a href="/checkout">Check Out</a></li>
+                        <!-- <li><a href="./blog-details.html">Blog Details</a></li> -->
                     </ul>
                 </li>
                 <li><a href="./blog.html">Blog</a></li>
@@ -90,7 +136,7 @@
         <div class="humberger__menu__contact">
             <ul>
                 <li><i class="fa fa-envelope"></i> techwiz@gmail.com</li>
-                <li>Free Shipping for all Order of $99</li>
+                <li>Free Shipping for all Order of ₹99</li>
             </ul>
         </div>
     </div>
@@ -107,7 +153,7 @@
                         <div class="header__top__left">
                             <ul>
                                 <li><i class="fa fa-envelope"></i> techwiz@gmail.com</li>
-                                <li>Free Shipping for all Order of $99</li>
+                                <li>Free Shipping for all Order of ₹99</li>
                             </ul>
                         </div>
                     </div>
@@ -129,16 +175,18 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <%if(session){ %>
-                                    <a href="/logout">Logout</a>
+                                <% if (session) { %>
+                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                                     <% } else { %>
-                                        <a href="/login"><i class="fa fa-user"></i> Login</a>
-                                        <% }%>
+                                        <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                                        <% } %>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
         <div class="container">
@@ -156,10 +204,10 @@
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
+                                    <!-- <li><a href="./shop-details.html">Shop Details</a></li> -->
+                                    <li><a href="/cart">Shoping Cart</a></li>
+                                    <li><a href="/checkout">Check Out</a></li>
+                                    <!-- <li><a href="./blog-details.html">Blog Details</a></li> -->
                                 </ul>
                             </li>
                             <li><a href="/">Blog</a></li>
@@ -174,10 +222,16 @@
                                 <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                            </li>
+                            <li>
+                                <!-- <a href="/profile"><img class="fa user_avathar" src="/user/img/user-1.jpg"
+                                        alt="user-avathar"></a> -->
+                                
+                                        <a href="/profile"><i class="fa solid fa-user"></i></a>
                             </li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                        <!-- <div class="header__cart__price">item: <span>$150.00</span></div> -->
                     </div>
                 </div>
             </div>
@@ -200,51 +254,53 @@
                     <div class="hero__categories">
                         <div class="hero__categories__all">
                             <i class="fa fa-bars"></i>
-                            <span>All departments</span>
+                            <span class="toggle-btn">All departments</span>
                         </div>
-                        <ul>
-                            <li><a href="#">Mobile</a></li>
-                            <li><a href="#">Laptop</a></li>
-                            <li><a href="#">Camera</a></li>
-                            <li><a href="#">Mobile Accessories</a></li>
-                            <li><a href="#">Laptop Accessories</a></li>
-                            <li><a href="#">Camera Accessories</a></li>
-                            <li><a href="#">Other</a></li>
+                        <ul class="departments-list" style="display: none;">
+                            <li><a href="/shop-grid">Mobile</a></li>
+                            <li><a href="/shop-grid">Laptop</a></li>
+                            <li><a href="/shop-grid">Camera</a></li>
+                            <li><a href="/shop-grid">Mobile Accessories</a></li>
+                            <li><a href="/shop-grid">Laptop Accessories</a></li>
+                            <li><a href="/shop-grid">Camera Accessories</a></li>
+                            <li><a href="/shop-grid">Other</a></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-lg-9">
                     <div class="hero__search">
+                        
+                        
                         <div class="hero__search__form">
-                            <form action="#">
-                                <div class="hero__search__categories">
-                                    All Categories
-                                    <span class="arrow_carrot-down"></span>
-                                </div>
-                                <input type="text" placeholder="What do yo u need?" />
+                            <form action="/index" method="GET"> <!-- Update action attribute -->
+                                <input type="text" name="query" placeholder="What do you need?" /> 
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
                         </div>
+                        
+
+
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
                                 <i class="fa fa-phone"></i>
                             </div>
                             <div class="hero__search__phone__text">
-                                <h5>+65 11.188.888</h5>
+                                <h5>+91 96.188.888</h5>
                                 <span>support 24/7 time</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="hero__item set-bg" data-setbg="/user/img/banner/Banner.jpg" style="height: 356px;">
-                        <!-- <div class="hero__text">
+                    <!-- <div class="hero__item set-bg" data-setbg="/user/img/banner/Banner.jpg" style="height: 356px;"> -->
+                    <!-- <div class="hero__text">
                             <span>FRUIT FRESH</span>
                             <h2>Vegetable <br />100% Organic</h2>
                             <p>Free Pickup and Delivery Available</p>
                             <a href="#" class="primary-btn">SHOP NOW</a>
                         </div> -->
-                    </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- Hero Section End -->

@@ -67,7 +67,9 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="#"><i class="fa fa-user"></i> Login</a>
+                                
+                                <li><a href="/"><i class="fa fa-user"></i> Login</a></li>
+                                
                             </div>
                         </div>
                     </div>
@@ -90,11 +92,11 @@
                     <h5 class="card-title text-center mb-4">Login</h5>
                     <% if (typeof message !="undefined" ) {%>
 
-                        <p class="mt-3 text-info ">
+                        <p id="errorMessage" class="mt-3 text-danger">
                             <%= message %>
                         </p>
-                
-                        <%} %>
+                        <%}%>
+
                     <form action="/login" method="POST" id="registrationForm2">
                         <div class="mb-3">
                             <label for="username" class="form-label">Email</label>
@@ -112,6 +114,7 @@
                             <!-- </a> -->
                         </div>
                         <div class="text-center mt-3">
+                            <a href="/forgetPassword">ForgetPassword</a>
                             <p>Create an account <a href="/signup">Register</a></p>
                         </div>
                     </form>
@@ -123,7 +126,14 @@
 
 
 
-
+<script>
+    setTimeout(() => {
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.style.display = "none"
+        }
+    }, 3000);
+</script>
 
 <script>
 
@@ -155,7 +165,7 @@
 
 		function passwordValidation() {
 			if (passwordInput.value.trim() === "" || passwordInput.value.length < 4) {
-				passwordError.innerHTML = "Please Enter Password with a minimum length of 8 characters!";
+				passwordError.innerHTML = "Please Enter Password with a minimum length of 4 characters!";
 				return false;
 			} else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{4,}$/.test(passwordInput.value))) {
 				passwordError.innerHTML = "Password includes uppercase, lowercase, numbers, and symbols!";
@@ -174,7 +184,7 @@
 			];
 			const hasErrors = validations.some(validation => validation === false);
 			if (!hasErrors) {
-				couponForm.submit(); // Trigger the form submission
+				couponForm.submit(); 
 			}
 		});
 

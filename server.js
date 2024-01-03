@@ -4,9 +4,12 @@ const app = express()
 const path = require('path')
 
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const flash = require("connect-flash");
 const morgan = require('morgan')
+const { v4: uuidv4 } = require("uuid");
+const Razorpay = require('razorpay')
 
 const userRoute = require("./routes/userRoute.js");
 const adminRoute = require("./routes/adminRoute.js");
@@ -28,8 +31,16 @@ app.use(express.static("public"));
 app.use(session({
   secret: 'your-secret-key',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  // store: new MongoStore({
+  //   mongoUrl: process.env.MONGO_URL,
+  //   collection: 'sessions',
+  // }),  
 }));
+
+
+
+
 
 app.use(flash());
 
@@ -44,3 +55,5 @@ app.all("/*",(req,res)=>res.render("404",{url:req.url}))
 
 const PORT = process.env.PORT;
 app.listen(PORT, ()=> console.log("Server id Running on Port ", PORT))
+
+

@@ -1962,10 +1962,10 @@ ol {
 .shoping__cart__table table tbody tr td.shoping__cart__quantity .pro-qty input {
 	color: #1c1c1c;
 }
-
+/* 
 .shoping__cart__table table tbody tr td.shoping__cart__quantity .pro-qty input::placeholder {
 	color: #1c1c1c;
-}
+} */
 
 .shoping__cart__table table tbody tr td.shoping__cart__quantity .pro-qty .qtybtn {
 	width: 15px;
