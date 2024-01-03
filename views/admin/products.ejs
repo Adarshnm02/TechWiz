@@ -54,10 +54,20 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Products</h4>
-                <div class="form-group">
-                    <label for="productSearch">Search:</label>
-                    <input type="text" class="form-control" id="productSearch" placeholder="Search products">
-                </div>
+                <form action="products" method="GET">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="userSearch">Search:</label>
+                                <input type="text" name="query" class="form-control" id="userSearch" value="<%= query%>"
+                                    placeholder="Search User" style="margin-left: 50px">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary" style="margin-left: 23px; width: 133px;">Search</button>
+                        </div>
+                    </div>
+                </form>
                 <div class="table-responsive">
                     <table id="productTable" class="table table-striped">
                         <thead>
@@ -139,7 +149,7 @@
             </div>
             <div class="pagination-container">
                 <% if (currentPage> 1) { %>
-                    <a href="/admin/productspage=1">First</a>
+                    <a href="/admin/products?page=1">First</a>
                     <a href="/admin/products?page=<%= currentPage - 1 %>">Previous</a>
                     <% } %>
 

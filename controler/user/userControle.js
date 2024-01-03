@@ -168,23 +168,45 @@ module.exports = {
                     is_delete: false
                 }).skip(skip).limit(limit).sort({ _id: -1 });
             } else {
-                products = await Product
-                    .find({ is_delete: false })
-                    .populate({
-                        path: 'category',
-                        match: { is_disable: false }
-                    })
-                    .skip(skip)
-                    .limit(limit)
-                    .sort({ _id: -1 });
-
+               products = await Product.aggregate([
+                    {
+                        $match: { is_delete: false }
+                    },
+                    {
+                        $lookup: {
+                            from: 'productcategories', // Assuming the name of the productCategory collection
+                            localField: 'category',
+                            foreignField: '_id',
+                            as: 'category'
+                        }
+                    },
+                    {
+                        $unwind: '$category' // Unwind the category array created by $lookup
+                    },
+                    {
+                        $match: { 'category.is_disable': false }
+                    },
+                    {
+                        $sort: { _id: -1 }
+                    },
+                    {
+                        $skip: skip
+                    },
+                    {
+                        $limit: limit
+                    }
+                ]);
+                console.log(products);
+                
+                // Now 'products' contains the result after aggregation
+                
                 latestPrd = await Product
                     .find({ is_delete: false })
                     .limit(limit)
                     .sort({ _id: 1 })
             }
 
-            console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
+            // console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
@@ -211,7 +233,7 @@ module.exports = {
                 if (foundUser) {
                     // User already exists
                     console.log("user is exist")
-                    res.render('user/userSignup');
+                    res.render('user/userSignup',{message: "User is already exist"});
                 } else {
                     if (password === confirmPassword) {
                         const hashPassword = await bcrypt.hash(password, salt)

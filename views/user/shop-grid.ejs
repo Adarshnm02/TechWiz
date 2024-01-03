@@ -292,7 +292,7 @@
                                         style="display: flex; justify-content: center;">
                                         <% if(element.image[0] && element.image[0].contentType && element.image[0].data)
                                             { %>
-                                            <img src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
+                                            <img onclick="productDetails('<%= element._id %>')" src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
                                                 alt="IMG-PRODUCT" style="height: 260.34px" />
                                             <% } else { %>
                                                 <p>No image available</p>
@@ -306,7 +306,7 @@
                                                         </li>
                                                     </ul>
                                     </div>
-                                    <div class="product__item__text">
+                                    <div class="product__item__text" onclick="productDetails('<%= element._id %>')">
                                         <h6><a href="/product/Details/<%= element._id%>">
                                                 <%= element.product_name %>
                                             </a>
@@ -345,7 +345,11 @@
         </div>
     </section>
 
-
+    <script>
+        function productDetails(Id) {
+            window.location.replace(`/product/Details/${Id}`)
+        }
+    </script>
 
 
     <%- include('../partials/user/footer') %>

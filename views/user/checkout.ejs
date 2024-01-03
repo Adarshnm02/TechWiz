@@ -1,4 +1,18 @@
 <%- include('../partials/user/header') %>
+<style>
+    .btn {
+        background-color: #333333bd;
+        border: none;
+        border-radius: 10px;
+        padding: 6px 13px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #000000;
+        color: #fff;
+    }
+</style>
 
 
     <!-- Checkout Section Begin -->
@@ -78,9 +92,11 @@
                                                     </p>
                                                 </div>
                                                 <div class="address-actions">
-                                                    <a href="/editAddress/<%=address._id %>"><button>Edit</button></a>
+                                                    <a href="/editAddress/<%=address._id %>" class="btn btn-success">
+                                                            Edit</a>
                                                     <!-- onclick="editAddress('address1')" -->
-                                                    <button onclick="deleteAddress('address1')">Delete</button>
+                                                    <button onclick="deleteAddress('address1')"
+                                                        class=" btn btn-success" style="background-color: #f31a1abd;">Delete</button>
                                                 </div>
                                             </div>
 
@@ -110,7 +126,7 @@
                                     </div>
 
                                     <div class="edit-address">
-                                       <a href="/addAddress"><button>Add New Address</button></a> 
+                                        <a href="/addAddress"><button>Add New Address</button></a>
                                     </div>
 
                                 </div>
@@ -194,9 +210,9 @@
     <script>
         const address = document.getElementById(`addressOption`);
         const payment = document.getElementById('paymentOption');
-    
+
         const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').value;
-        
+
         async function checkOut() {
             try {
                 // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
@@ -207,19 +223,19 @@
 
                 if (selectedPaymentOption === 'razorpay') {
 
-                    fetch("/razorpay",{method:"post"}).then(async res=>{
-                        if(res.ok){
+                    fetch("/razorpay", { method: "post" }).then(async res => {
+                        if (res.ok) {
                             let id = await res.json()
                             console.log(id)
                             razorpay(id)
                         }
                     })
 
-                    
+
 
 
                 } else {
-                    console.log("from payment: ",selectedPaymentOption);
+                    console.log("from payment: ", selectedPaymentOption);
 
                     const data = { address: selectedAddrerssOption, payment: selectedPaymentOption };
 
@@ -246,7 +262,7 @@
                             },
                             body: JSON.stringify(data),
                         });
-                     
+
                         // const orderData = await orderResponse.json();
 
                         // Display a success SweetAlert and redirect on successful order placement
@@ -258,7 +274,7 @@
                             window.location.href = '/';
                             // /orderSuccess
                         });
-                    } else { 
+                    } else {
                         Swal.fire({
                             title: 'Insufficient Stock',
                             text: 'The stock for some products is insufficient. Please review your order.',
@@ -266,7 +282,7 @@
                         });
                     }
                 }
-            
+
 
 
             } catch (error) {
@@ -277,8 +293,8 @@
 
     </script>
 
-        
-        <!-- // Reference to the PLACE ORDER button
+
+    <!-- // Reference to the PLACE ORDER button
         const placeOrderButton = document.getElementById('placeOrderBtn');
         
         // Event listener for the button click
@@ -291,8 +307,8 @@
                         confirmButtonText: 'Okay'
                     });
                 }); -->
-                
-        
+
+
 
 
     <!-- <button id="rzp-button1">Pay with Razorpay</button> -->
@@ -300,7 +316,7 @@
     <script>
 
 
-      function razorpay(id) {
+        function razorpay(id) {
 
 
             var options = {
@@ -312,25 +328,25 @@
                 "order_id": id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                 "handler": async function (response) {
                     const data = { address: selectedAddrerssOption, payment: "razorpay" };
-                        console.log("22222222222222222222222222")
-                        // Proceed with placing the order
-                        const orderResponse = await fetch(`/checkout`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(data),
-                        });
+                    console.log("22222222222222222222222222")
+                    // Proceed with placing the order
+                    const orderResponse = await fetch(`/checkout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
 
 
-                        Swal.fire({
-                            title: 'Order Placed!',
-                            text: 'Good job!',
-                            icon: 'success'
-                        }).then(() => {
-                            window.location.href = '/orderSuccess';
-                        });
-                   
+                    Swal.fire({
+                        title: 'Order Placed!',
+                        text: 'Good job!',
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/orderSuccess';
+                    });
+
                 },
                 "prefill": {
                     "name": "Gaurav Kumar",
@@ -357,7 +373,7 @@
 
             rzp1.open();
         }
-        
+
     </script>
 
     <%- include('../partials/user/footer') %>

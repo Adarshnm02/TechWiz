@@ -35,7 +35,7 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="text" name="email" id="email1" value="<%= user.email %>" required="false">
+                                        <input type="text" name="" id="email1" value="<%= user.email %>" readonly>
                                         <p id="emailError" class="text-danger"></p>
                                     </div>
                                 </div>
@@ -45,7 +45,6 @@
 
                             <div class="edit-address">
                                 <a><button type="submit">Submit</button></a>
-                                <!-- onclick="emailValidation('</%=user._id%>')" -->
                             </div>
                         </div>
                     </div>
@@ -54,82 +53,35 @@
         </div>
     </section>
 
-    <!-- <script>
-        const addressForm = document.getElementById("addAddressForm1");
-
-        const nameInput = document.getElementById("full-name")
-        const nameError = document.getElementById("nameError")
-        const phoneInput = document.getElementById('phone')
-        const phoneError = document.getElementById('phoneError')
-
-        function nameValidation() {
-            if (nameInput.value.trim() === "") {
-                nameError.innerHTML = "Please enter your Full Name!"
-                return false;
-            } else {
-                nameError.innerHTML = "";
-                return true;
-            }
-
-        }
-        function phoneValidation() {
-            const phoneValue = phoneInput.value.trim();
-            if (phoneValue.length !== 10 || isNaN(phoneValue)) {
-                if (phoneValue.length !== 10) {
-                    phoneError.innerHTML = "Phone number should be of length 10";
-                } else if (isNaN(phoneValue)) {
-                    phoneError.innerHTML = "Should not contain any non-numeric characters";
-                }
-                return false;
-            } else {
-                phoneError.innerHTML = "";
-                return true;
-            }
-        }
-
-        addressForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            const validations = [
-                nameValidation(),
-                phoneValidation()
-
-            ];
-            const hasErrors = validations.some(validation => validation === false);
-            if (!hasErrors) {
-                addressForm.submit();
-            }
-        });
-
-    </script> -->
 
 
     <script>
         const couponForm = document.getElementById("addAddressForm1");
-        const emailInput = document.getElementById("email1");
-        const emailError = document.getElementById("emailError");
+        // const emailInput = document.getElementById("email1");
+        // const emailError = document.getElementById("emailError");
         const nameInput = document.getElementById("full-name");
         const nameError = document.getElementById("nameError");
         const phoneInput = document.getElementById('phone');
         const phoneError = document.getElementById('phoneError');
 
-        function emailValidation() {
-            const emailValue = emailInput.value.trim();
+        // function emailValidation() {
+        //     const emailValue = emailInput.value.trim();
 
-            if (emailValue === "") {
-                emailError.innerHTML = "Please enter your Email Address!";
-                return false;
-            }
+        //     if (emailValue === "") {
+        //         emailError.innerHTML = "Please enter your Email Address!";
+        //         return false;
+        //     }
 
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        //     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            if (!emailRegex.test(emailValue)) {
-                emailError.innerHTML = "Please enter a valid Email address.";
-                return false;
-            }
+        //     if (!emailRegex.test(emailValue)) {
+        //         emailError.innerHTML = "Please enter a valid Email address.";
+        //         return false;
+        //     }
 
-            emailError.innerHTML = "";
-            return true;
-        }
+        //     emailError.innerHTML = "";
+        //     return true;
+        // }
 
 
         function nameValidation() {
@@ -164,7 +116,7 @@
         couponForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const validations = [emailValidation(), nameValidation(), phoneValidation()];
+            const validations = [nameValidation(), phoneValidation()];
             const hasErrors = validations.some(validation => validation === false);
 
             if (!hasErrors) {

@@ -1,13 +1,12 @@
 const express = require('express');
 const productCategory = require('../../models/categoryModel');
 
-function isValidImage(file) {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    const check = allowedTypes.includes(file.mimetype);
-    console.log("image", check);
 
-    return check
-}
+const isValidImage = (file) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    return file && allowedTypes.includes(file.mimetype);
+};
+
 
 
 
@@ -17,7 +16,7 @@ module.exports = {
     async category(req, res) {
         try {
             const category = await productCategory.find()
-            console.log(category);
+            // console.log(category);
 
             if (category) {
                 res.render('admin/category', { category })
@@ -45,46 +44,50 @@ module.exports = {
 
     async addProductCategory(req, res) {
         try {
-            if (!req.body.categoryName || !req.file) {
+            const category = await productCategory.find()
+            const { categoryName, description } = req.body;
+            const image = req.file;
+    
+            if (!categoryName || !image) {
                 console.log("Category name or image not found");
                 return res.render('admin/addCategory', {
                     message: "All fields must be filled",
-                })
+                });
             }
-
-            const categoryName = req.body.categoryName.charAt(0).toUpperCase() + req.body.categoryName.slice(1).toLowerCase();
-
-            const exist = await productCategory.findOne({
-                categoryName: categoryName
+    
+            const categoryNameFormatted = categoryName.charAt(0).toUpperCase() + categoryName.slice(1).toLowerCase();
+    
+            const existingCategory = await productCategory.findOne({
+                categoryName: categoryNameFormatted
             });
-            if (!exist) {
-                const category = new productCategory({
-                    categoryName: req.body.categoryName,
-                    description: req.body.description,
+    
+            if (!existingCategory) {
+                if (!isValidImage(image)) {
+                    console.log("Not a valid image file");
+                    return res.render('admin/addCategory', { message: 'Not a valid image file' });
+                }
+    
+                const categorys = new productCategory({
+                    categoryName: categoryNameFormatted,
+                    description: description,
                     image: {
-                        data: req.file.buffer,
-                        contentType: req.file.mimetype
+                        data: image.buffer,
+                        contentType: image.mimetype
                     }
                 });
-
-                if (category) {
-
-                    await category.save();
-                    console.log("Category Saved", category);
-                }
-
-                return res.render("admin/addCategory", { message: "Category insert successfully" })
-
+    
+                await categorys.save();
+                console.log("Category Saved");
+                return res.render("admin/category", {category});
             } else {
-                console.log("This Category is already exist");
-                return res.render("admin/addCategory", { message: "This Category is already exist" })
+                console.log("This Category already exists");
+                return res.render("admin/addCategory", { message: "This Category already exists" });
             }
         } catch (error) {
-            console.log(error.message);
-            res.render('/admin/500')
+            console.error(error.message);
+            res.render('admin/500');
         }
     },
-
 
 
     async categoryDisable(req, res) {
@@ -121,67 +124,67 @@ module.exports = {
 
         }
     },
-
     async updateCategory(req, res) {
         try {
             const { id } = req.params;
             const { description } = req.body;
 
             const category = await productCategory.findById(id);
+
             const editCategoryName = req.body.categoryName.charAt(0).toUpperCase() + req.body.categoryName.slice(1).toLowerCase();
-            const exist = await productCategory.findOne({
-                categoryName: editCategoryName
-            });
+
+            const exist = await productCategory.findOne({ categoryName: editCategoryName });
+
             if (exist) {
-                console.log("exist");
-                res.render('admin/editCategory', { category, message: "categrory exist" })
-            } else {
+                if (exist.categoryName !== editCategoryName) {
 
-                const data = {
-                    categoryName: editCategoryName,
-                    description: description
-                };
-                if( !isValidImage(req.file)){
-                    return res.render('admin/editCategory',{message: 'not a image',category})
+                    return res.render('admin/editCategory', { category, message: "Category already exists" });
                 }
-
-                // Check if a file was uploaded
-                if (req.file) {
-
-                    if (category) {
-                        // Update the category's image if a file was provided
-                        category.image = {
-                            data: req.file.buffer,
-                            contentType: req.file.mimetype
-                        };
-                        await category.save();
-                    } else {
-                        console.log("Category not found");
-                        return res.status(404).send("Category not found");
-                    }
-                }
-
-                // Update other category details
-                const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
-
-                console.log(updatedCategory);
-                return res.redirect('/admin/category');
             }
+
+            const data = {
+                categoryName: editCategoryName,
+                description: description
+            };
+            if (req.file) {
+                if (!isValidImage(req.file)) {
+                    return res.render('admin/editCategory', { message: 'Not a valid image file', category });
+                }
+            }
+
+
+            if (req.file) {
+                if (category) {
+                    category.image = {
+                        data: req.file.buffer,
+                        contentType: req.file.mimetype
+                    };
+                    await category.save();
+                } else {
+                    console.log("Category not found");
+                    return res.status(404).send("Category not found");
+                }
+            }
+
+            // Update other category details
+            const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
+
+            console.log("Category updated");
+            return res.redirect('/admin/category');
         } catch (error) {
-            console.log(error.message);
-            res.render('admin/500')
+            console.error(error.message);
+            res.render('admin/500');
         }
     },
-
 
     async imageDelete(req, res) {
         try {
             const { id } = req.params;
-            const { imageId } = req.body; // Assuming the key for imageId in req.body
+            const { imageId } = req.body; 
 
             const updatedCategory = await productCategory.findByIdAndUpdate(
                 id,
-                { $unset: { image: '' } }, // Removing the image field
+                { $unset: { image: '' } }, 
                 { new: true }
             );
 

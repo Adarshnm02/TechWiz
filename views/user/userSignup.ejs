@@ -54,13 +54,12 @@
 					<span class="login100-form-title">
 						SignUp
 					</span>
-					<% if (typeof message !="undefined" ) {%>
+					  <% if (typeof message !="undefined" ) {%>
 
-						<p class="mt-3 text-danger">
-							<%= message %>
-						</p>
-
-						<%} %>
+                        <p id="errorMessage" class="mt-3 text-danger">
+                            <%= message %>
+                        </p>
+                        <%}%>
 
 							<div class="wrap-input100 validate-input">
 								<input class="input100" type="text" name="username" placeholder="Username"
@@ -132,6 +131,14 @@
 
 
 	<!-- </section> -->
+	<script>
+        setTimeout(() => {
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.style.display = "none"
+            }
+        }, 3000);
+    </script>
 
 	<script>
 

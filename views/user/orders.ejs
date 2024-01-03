@@ -97,6 +97,21 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        
+        .btnc {
+            background-color: #dc3545;
+            color: #fff !important;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 13px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnc:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+    
     </style>
 
 
@@ -107,37 +122,7 @@
         <div class="row mt-5">
             <div class="col-md-4">
                 <!-- Sidebar -->
-                <div class="sidenav">
-                    <div class="profile">
-                        <% if(user && user.image && user.image.contentType) { %>
-
-                            <!-- <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="Profile Image"
-                        width="100" height="100"> -->
-                            <img class="w-100"
-                                src="data:<%= user.image.contentType %>;base64,<%= user.image.data.toString('base64')%>"
-                                width="100" height="100" />
-                            <% } else { %>
-                                <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100" height="100">
-
-                                <% } %>
-                                    <div class="details">
-                                        <div class="name">
-                                            <%= user.userName %>
-                                        </div>
-                                        <!-- <div class="job">Web Developer</div> -->
-                                    </div>
-                    </div>
-                    <div class="sidenav-links">
-                        <button class="btn btn-primary btn-block mt-3" type="submit">
-                            Change Image
-                        </button>
-                        <a href="/profile" class="btn btn-success btn-block mt-3">Profile</a>
-                        <a href="/profile/address" class="btn btn-success btn-block mt-3">My Address</a>
-                        <a href="/order" class="btn btn-success btn-block mt-3">My Orders</a>
-                        <a href="/newPassword" class="btn btn-success btn-block mt-3">Change Password</a>
-                        <a href="/coupons" class="btn btn-success btn-block mt-3">coupons</a>
-                    </div>
-                </div>
+                <%- include('../partials/user/profileSidebar') %>
                 <!-- End Sidebar -->
             </div>
 
@@ -162,7 +147,7 @@
                                                 <%if(order.status==="Cancelled" ) {%>
                                                     <p class="text-danger">Canceled</p>
                                                     <%} else {%>
-                                                        <a class="btn btn-danger mr-2" style="background-color: #d00000; color: #252525;" id="<%= order.orderId %>"
+                                                        <a class="btnc btn-danger mr-2"  id="<%= order.orderId %>"
                                                             onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
                                                         <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
                                                         <%}%>

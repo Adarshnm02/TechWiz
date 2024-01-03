@@ -57,12 +57,12 @@
                 <% products.forEach(product=> { %>
 
 
-                    <div class="col-lg-4 col-md-6 col-sm-6" onclick="productDetails('<%= product._id %>')">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
 
-                            <div class="product__item__pic set-bg" style="display: flex; justify-content: center;">
+                            <div class="product__item__pic set-bg"  style="display: flex; justify-content: center;">
                                 <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
-                                    <img src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
+                                    <img onclick="productDetails('<%= product._id %>')" src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
                                         alt="IMG-PRODUCT" style="height: 260.34px" />
                                     <% } else { %>
                                         <p>No image available</p>
@@ -75,7 +75,7 @@
                                                 </li>
                                             </ul>
                             </div>
-                            <div class="product__item__text link">
+                            <div class="product__item__text link" onclick="productDetails('<%= product._id %>')">
                                 <h6><a>
                                         <%= product.product_name %>
                                     </a>

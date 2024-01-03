@@ -1,3 +1,5 @@
+const User = require('../models/userModel')
+
 
 module.exports = {
 
@@ -9,8 +11,13 @@ isLogged (req, res, next){
           next()
     }
 },
-isLogedout (req, res, next) {
+async isLogedout (req, res, next) {
     if (req.session.user) {
+        const user = await User.findById(req.session.user);
+        if (user.is_blocked) {
+            console.log("User blocked by admin");
+            return res.redirect('/index');
+        }
        next()
     } else {
         req.session.url = req.url

@@ -40,10 +40,21 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Products</h4>
-                <div class="form-group">
-                    <label for="userSearch">Search:</label> 
-                    <input type="text" class="form-control" id="userSearch" placeholder="Search User">
-                </div>
+                <form action="userList" method="GET">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="userSearch">Search:</label>
+                                <input type="text" name="query" class="form-control" id="userSearch" value="<%= query%>"
+                                    placeholder="Search User" style="margin-left: 50px">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary" style="margin-left: 23px; width: 133px;">Search</button>
+                        </div>
+                    </div>
+                </form>
+                
                 <div class="table-responsive">
                     <table id="userTable" class="table table-striped datatable">
                         <thead>
@@ -57,44 +68,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% const usersPerPage = 10 %>
-                            <% const offset = (currentPage - 1) * usersPerPage; %>
-                            <% users.forEach((user,i)=>{ %>
+                            <% const usersPerPage=10 %>
+                                <% const offset=(currentPage - 1) * usersPerPage; %>
+                                    <% users.forEach((user,i)=>{ %>
 
-                                <tr>
-                                    <td>
-                                        <%= offset + i + 1 %>
-                                    </td>
-                                    <td>
-                                        <%= user.userName %>
-                                    </td>
-                                    <td>
-                                        <%= user.email %>
-                                    </td>
+                                        <tr>
+                                            <td>
+                                                <%= offset + i + 1 %>
+                                            </td>
+                                            <td>
+                                                <%= user.userName %>
+                                            </td>
+                                            <td>
+                                                <%= user.email %>
+                                            </td>
 
-                                    <% if(user.is_varified===true) { %>
-                                        <td>Verified</td>
-                                        <% } else { %>
-                                            <td>Not Verified</td>
-                                            <%}%>
+                                            <% if(user.is_varified===true) { %>
+                                                <td>Verified</td>
+                                                <% } else { %>
+                                                    <td>Not Verified</td>
+                                                    <%}%>
 
-                                                <td>
-                                                    <% if (user.is_blocked===true || user.is_blocked==='true' ) { %>
-                                                        <label class="text-danger">Blocked</label>
-                                                        <% } else { %>
-                                                            <label class="text-success">Active</label>
-                                                            <% } %>
-                                                </td>
+                                                        <td>
+                                                            <% if (user.is_blocked===true || user.is_blocked==='true' )
+                                                                { %>
+                                                                <label class="text-danger">Blocked</label>
+                                                                <% } else { %>
+                                                                    <label class="text-success">Active</label>
+                                                                    <% } %>
+                                                        </td>
 
-                                                <td>
-                                                    <a href="/admin/userList/<%= user.is_blocked === true || user.is_blocked === 'true' ? 'Unblock/' + user._id : 'Block/' + user._id %>"
-                                                        class="btn <%= user.is_blocked === true || user.is_blocked === 'true' ? 'btn-primary' : 'btn-danger' %>">
-                                                        <%= user.is_blocked===true || user.is_blocked==='true'
-                                                            ? 'Unblock' : 'Block' %>
-                                                    </a>
-                                                </td>
-                                </tr>
-                                <% }) %>
+                                                        <td>
+                                                            <a href="/admin/userList/<%= user.is_blocked === true || user.is_blocked === 'true' ? 'Unblock/' + user._id : 'Block/' + user._id %>"
+                                                                class="btn <%= user.is_blocked === true || user.is_blocked === 'true' ? 'btn-primary' : 'btn-danger' %>">
+                                                                <%= user.is_blocked===true || user.is_blocked==='true'
+                                                                    ? 'Unblock' : 'Block' %>
+                                                            </a>
+                                                        </td>
+                                        </tr>
+                                        <% }) %>
                         </tbody>
 
                     </table>

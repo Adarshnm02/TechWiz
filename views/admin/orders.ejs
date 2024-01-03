@@ -134,9 +134,13 @@
                                         </td>
                                         <td>Status</td>
                                         <td>:</td>
-                                        <td>
+                                        <td id="statusOptions<%=order.orderId%>">
                                             <% if (order.status==='Cancelled' ) { %>
                                                 <p class="font-weight-bold text-danger">Cancelled</p>
+
+
+                                                <% } else if(order.status==='Delivered') { %>
+                                                    <p class="font-weight-bold "> Delivered</p>
                                                 <% } else { %>
                                                     <select class="form-select text-black status-dropdown"
                                                         data-user-id="<%= order._id %>">
@@ -244,6 +248,10 @@
                     body: JSON.stringify({ newStatus }),
                 });
                 const updatedUser = await response.json();
+                if (newStatus==="Delivered") {
+                    console.log("2323")
+                    // document.getElementById("statusOptions").innerHTML =`<p class="font-weight-bold "> Delivered</p>`
+                }
                 console.log('User status updated:', updatedUser);
             } catch (error) {
                 console.error('Error updating user status:', error);

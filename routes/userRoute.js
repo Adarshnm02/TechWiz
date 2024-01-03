@@ -22,7 +22,7 @@ user_Route.get('/logout', Auth.logouting, userControle.logout)
 
 //Signup
 user_Route.get('/signup', Auth.isLogged, userControle.loadSignup)
-user_Route.post('/signup', userControle.insertUser)
+user_Route.post('/signup', Auth.isLogged,userControle.insertUser)
 
 user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
 user_Route.post('/verification', userControle.otpVerification) 

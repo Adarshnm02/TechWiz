@@ -60,15 +60,15 @@ module.exports = {
         
                 const { userName, email, mobile } = req.body;
         
-                if (userName && email) {
+                if (userName) {
                     const user = await User.findById(userId);
         
                     if (!user) {
                         return res.status(404).render('user/404'); 
                     }
                     user.userName = userName;
-                    user.email = email;
                     user.mobile = mobile;
+                    // user.email 
         
                     await user.save();
                     console.log(user, "form");
@@ -76,8 +76,6 @@ module.exports = {
                     // res.json({ succes : true, user });
                     res.redirect('/profile')
                 }
-        
-                // ;\ 
         
             } catch (err) {
                 console.log(err);
@@ -173,8 +171,8 @@ module.exports = {
                 }
             );
             if (result) {
-                console.log("updated result ", result);
-                res.redirect('/profile');
+                // console.log("updated result ", result);
+                res.redirect('/profile/address');
             } else {
 
                 res.status(404).send('Address not found');
@@ -210,8 +208,8 @@ module.exports = {
             const session = req.session.user
 
             const address = await Address.find({ userId: req.session.user })
-            const orders = await Order.find({user:req.session.user}).populate('products.product').populate('user')
-            // console.log(orders[0].user.userName);
+            const orders = await Order.find({user:req.session.user}).populate('products.product').populate('user').sort({ orderDate: -1 });
+            console.log(orders[0].user.userName);
             // console.log(orders[0].products[0].quantity);
             // console.log("from back address:-", address, "orders from back", orders);
 

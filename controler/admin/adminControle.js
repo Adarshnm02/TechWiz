@@ -28,11 +28,12 @@ module.exports = {
     
         try {
             const { query } = req.query;
+            console.log(query)
             let users;
             let totalCount;
     
             if (query) {
-                users = await User.find({ name: { $regex: ".*" + query + ".*" } })
+                users = await User.find({ userName: { $regex: ".*" + query + ".*" } })
                     .skip(skip)
                     .limit(limit);
     
@@ -53,6 +54,7 @@ module.exports = {
                 query: query || ""
             });
         } catch (error) {
+            console.log(error)
             res.render("admin/500", { error });
         }
     },

@@ -5,109 +5,124 @@
             enctype="multipart/form-data" id="productEditingForm">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="text-center mb-0">Product Save Info</h3>
-                    </div>
+                    <% if (typeof message !="undefined" ) {%>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="productName" class="form-label mt-4">Product Name</label>
-                                <input type="text" name="productName" class="form-control" id="productName"
-                                    placeholder="Product Name">
-                                <p class="text-danger" id="name_error"></p>
+                        <p id="errorMessage" class="mt-3 text-danger">
+                            <%= message %>
+                        </p>
+                        <%}%>
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="text-center mb-0">Product Save Info</h3>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="brandName" class="form-label mt-4">Product Brand</label>
-                                <input type="text" name="brandName" class="form-control" id="brandName"
-                                    placeholder="Product Brand">
-                                <p class="text-danger" id="brandName_error"></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="productName" class="form-label mt-4">Product Name</label>
+                                        <input type="text" name="productName" class="form-control" id="productName"
+                                            placeholder="Product Name">
+                                        <p class="text-danger" id="name_error"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="brandName" class="form-label mt-4">Product Brand</label>
+                                        <input type="text" name="brandName" class="form-control" id="brandName"
+                                            placeholder="Product Brand">
+                                        <p class="text-danger" id="brandName_error"></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="description" class="form-label mt-4">Product Description</label>
-                                <textarea class="form-control" name="description" id="description" cols="30" rows="3"
-                                    placeholder="Product Description"></textarea>
-                                <p class="text-danger" id="description_error"></p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="description" class="form-label mt-4">Product Description</label>
+                                        <textarea class="form-control" name="description" id="description" cols="30"
+                                            rows="3" placeholder="Product Description"></textarea>
+                                        <p class="text-danger" id="description_error"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
+                                        <input type="number" name="stockCount" class="form-control" id="stockCount"
+                                            placeholder="Stock Quantity">
+                                        <p class="text-danger" id="stockCount_error"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price" class="form-label mt-4">Price</label>
+                                        <input type="number" name="price" class="form-control" id="price"
+                                            placeholder="Main Price">
+                                        <p class="text-danger" id="price_error"></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="stockCount" class="form-label mt-4">Stock Quantity</label>
-                                <input type="number" name="stockCount" class="form-control" id="stockCount"
-                                    placeholder="Stock Quantity">
-                                <p class="text-danger" id="stockCount_error"></p>
-                            </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="mainImage" class="form-label mt-4">Main Image / File</label>
+                                        <input type="file" name="image" multiple class="form-control" id="mainImage"
+                                            placeholder="Main Image / File">
+                                    </div>
+                                </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="price" class="form-label mt-4">Price</label>
-                                <input type="number" name="price" class="form-control" id="price"
-                                    placeholder="Main Price">
-                            </div>
-                        </div>
-                    </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="category" class="form-label mt-4">Product Category</label>
+                                        <select class="form-select drop1" name="category">
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="mainImage" class="form-label mt-4">Main Image / File</label>
-                                <input type="file" name="image" multiple class="form-control" id="mainImage"
-                                    placeholder="Main Image / File">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="category" class="form-label mt-4">Product Category</label>
-                                <select class="form-select drop1" name="category">
-
-                                    <% category.forEach((category)=> { %>
-                                        <option value="<%= category._id %>">
-                                            <%= category.categoryName %>
-                                        </option>
-                                        <% }) %>
+                                            <% categorys.forEach((category)=> { %>
+                                                <option value="<%= category._id %>">
+                                                    <%= category.categoryName %>
+                                                </option>
+                                                <% }) %>
 
 
 
-                                            <!-- <option value="mobile">Mobile</option>
+                                                    <!-- <option value="mobile">Mobile</option>
                                 <option value="laptop">Laptop</option>
                                 <option value="camera">Camera</option>
                                 <option value="accessories">Accessories</option> -->
-                                </select>
-                            </div>
-                        </div>
+                                        </select>
+                                    </div>
+                                </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="colorTypes" class="form-label mt-4">Color Types</label>
-                                <input type="text" name="color" class="form-control" id="colorTypes"
-                                    placeholder="Color Types">
-                                <p class="text-danger" id="colorTypes_error"></p>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="colorTypes" class="form-label mt-4">Color Types</label>
+                                        <input type="text" name="color" class="form-control" id="colorTypes"
+                                            placeholder="Color Types">
+                                        <p class="text-danger" id="colorTypes_error"></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-12 text-center mt-5">
-                            <button type="submit" class="btn btn-primary btn-lg">Save Products</button>
-                        </div>
-                    </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center mt-5">
+                                    <button type="submit" class="btn btn-primary btn-lg">Save Products</button>
+                                </div>
+                            </div>
                 </div>
             </div>
         </form>
     </div>
 
 
+    <script>
+        setTimeout(() => {
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.style.display = "none"
+            }
+        }, 3000);
+    </script>
 
     <script>
 
@@ -117,11 +132,15 @@
         const brandName = document.getElementById("brandName")
         const description = document.getElementById("description")
         const colorTypes = document.getElementById("colorTypes")
+        const stockCountInput = document.getElementById("stockCount");
+        const priceInput = document.getElementById("price");
 
         const name_error = document.getElementById("name_error")
         const brandName_error = document.getElementById("brandName_error")
         const description_error = document.getElementById("description_error")
         const colorTypes_error = document.getElementById("colorTypes_error")
+        const stockCountError = document.getElementById("stockCount_error");
+        const priceError = document.getElementById("price_error");
 
 
         function nameValidation() {
@@ -131,9 +150,9 @@
             if (productName.value.trim() === "") {
                 name_error.innerHTML = "Please enter the Product Name!";
                 return false;
-            // } else if (!nameRegex.test(productName.value)) {
-            //     name_error.innerHTML = "Please enter a valid Product Name.";
-            //     return false;
+                // } else if (!nameRegex.test(productName.value)) {
+                //     name_error.innerHTML = "Please enter a valid Product Name.";
+                //     return false;
             } else {
                 name_error.innerHTML = "";
                 return true;
@@ -180,6 +199,31 @@
             return true; // Return true when validation passes
         }
 
+        function validateStockCount() {
+            const stockCountValue = parseInt(stockCountInput.value, 10);
+
+            if (stockCountValue <= 0) {
+                stockCountError.innerHTML = "Please enter a valid stock quantity greater than 0.";
+                return false;
+            } else {
+                stockCountError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function validatePrice() {
+            const priceValue = parseInt(priceInput.value, 10);
+
+            if (priceValue <= 0) {
+                console.log("Price is not valid");
+                priceError.innerHTML = "Please enter a valid price greater than 0.";
+                return false;
+            } else {
+                priceError.innerHTML = "";
+                return true;
+            }
+        }
+
 
         productEditingForm.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -188,14 +232,25 @@
                 nameValidation(),
                 brandName_validation(),
                 description_Validation(),
-                colorTypes_validation()
+                colorTypes_validation(),
+                validateStockCount(),
+                validatePrice()
             ];
 
-            const hasErrors = validations.some(validation => validation === false); 
+            const hasErrors = validations.some(validation => validation === false);
             console.log(hasErrors);
 
             if (!hasErrors) {
-                productEditingForm.submit(); 
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Product added successfuly",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                setTimeout(() => {
+                    productEditingForm.submit();
+                },1500)
             }
         });
     </script>
