@@ -33,11 +33,12 @@ module.exports = {
             let totalCount;
     
             if (query) {
-                users = await User.find({ userName: { $regex: ".*" + query + ".*" } })
+                const regex = new RegExp(query, 'i');
+                users = await User.find({ userName:{ $regex: regex } })
                     .skip(skip)
                     .limit(limit);
     
-                totalCount = await User.countDocuments({ name: { $regex: ".*" + query + ".*" } });
+                totalCount = await User.countDocuments({ userName: { $regex: regex } });
             } else {
                 users = await User.find()
                     .skip(skip)
