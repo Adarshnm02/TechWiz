@@ -24,6 +24,7 @@ module.exports = {
                 const totalPages = Math.ceil(totalCount / limit);
 
                 console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
+                console.log(cart.length)
                 res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount })
             }
         } catch (err) {
@@ -144,7 +145,8 @@ module.exports = {
                     message: "Success",
                     quantity: cartItem.quantity,
                     totalAmount: cartItem.totalAmount,
-                    grandTotal: user.grandTotal
+                    grandTotal: user.grandTotal,
+                    stock_count: product.stock_count
                 });
             } else {
                 console.log("Cart item not found");

@@ -53,20 +53,8 @@ function isValidPassword(password) {
 
 module.exports = {
 
-
-    // loadHome(req, res) {
-    //     console.log(req.session.user);
-
-    //     try{
-    //         res.render('user/index', { session: req.session.user})
-
-    //     } catch{
-    //         res.render('user/500')
-    //     }
-
-    // },
     login(req, res) {
-        res.render('user/user_login', { session: req.session.user })
+        res.render('user/user_login')
     },
 
 
@@ -100,57 +88,6 @@ module.exports = {
         }
     },
 
-    
-
-    // async loadHome(req, res) {
-    //     try {
-    //         const session = req.session.user;
-
-
-    //         const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-    //         const limit = 12; // Set the number of products per page
-    //         const skip = (page - 1) * limit;
-
-    //         let products;
-    //         if (req.query.query) {
-    //             products = await Product.find({
-    //                 product_name: { $regex: ".*" + req.query.query + ".*", $options: "i" },
-    //                 is_delete: false
-    //             }).skip(skip).limit(pageSize);
-
-    //         } else {
-
-    //             products = await Product
-    //             .find({ is_delete: false })
-    //             .populate({
-    //                 path: 'category',
-    //                 match: { is_disable: false }
-    //             })
-    //             .skip(skip)
-    //             .limit(limit)
-    //             .sort({ _id: -1 });
-
-    //         const latestPrd = await Product
-    //             .find({ is_delete: false })
-    //             .limit(limit)
-    //             .sort({ _id: 1 })
-    //         }
-
-    //         // Count total products for pagination calculation
-    //         const totalCount = await Product.countDocuments({ is_delete: false });
-
-    //         // Calculate total pages
-    //         const totalPages = Math.ceil(totalCount / limit);
-
-    //         res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
-
-    //     } catch (err) {
-    //         console.log("Error From loadHome", err);
-    //         res.render("user/500");
-    //     }
-    // },
-
-
 
     async loadHome(req, res) {
         try {
@@ -174,14 +111,14 @@ module.exports = {
                     },
                     {
                         $lookup: {
-                            from: 'productcategories', // Assuming the name of the productCategory collection
+                            from: 'productcategories', 
                             localField: 'category',
                             foreignField: '_id',
                             as: 'category'
                         }
                     },
                     {
-                        $unwind: '$category' // Unwind the category array created by $lookup
+                        $unwind: '$category' 
                     },
                     {
                         $match: { 'category.is_disable': false }
@@ -196,9 +133,7 @@ module.exports = {
                         $limit: limit
                     }
                 ]);
-                console.log(products);
-                
-                // Now 'products' contains the result after aggregation
+                // console.log(products);
                 
                 latestPrd = await Product
                     .find({ is_delete: false })
@@ -212,7 +147,6 @@ module.exports = {
             const totalCount = await Product.countDocuments({ is_delete: false });
             const totalPages = Math.ceil(totalCount / limit);
 
-            // res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
             res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
 
 

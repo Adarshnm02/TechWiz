@@ -97,7 +97,7 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
-        
+
         .btnc {
             background-color: #dc3545;
             color: #fff !important;
@@ -111,7 +111,6 @@
             background-color: #000000;
             color: #fff;
         }
-    
     </style>
 
 
@@ -123,7 +122,7 @@
             <div class="col-md-4">
                 <!-- Sidebar -->
                 <%- include('../partials/user/profileSidebar') %>
-                <!-- End Sidebar -->
+                    <!-- End Sidebar -->
             </div>
 
 
@@ -147,7 +146,7 @@
                                                 <%if(order.status==="Cancelled" ) {%>
                                                     <p class="text-danger">Canceled</p>
                                                     <%} else {%>
-                                                        <a class="btnc btn-danger mr-2"  id="<%= order.orderId %>"
+                                                        <a class="btnc btn-danger mr-2" id="<%= order.orderId %>"
                                                             onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
                                                         <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
                                                         <%}%>
@@ -196,24 +195,29 @@
                                                     <td>:</td>
                                                     <td>
                                                         <%=address.houseName%>, <%=address.city%>, <%=address.district%>
-                                                                    
+
                                                     </td>
                                                 </tr>
-                                                
+
                                                 <% order.products.forEach( (product, i)=>{ %>
                                                     <tr id="expandableRows" class="collapse">
                                                         <!-- Include additional rows here -->
-                                                        <td>Product <%=i+1%></td>
+                                                        <td>Product <%=i+1%>
+                                                        </td>
                                                         <td>:</td>
                                                         <td>
                                                             <%=product.product.product_name%>
                                                         </td>
-                                                        <tr id="expandableRows" class="collapse">
-                                                        <td>  </td>
-                                                        <td><span class="mr-3">Quantity  : </span><%= product.quantity %></td>
-                                                        <td><span class="mr-3">Total Price  : </span><%= product.totalAmount %></td>
-                                                        </tr>
-                                    
+                                                    <tr id="expandableRows" class="collapse">
+                                                        <td> </td>
+                                                        <td><span class="mr-3">Quantity : </span>
+                                                            <%= product.quantity %>
+                                                        </td>
+                                                        <td><span class="mr-3">Total Price : </span>
+                                                            <%= product.totalAmount %>
+                                                        </td>
+                                                    </tr>
+
                                                     </tr>
                                                     <!-- Add more collapsible rows as needed -->
 
@@ -280,37 +284,47 @@
                                             title: 'Cancelled!',
                                             text: 'The order has been cancelled.',
                                             icon: 'success',
-                                        });
-                                        // const statusElement = document.getElementById(`orderStatus_${orderid}`);
-                                        // const button = document.getElementById(`${orderid}`);
-                                        // statusElement.textContent = 'Cancelled';
-                                        // statusElement.classList.remove('text-orange-300');
-                                        // statusElement.classList.add('text-red-500');
-                                        // button.classList.add('hidden');
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Error',
-                                            text: 'Failed to cancel the order. Please try again.',
-                                            icon: 'error',
-                                        });
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.error('Error:', error);
-                                    Swal.fire({
-                                        title: 'Error',
-                                        text: 'An unexpected error occurred. Please try again.',
-                                        icon: 'error',
-                                    });
-                                });
+                                        }).then((reasonResult) => {
+                                            if (reasonResult.isConfirmed) {
+                                                    window.location.reload()
 
+
+                                            }
+                                                // setTimeout(() => {
+
+                                                //     window.location.reload()
+                                                // },)
+                                                // const statusElement = document.getElementById(`orderStatus_${orderid}`);
+                                                // const button = document.getElementById(`${orderid}`);
+                                                // statusElement.textContent = 'Cancelled';
+                                                // statusElement.classList.remove('text-orange-300');
+                                        })
+                                                // statusElement.classList.add('text-red-500');
+                                                // button.classList.add('hidden');
+                                            } else {
+                                                Swal.fire({
+                                                    title: 'Error',
+                                                    text: 'Failed to cancel the order. Please try again.',
+                                                    icon: 'error',
+                                                });
+                                            }
+                                        })
+                                            .catch((error) => {
+                                                console.error('Error:', error);
+                                                Swal.fire({
+                                                    title: 'Error',
+                                                    text: 'An unexpected error occurred. Please try again.',
+                                                    icon: 'error',
+                                                });
+                                            });
+
+                                    }
+                                });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            Swal.fire('Cancelled', 'Your order is safe :)', 'info');
                         }
                     });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire('Cancelled', 'Your order is safe :)', 'info');
                 }
-            });
-        }
     </script>
 
 

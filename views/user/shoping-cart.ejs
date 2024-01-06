@@ -85,7 +85,7 @@
 
                                 <% cart.forEach((element)=> { %>
                                     <% if (element.product && element.product._id) { %>
-                                        <tr id="<%=element.product._id%>">
+                                        <tr id="<%=element.product._id%>" class="items">
                                             <td class="shoping__cart__item">
                                                 <% if (element.product.image.length> 0 && element.product.image[0].data)
                                                     {
@@ -191,13 +191,14 @@
                                     <%= user.grandTotal %>
                                 </span></li>
                         </ul>
-                        <a href="/checkout" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        <a href="<%= (cart.length === 0) ? '/cart' : '/checkout' %>" class="primary-btn">PROCEED TO
+                            CHECKOUT</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Shoping Cart Section End -->
+
 
 
     <script>
@@ -247,10 +248,12 @@
                             toast.onmouseleave = Swal.resumeTimer;
                         }
                     });
-                    Toast.fire({
-                        icon: "success",
-                        title: "Quantity Updated successfuly"
-                    })
+
+                        Toast.fire({
+                            icon: "success",
+                            title: "Quantity Updated successfuly"
+                        })
+                    
                     console.log('Success:', data);
                     showTotalAmount()
                     // Update the quantity displayed on the page
@@ -268,6 +271,14 @@
                         grandTotal.innerHTML = `${data.grandTotal}`
                         grandTtl.innerHTML = `${data.grandTotal}`
                     }
+                    if (data.stock_count === data.quantity) {
+                        Toast.fire({
+                            icon: "warning",
+                            title: "Quantity is exeeded"
+                        })
+
+                    }
+
 
 
                     // if (totalAmountElement) {
@@ -307,7 +318,16 @@
 
                     const deletedItem = document.getElementById(productId);
                     if (deletedItem) {
+
                         deletedItem.remove();
+                        const items = document.querySelectorAll('.items')
+
+                        if (items.length === 0) {
+
+                            window.location.reload()
+                        }
+
+
                     }
                     console.log(deletedItem);
                 })
