@@ -36,13 +36,15 @@ module.exports = {
                 const regex = new RegExp(query, 'i');
                 users = await User.find({ userName:{ $regex: regex } })
                     .skip(skip)
-                    .limit(limit);
+                    .limit(limit)
+                    .sort({_id : -1});
     
                 totalCount = await User.countDocuments({ userName: { $regex: regex } });
             } else {
                 users = await User.find()
                     .skip(skip)
-                    .limit(limit);
+                    .limit(limit)
+                    .sort({_id : -1});;
     
                 totalCount = await User.countDocuments();
             }

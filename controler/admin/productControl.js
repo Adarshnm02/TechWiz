@@ -3,10 +3,15 @@ const express = require('express')
 const Product = require("../../models/productModel")
 const Category = require("../../models/categoryModel")
 
-function isValidImage(file) {
+// function isValidImage(file) {
+//     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+//     return allowedTypes.includes(file.mimetype);
+// }
+
+const isValidImage = (file) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    return allowedTypes.includes(file.mimetype);
-}
+    return file && allowedTypes.includes(file.mimetype);
+};
 
 module.exports = {
 
@@ -80,16 +85,15 @@ module.exports = {
 
             // Validate and process each uploaded file
             for (const file of req.files) {
-                const isImage = isValidImage(file);
-
-                if (isImage) {
-                    createdProduct.image.push({
-                        data: file.buffer,
-                        contentType: file.mimetype
-                    });
-                } else {
+                if (!isValidImage(file)) {
+                    console.log("Not a valid image file");
                     return res.render('admin/addProduct', { message: "uploaded file is not valid image", categorys });
                 }
+
+                createdProduct.image.push({
+                    data: file.buffer,
+                    contentType: file.mimetype
+                });
             }
 
             await createdProduct.save();
@@ -105,8 +109,8 @@ module.exports = {
     async loadShop(req, res) {
         try {
             const session = req.session.user;
-            const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-            const limit = 12; // Set the number of products per page
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
             const skip = (page - 1) * limit;
 
             const products = await Product
@@ -119,10 +123,8 @@ module.exports = {
                 .limit(limit)
                 .sort({ _id: -1 });
 
-            // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
 
-            // Calculate total pages
             const totalPages = Math.ceil(totalCount / limit);
 
             res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount });
@@ -133,26 +135,9 @@ module.exports = {
         }
     },
 
-
-    // async loadProductList(req, res) {
-    //     try {
-    //         const products = await Product.find();
-
-
-    //         // console.log(products);
-    //         if (products) {
-    //             res.render("admin/products", { products });
-    //         } else {
-    //             console.log("product not found");
-    //         }
-    //     } catch (error) {
-    //         console.log(error.message);
-    //         res.render("admin/500")
-    //     }
-    // },
     async loadProductList(req, res) {
-        const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-        const limit = 10; // Set a limit for the number of products per page
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
         const skip = (page - 1) * limit;
 
         try {
@@ -161,13 +146,13 @@ module.exports = {
             let totalCount
 
             if (query) {
-                console.log(" From load product ");
+                console.log(" searched products ");
                 const regex = new RegExp(query, 'i');
                 products = await Product.find({ product_name: { $regex: regex } })
                     .skip(skip)
                     .limit(limit);
 
-                    totalCount = await Product.countDocuments({ product_name: { $regex: regex } });
+                totalCount = await Product.countDocuments({ product_name: { $regex: regex } });
 
             } else {
                 products = await Product.find()
@@ -186,6 +171,7 @@ module.exports = {
                 query: query || ""
             });
         } catch (error) {
+
             console.log(error.message);
             res.render("admin/500", { error });
         }

@@ -20,24 +20,6 @@ user_Route.get('/login', Auth.isLogged, userControle.login)
 user_Route.post('/login', userControle.userLogin)
 user_Route.get('/logout', Auth.logouting, userControle.logout)
 
-//Signup
-user_Route.get('/signup', Auth.isLogged, userControle.loadSignup)
-user_Route.post('/signup', Auth.isLogged,userControle.insertUser)
-
-user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
-user_Route.post('/verification', userControle.otpVerification) 
-
-//profile
-user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
-user_Route.get("/profile/address", Auth.isLogedout, profileCtrl.loadProfileAddress)
-user_Route.get("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.loadEditProfile)
-user_Route.post("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.updateProfile)
-
-// //forgot Password
-// user_Route.get("/profile/forgotPass", userControle.loadForgetPass)
-// user_Route.post("/profile/forgotPass", userControle.forgetPassword)
-
-
 
 //forget password
 user_Route.get('/forgetPassword', userControle.loadForgetPass)
@@ -46,16 +28,17 @@ user_Route.get('/verifyOTPForgetPass', userControle.loadOTPForgetPassPage)
 user_Route.post('/verifyOTPForgetPass', userControle.verifyOTPForgetPassPage)
 user_Route.post('/changePass', userControle.changepass)
 
+//Signup
+user_Route.get('/signup', Auth.isLogged, userControle.loadSignup)
+user_Route.post('/signup', Auth.isLogged,userControle.insertUser)
 
+user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
+user_Route.post('/verification', userControle.otpVerification) 
 
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
-
-
 user_Route.get('/product/Details/:id', Auth.isLogedout, cartCtrl.productDetails)
-// user_Route.get('/productDetails', productControl.productDetails)
-// user_Route.get("/logindel", userControle.loadDel)
 
 //Cart
 user_Route.get('/cart', Auth.isLogedout, cartCtrl.load_cart)
@@ -75,6 +58,12 @@ user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
 user_Route.get('/order', profileCtrl.loadOrder)
 user_Route.post('/cancelOrder/:id', profileCtrl.cancelOrder)
 user_Route.get('/orderSuccess',  userControle.loadHome)
+
+//profile
+user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)
+user_Route.get("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.loadEditProfile)
+user_Route.post("/profile/editProfile/:id", Auth.isLogedout, profileCtrl.updateProfile)
+user_Route.get("/profile/address", Auth.isLogedout, profileCtrl.loadProfileAddress)
 
 //Address
 user_Route.get('/addAddress', Auth.isLogedout, profileCtrl.loadAddAddress)

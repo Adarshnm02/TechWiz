@@ -83,11 +83,12 @@
 
         function descriptionValidation() {
 
-            if (!/^[A-Za-z\s]+$/.test(CategoryDescription.value.trim())) {
-                descriptionError.innerHTML = "Description must contain only words (non-numeric characters).";
-                return false;
+            // if (!/^[A-Za-z\s]+$/.test(CategoryDescription.value.trim())) {
+            //     descriptionError.innerHTML = "Description must contain only words (non-numeric characters).";
+            //     return false;
 
-            } else if (CategoryDescription.value.trim().length <= 15) {
+            // } else
+             if (CategoryDescription.value.trim().length <= 15) {
                 descriptionError.innerHTML = "Description must be at least 15 characters long.";
                 return false;
 
@@ -109,7 +110,7 @@
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: "Category added successfuly",
+                    title: "Category Detials Submitted",
                     showConfirmButton: false,
                     timer: 1500
                 });

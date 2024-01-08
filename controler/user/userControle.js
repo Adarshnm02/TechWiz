@@ -72,7 +72,6 @@ module.exports = {
 
 
     load_otp(req, res) {
-        // res.render('user/forDelete')
         const id = '123';
         res.render('user/otpVerification', { id })
     },
@@ -158,14 +157,13 @@ module.exports = {
 
     async insertUser(req, res) {
         try {
-            console.log("Form req.body Body", req.body);
+            // console.log("Form req.body Body", req.body);
             const { email, username, password, confirmPassword } = req.body;
 
             if (email && username && password && confirmPassword) {
                 const foundUser = await User.findOne({ email: email });
 
                 if (foundUser) {
-                    // User already exists
                     console.log("user is exist")
                     res.render('user/userSignup',{message: "User is already exist"});
                 } else {
@@ -179,9 +177,7 @@ module.exports = {
                         });
 
                         await newUser.save();
-                        console.log("Showing newUser ", newUser);
-                        console.log("User saved successfully");
-
+                        console.log("User saved successfully ", newUser);
                         const savedUser = await User.findOne({ userName: username })
                         sendMail(req, res, savedUser._id, email)
                         
@@ -218,19 +214,14 @@ module.exports = {
                 return res.render('user/otpVerification', { message: "Enter valied OTP", id: ID })
             }
             const { userId, otp } = OTPrecord;
-            // if (expireAt < Date.now()) {
-            //     await userOTP.deleteOne({ userId })
-            //     return res.render('user/otpVerification', { message: 'OTP has been expired,Please try again', id: ID })
-            // }
-            console.log("11" + OTP, otp);
             const isvalid = await bcrypt.compare(OTP, otp);
-
-            console.log(isvalid);
-            console.log("11  " + OTP + "   helo   " + otp);
+            console.log("otp is ",isvalid);
+            
 
             if (!isvalid) {
                 return res.render('user/otpVerification', { message: 'The entered OTP is invalid', id: ID })
             }
+
             await User.updateOne({ _id: ID }, { $set: { is_varified: true } })
             await userOTP.deleteOne({ userId })
             req.session.user = userId._id
@@ -273,12 +264,12 @@ module.exports = {
 
                     }
                 } else {
-                    console.log("error from userLogin else");
+                    console.log("user is not Verified");
                     return res.render('user/user_login', { message: "Not a Verified User " })
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.log("Error from userLogin", error);
             res.render('user/500')
         }
     },

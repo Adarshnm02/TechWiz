@@ -9,21 +9,20 @@ module.exports = {
     async load_cart(req, res) {
         try {
             if (req.session.user) {
-                const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-                const limit = 6; // Set the number of products per page
+                const page = parseInt(req.query.page) || 1; 
+                const limit = 6; 
                 const skip = (page - 1) * limit;
+
                 const userId = req.session.user;
                 const user = await User.findById(userId).populate({
                     path: 'cart.product',
                     options: { skip, limit }
                 });
-                // Count total products for pagination calculation
-                // const totalCount = await Product.countDocuments({ is_delete: false });
                 const cart = user.cart;
-                const totalCount = cart.length; // Total items in the cart
+                const totalCount = cart.length; 
                 const totalPages = Math.ceil(totalCount / limit);
 
-                console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
+                // console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
                 console.log(cart.length)
                 res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount })
             }
@@ -161,10 +160,9 @@ module.exports = {
     async productDetails(req, res) {
         try {
             const session = req.session.user;
-            console.log("Session from product details ", session);
             const { id } = req.params;
             const details = await Product.findById({ _id: id })
-            console.log("from details", details);
+            // console.log("from details", details);
 
             const user = await User.findById(req.session.user).populate({
                 path: 'cart.product',
@@ -172,14 +170,12 @@ module.exports = {
             })
             
             cart = user.cart
-            console.log(details);
-            
             if (details) {
                 console.log("Product Details Rendering");
                 res.render('user/productDetails', { details, session, id, cart})
             }
-            console.log("gdfg", details.category);
-            console.log("dsdsddddddddd");
+            // console.log("gdfg", details.category);
+            
 
         } catch (error) {
             console.log(error.message);
