@@ -35,6 +35,7 @@ module.exports = {
     // }
 
 
+
     async loadAddProduct(req, res) {
         try {
             const categorys = await Category.find()

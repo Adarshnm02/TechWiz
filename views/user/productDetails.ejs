@@ -2,59 +2,88 @@
 
 
 <style>
-    .btn-qunty {
-            border: 0;
-            height: 30px;
-            width: 30px;
-        }
-    .quantity {
-            width: 63px;
-        }
+    .imgof{
+        /* background: rgb(202, 233, 247); */
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .image {
+        position: relative;
+        width: 600px;
+        height: 400px;
+        overflow: hidden;
+        /* border: 5px solid #fff; */
+        /* box-shadow: -1px 5px; */
+    }
+    .image img{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transform: scale(var(--zoom, 1));
+        transform-origin: var(--x) var(--y);
+        transition: transform 0.3s ease;
+
+    }
+
+
+    .image:hover{
+        --zoom: 3;
+
+    }
 </style>
-
-
-
-
-
 
 
     <!-- Product Details Section Begin -->
     <section class="product-details spad">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <div class="product__details__pic">
-                        <div class="product__details__pic__item slick-slider">
 
-                            <div class="item-slick3">
-                                <div class="wrap-pic-w pos-relative"
-                                    style="min-width: 422px ; display:flex ; align-content: center; justify-content: center;">
+            <div class="row">
+                <div class="imgof col-lg-6 col-md-6 ">
+                    <div class="product__details__pic">
+                        <div class=" product__details__pic__item slick-slider">
+
+                            <div >
+                                <!-- class="item-slick3" -->
+                                <div class="image ">
+                                    <!-- wrap-pic-w pos-relative -->
+                                    <!-- style="min-width: 422px ; display:flex ; align-content: center; justify-content: center;" -->
                                     <% if (details.image && details.image[0].contentType && details.image[0].data) { %>
                                         <img src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" style="width: 253px;height: 435px;" />
+                                            alt="IMG-PRODUCT" />
+                                            <!-- style="width: 253px;height: 435px;" -->
                                         <% } else { %>
                                             <p>Image is not available</p>
                                             <% } %>
-                                                <div id="zoom"></div>
+                                                <!-- <div id="zoom"></div> -->
                                 </div>
                             </div>
 
                         </div>
 
-
-
-                        <div class="product__details__pic__slider owl-carousel">
+                        <div class="">
                             <% if (details.image && details.image[1]) { %>
                                 <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
-                                    alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
+                                    alt="IMG-PRODUCT" />
+                                    <!-- style="width: 342px;height: 140px !important;" -->
                                 <% } %>
                                     <% if (details.image && details.image[2]) { %>
                                         <img src="data:<%= details.image[2].contentType %>;base64,<%= details.image[2].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
+                                            alt="IMG-PRODUCT" />
+                                            <!-- style="width: 342px;height: 140px !important;" -->
                                         <% } %>
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
                         <h3>
@@ -133,6 +162,32 @@
         </div>
     </section>
     <!-- Product Details Section End -->
+
+
+
+
+
+    <script>
+        document.querySelectorAll('.image').forEach(elem =>{
+            let x,y,width,height;
+            elem.onmouseenter = () => {
+                const size = elem.getBoundingClientRect();
+
+                x = size.x
+                y = size.y
+                width = size.width;
+                height = size.height;
+            }
+            elem.onmousemove = e => {
+                const horizontal = (e.clientX - x) / width*100;
+                const vertical = (e.clientY - y) / height*100;
+
+                elem.style.setProperty('--x', horizontal + '%');
+                elem.style.setProperty('--y', vertical + '%');
+
+            };
+        })
+    </script>
 
 
     <%- include('../partials/user/footer') %>
