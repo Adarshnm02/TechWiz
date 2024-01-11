@@ -58,6 +58,7 @@ user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
 user_Route.get('/order', profileCtrl.loadOrder)
 user_Route.post('/cancelOrder/:id', profileCtrl.cancelOrder)
 user_Route.get('/orderSuccess',  userControle.loadHome)
+user_Route.post('/returnProduct/:id' , profileCtrl.returnOrder)
 
 //profile
 user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)

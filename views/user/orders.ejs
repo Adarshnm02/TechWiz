@@ -137,19 +137,24 @@
                             <% orders.forEach(order=>{ %>
                                 <div class="border-bottom address-div">
                                     <% order.deliveryAddress.forEach(address=> { %>
-
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <!-- <img src="../../user/img/user-1.jpg" alt="Profile Image" width="100"
                                                 height="100"> -->
                                             <h4></h4>
                                             <div class="edit-delete-buttons">
-                                                <%if(order.status==="Cancelled" ) {%>
-                                                    <p class="text-danger">Canceled</p>
-                                                    <%} else {%>
-                                                        <a class="btnc btn-danger mr-2" id="<%= order.orderId %>"
-                                                            onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
-                                                        <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
-                                                        <%}%>
+                                                <% if(order.status==="Delivered" ) { %>
+                                                    <a class="btnc btn-danger mr-2" id="<%= order.orderId %>"
+                                                        onclick="returnProduct('<%= order.orderId %>')">Return</a>
+                                                    <% } else if(order.status==="Cancelled" ) {%>
+                                                        <p class="text-danger">Canceled</p>
+                                                        <%} else {%>
+                                                            <% if( order.status !=='Returned' ) { %>
+                                                                <a class="btnc btn-danger mr-2"
+                                                                    id="<%= order.orderId %>"
+                                                                    onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
+                                                                <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
+                                                                <% } %>
+                                                                    <%}%>
                                             </div>
                                         </div>
 
@@ -286,45 +291,119 @@
                                             icon: 'success',
                                         }).then((reasonResult) => {
                                             if (reasonResult.isConfirmed) {
-                                                    window.location.reload()
+                                                window.location.reload()
 
 
                                             }
-                                                // setTimeout(() => {
+                                            // setTimeout(() => {
 
-                                                //     window.location.reload()
-                                                // },)
-                                                // const statusElement = document.getElementById(`orderStatus_${orderid}`);
-                                                // const button = document.getElementById(`${orderid}`);
-                                                // statusElement.textContent = 'Cancelled';
-                                                // statusElement.classList.remove('text-orange-300');
+                                            //     window.location.reload()
+                                            // },)
+                                            // const statusElement = document.getElementById(`orderStatus_${orderid}`);
+                                            // const button = document.getElementById(`${orderid}`);
+                                            // statusElement.textContent = 'Cancelled';
+                                            // statusElement.classList.remove('text-orange-300');
                                         })
-                                                // statusElement.classList.add('text-red-500');
-                                                // button.classList.add('hidden');
-                                            } else {
-                                                Swal.fire({
-                                                    title: 'Error',
-                                                    text: 'Failed to cancel the order. Please try again.',
-                                                    icon: 'error',
-                                                });
-                                            }
-                                        })
-                                            .catch((error) => {
-                                                console.error('Error:', error);
-                                                Swal.fire({
-                                                    title: 'Error',
-                                                    text: 'An unexpected error occurred. Please try again.',
-                                                    icon: 'error',
-                                                });
-                                            });
-
+                                        // statusElement.classList.add('text-red-500');
+                                        // button.classList.add('hidden');
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Failed to cancel the order. Please try again.',
+                                            icon: 'error',
+                                        });
                                     }
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An unexpected error occurred. Please try again.',
+                                        icon: 'error',
+                                    });
                                 });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            Swal.fire('Cancelled', 'Your order is safe :)', 'info');
+
                         }
                     });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire('Cancelled', 'Your order is safe :)', 'info');
                 }
+            });
+        }
+    </script>
+
+
+
+    <script>
+        function returnProduct(orderid) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to return this product!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, return it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                console.log(result, "sdfgsdfgsdfgsdfgsdfg");
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Select a reason for return',
+                        input: 'select',
+                        inputOptions: {
+                            'Defective Product': 'Defective Product',
+                            'Received Wrong Item': 'Received Wrong Item',
+                            'Changed my mind': 'Changed my mind',
+                            'Not as Expected': 'Not as Expected',
+                            'Other': 'Other',
+                        },
+                        inputPlaceholder: 'Select a reason',
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirm',
+                        cancelButtonText: 'Cancel'
+                    }).then((reasonResult) => {
+                        console.log(reasonResult, "jfoasdfhihasodhfoasdfasdjfoajosjdfo");
+                        if (reasonResult.isConfirmed) {
+                            const returnReason = reasonResult.value;
+                            fetch(`/returnProduct/${orderid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ orderID: orderid, reason: returnReason }),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Returned!',
+                                            text: 'The product has been returned.',
+                                            icon: 'success',
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Failed to return the product. Please try again.',
+                                            icon: 'error',
+                                        });
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Erro for order fornt r:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An unexpected error occurred. Please try again.',
+                                        icon: 'error',
+                                    });
+                                });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire('Cancelled', 'The product return has been cancelled.', 'info');
+                }
+            });
+        }
     </script>
 
 

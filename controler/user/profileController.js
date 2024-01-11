@@ -214,7 +214,7 @@ module.exports = {
             const user = await User.findById(req.session.user)
             // console.log("from profile", session)
 
-            console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
+            // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
             res.render('user/orders', { user, address, session, orders })
 
         } catch (err) {
@@ -229,9 +229,7 @@ module.exports = {
         const { reason } = req.body;
         console.log(id, reason);
         try {
-            const order = await Order.findOne({ orderId: id });
-
-
+            // const order = await Order.findOne({ orderId: id });
             // await order.save();
 
             const result = await Order.findOneAndUpdate(
@@ -247,6 +245,30 @@ module.exports = {
             console.error('Error cancelling order:', err);
             return res.status(500).json({ success: false, message: 'Failed to cancel order. Please try again.' });
         }
+    },
+
+    async returnOrder(req, res) {
+        try {
+            let { id } = req.params;
+            const { reason } = req.body;
+            console.log(id, reason, 'gfdgfjguyedyrsgchgvuhvhgssyditgfhh');
+
+
+            const result = await Order.findOneAndUpdate(
+                { orderId: id },
+                { $set: { status: 'Returned', returnReason: reason } },
+                { new: true }
+            );
+
+
+            console.log(result, "foeroejfa");
+
+            return res.json({ success: true, message: 'Order Returend Successfully', result })
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: 'Failed to Return Order. Please try again.' });
+        }
+
     },
 
 
