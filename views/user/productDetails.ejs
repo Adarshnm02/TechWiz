@@ -1,89 +1,61 @@
 <%- include('../partials/user/shortHeader') %>
 
 
-<style>
-    .imgof{
-        /* background: rgb(202, 233, 247); */
-        display: flex;
-        align-items: baseline;
-        justify-content: center;
-        height: 100vh;
-    }
+    <style>
+        .imgof {
+            /* background: rgb(202, 233, 247); */
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            height: 100vh;
+        }
 
-    .image {
-        position: relative;
-        width: 600px;
-        height: 400px;
-        overflow: hidden;
-        /* border: 5px solid #fff; */
-        /* box-shadow: -1px 5px; */
-    }
-    .image img{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transform: scale(var(--zoom, 1));
-        transform-origin: var(--x) var(--y);
-        transition: transform 0.3s ease;
+        .image {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+            /* border: 5px solid #fff; */
+            /* box-shadow: -1px 5px; */
+        }
 
-    }
+        .image img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scale(var(--zoom, 1));
+            transform-origin: var(--x) var(--y);
+            transition: transform 0.3s ease;
+
+        }
 
 
-    .image:hover{
-        --zoom: 3;
+        .image:hover {
+            --zoom: 3;
 
-    }
-</style>
+        }
+    </style>
 
 
     <!-- Product Details Section Begin -->
     <section class="product-details spad">
         <div class="container">
-
             <div class="row">
-                <div class="imgof col-lg-6 col-md-6 ">
+                <div class="col-lg-6 col-md-6">
                     <div class="product__details__pic">
-                        <div class=" product__details__pic__item slick-slider">
-
-                            <div >
-                                <!-- class="item-slick3" -->
-                                <div class="image ">
-                                    <!-- wrap-pic-w pos-relative -->
-                                    <!-- style="min-width: 422px ; display:flex ; align-content: center; justify-content: center;" -->
-                                    <% if (details.image && details.image[0].contentType && details.image[0].data) { %>
-                                        <img src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" />
-                                            <!-- style="width: 253px;height: 435px;" -->
-                                        <% } else { %>
-                                            <p>Image is not available</p>
-                                            <% } %>
-                                                <!-- <div id="zoom"></div> -->
-                                </div>
-                            </div>
-
+                        <div class="product__details__pic__item image">
+                            <img class="product__details__pic__item--large "
+                                src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>">
                         </div>
-
-                        <div class="">
-                            <% if (details.image && details.image[1]) { %>
-                                <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
-                                    alt="IMG-PRODUCT" />
-                                    <!-- style="width: 342px;height: 140px !important;" -->
-                                <% } %>
-                                    <% if (details.image && details.image[2]) { %>
-                                        <img src="data:<%= details.image[2].contentType %>;base64,<%= details.image[2].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" />
-                                            <!-- style="width: 342px;height: 140px !important;" -->
-                                        <% } %>
+                        <div class="product__details__pic__slider owl-carousel ">
+                            <%details.image.forEach(item=>{%>
+                                <img data-imgbigurl="data:<%= item.contentType %>;base64,<%= item.data.toString('base64')%>"
+                                    src="data:<%= item.contentType %>;base64,<%= item.data.toString('base64')%>" alt="">
+                                <%})%>
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
                         <h3>
@@ -92,11 +64,15 @@
                             </p>
                         </h3>
                         <ul>
-                            <li>Brand : <%= details.brand_name %></li>
+                            <li><b>Brand : </b> <span><%= details.brand_name %></span></li>
+                            <li><b>Color : </b> <span><%= details.color %></span></li>
+
                         </ul>
                         <p></p>
 
                         <div class="product__details__rating">
+                            <i><b>Rating : </b></i>
+                            <i></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -104,21 +80,36 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
-
                         <div class="product__details__price">
                             ₹ <%= details.price%>
+                        </div>
+
+                        <div class="product__details__quantity">
+                            <div class="quantity">
+                                <div class="pro-qty">
+                                    <input type="text" value="1">
+                                </div>
+                            </div>
                         </div>
 
 
                         <button class="primary-btn" onclick="addToCart('<%= details._id %>')">ADD TO CARD</button>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
 
-
                         <ul>
                             <li><b>Availability</b> <span>
                                     <%= details.stock_count%>
                                 </span></li>
-                           
+                            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
+                            <li><b>Weight</b> <span>0.5 kg</span></li>
+                            <li><b>Share on</b>
+                                <div class="share">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -155,6 +146,14 @@
                                     </p>
                                 </div>
                             </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <div class="product__details__tab__desc">
+                                    <h6>Products Infomation</h6>
+                                    <p>
+                                        <%= details.description %>.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,8 +167,8 @@
 
 
     <script>
-        document.querySelectorAll('.image').forEach(elem =>{
-            let x,y,width,height;
+        document.querySelectorAll('.image').forEach(elem => {
+            let x, y, width, height;
             elem.onmouseenter = () => {
                 const size = elem.getBoundingClientRect();
 
@@ -179,8 +178,8 @@
                 height = size.height;
             }
             elem.onmousemove = e => {
-                const horizontal = (e.clientX - x) / width*100;
-                const vertical = (e.clientY - y) / height*100;
+                const horizontal = (e.clientX - x) / width * 100;
+                const vertical = (e.clientY - y) / height * 100;
 
                 elem.style.setProperty('--x', horizontal + '%');
                 elem.style.setProperty('--y', vertical + '%');
