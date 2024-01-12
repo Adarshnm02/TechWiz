@@ -42,14 +42,15 @@ const sendToMail = (req,res, userId,email) =>{
 
     const mailOptions = {
         from: {
-            name:"ex-fam",
+            name:"TechWiz.com",
             address: process.env.USER,
         },
         to:req.body.email || email,
         subject: 'OTP Verification',
         html: `<p> Your otp for varification is ${OTP} </p>`,
     }
-console.log(OTP, "otp");
+
+    console.log(OTP, "otp");
     const sendMail = async (transporter,options) =>{
         try{
             const hashedOTP = await bcrypt.hash(OTP, salt)

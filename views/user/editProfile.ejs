@@ -28,7 +28,7 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Phone<span>*</span></p>
-                                        <input type="number" name="mobile" id="phone" value="<%= user.mobile %>">
+                                        <input type="text" name="mobile" id="phone" value="<%= user.mobile %>">
                                         <p id="phoneError" class="text-danger"></p>
                                     </div>
                                 </div>
@@ -96,15 +96,19 @@
 
         function phoneValidation() {
             const phoneValue = phoneInput.value.trim();
-            if (phoneValue.length === 10 && /^0{10}$/.test(phoneValue)) {
-                phoneError.innerHTML = "Phone number should not consist of 10 consecutive zeros";
+
+            if (/^-?0{10}$/.test(phoneValue) || /^0{10}$/.test(phoneValue)|| phoneValue[0]==="-"||phoneValue[0]==="+") {
+                phoneError.innerHTML = "Phone number is not valid";
                 return false;
             }
-            if (phoneValue.length !== 10 || isNaN(phoneValue)) {
+
+            if (phoneValue.length !== 10 || isNaN(phoneValue) || parseInt(phoneValue) < 0) {
                 if (phoneValue.length !== 10) {
                     phoneError.innerHTML = "Phone number should be of length 10";
                 } else if (isNaN(phoneValue)) {
                     phoneError.innerHTML = "Should not contain any non-numeric characters";
+                } else if (parseInt(phoneValue) < 0 || phoneValue.charAt(0) === '-') {
+                    phoneError.innerHTML = "Phone number should not be negative";
                 }
                 return false;
             } else {
@@ -112,6 +116,8 @@
                 return true;
             }
         }
+
+
 
         couponForm.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -131,29 +137,6 @@
                 setTimeout(() => {
                     couponForm.submit();
                 }, 1000)
-
-                // const formData = new FormData(couponForm);
-                // console.log(formData);
-
-                //     fetch("/profile/editProfile/'</%= user._id %>'", {
-                //         method: 'POST',
-                //         body: formData
-                //     })
-                //         .then(response => {
-                //             if (!response.ok) {
-                //                 throw new Error('Network response was not ok');
-                //                 console.log("Response is not ok");
-                //             }
-                //             // return response.json();
-                //         })
-                //         .then(data => {
-                //             // Handle success, if needed
-                //             console.log(data);
-                //             window.location.href = '/profile';
-                //         })
-                //         .catch(error => {
-                //             console.error('There was an error!', error);
-                //         });
             }
         });
     </script>

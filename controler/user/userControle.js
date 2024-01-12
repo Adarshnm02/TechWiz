@@ -53,20 +53,8 @@ function isValidPassword(password) {
 
 module.exports = {
 
-
-    // loadHome(req, res) {
-    //     console.log(req.session.user);
-
-    //     try{
-    //         res.render('user/index', { session: req.session.user})
-
-    //     } catch{
-    //         res.render('user/500')
-    //     }
-
-    // },
     login(req, res) {
-        res.render('user/user_login', { session: req.session.user })
+        res.render('user/user_login')
     },
 
 
@@ -84,7 +72,6 @@ module.exports = {
 
 
     load_otp(req, res) {
-        // res.render('user/forDelete')
         const id = '123';
         res.render('user/otpVerification', { id })
     },
@@ -99,57 +86,6 @@ module.exports = {
             res.render('user/500')
         }
     },
-
-    
-
-    // async loadHome(req, res) {
-    //     try {
-    //         const session = req.session.user;
-
-
-    //         const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-    //         const limit = 12; // Set the number of products per page
-    //         const skip = (page - 1) * limit;
-
-    //         let products;
-    //         if (req.query.query) {
-    //             products = await Product.find({
-    //                 product_name: { $regex: ".*" + req.query.query + ".*", $options: "i" },
-    //                 is_delete: false
-    //             }).skip(skip).limit(pageSize);
-
-    //         } else {
-
-    //             products = await Product
-    //             .find({ is_delete: false })
-    //             .populate({
-    //                 path: 'category',
-    //                 match: { is_disable: false }
-    //             })
-    //             .skip(skip)
-    //             .limit(limit)
-    //             .sort({ _id: -1 });
-
-    //         const latestPrd = await Product
-    //             .find({ is_delete: false })
-    //             .limit(limit)
-    //             .sort({ _id: 1 })
-    //         }
-
-    //         // Count total products for pagination calculation
-    //         const totalCount = await Product.countDocuments({ is_delete: false });
-
-    //         // Calculate total pages
-    //         const totalPages = Math.ceil(totalCount / limit);
-
-    //         res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
-
-    //     } catch (err) {
-    //         console.log("Error From loadHome", err);
-    //         res.render("user/500");
-    //     }
-    // },
-
 
 
     async loadHome(req, res) {
@@ -174,14 +110,14 @@ module.exports = {
                     },
                     {
                         $lookup: {
-                            from: 'productcategories', // Assuming the name of the productCategory collection
+                            from: 'productcategories', 
                             localField: 'category',
                             foreignField: '_id',
                             as: 'category'
                         }
                     },
                     {
-                        $unwind: '$category' // Unwind the category array created by $lookup
+                        $unwind: '$category' 
                     },
                     {
                         $match: { 'category.is_disable': false }
@@ -196,9 +132,7 @@ module.exports = {
                         $limit: limit
                     }
                 ]);
-                console.log(products);
-                
-                // Now 'products' contains the result after aggregation
+                // console.log(products);
                 
                 latestPrd = await Product
                     .find({ is_delete: false })
@@ -212,7 +146,6 @@ module.exports = {
             const totalCount = await Product.countDocuments({ is_delete: false });
             const totalPages = Math.ceil(totalCount / limit);
 
-            // res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
             res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
 
 
@@ -224,14 +157,13 @@ module.exports = {
 
     async insertUser(req, res) {
         try {
-            console.log("Form req.body Body", req.body);
+            // console.log("Form req.body Body", req.body);
             const { email, username, password, confirmPassword } = req.body;
 
             if (email && username && password && confirmPassword) {
                 const foundUser = await User.findOne({ email: email });
 
                 if (foundUser) {
-                    // User already exists
                     console.log("user is exist")
                     res.render('user/userSignup',{message: "User is already exist"});
                 } else {
@@ -245,9 +177,7 @@ module.exports = {
                         });
 
                         await newUser.save();
-                        console.log("Showing newUser ", newUser);
-                        console.log("User saved successfully");
-
+                        console.log("User saved successfully ", newUser);
                         const savedUser = await User.findOne({ userName: username })
                         sendMail(req, res, savedUser._id, email)
                         
@@ -284,19 +214,14 @@ module.exports = {
                 return res.render('user/otpVerification', { message: "Enter valied OTP", id: ID })
             }
             const { userId, otp } = OTPrecord;
-            // if (expireAt < Date.now()) {
-            //     await userOTP.deleteOne({ userId })
-            //     return res.render('user/otpVerification', { message: 'OTP has been expired,Please try again', id: ID })
-            // }
-            console.log("11" + OTP, otp);
             const isvalid = await bcrypt.compare(OTP, otp);
-
-            console.log(isvalid);
-            console.log("11  " + OTP + "   helo   " + otp);
+            console.log("otp is ",isvalid);
+            
 
             if (!isvalid) {
                 return res.render('user/otpVerification', { message: 'The entered OTP is invalid', id: ID })
             }
+
             await User.updateOne({ _id: ID }, { $set: { is_varified: true } })
             await userOTP.deleteOne({ userId })
             req.session.user = userId._id
@@ -339,12 +264,12 @@ module.exports = {
 
                     }
                 } else {
-                    console.log("error from userLogin else");
+                    console.log("user is not Verified");
                     return res.render('user/user_login', { message: "Not a Verified User " })
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.log("Error from userLogin", error);
             res.render('user/500')
         }
     },

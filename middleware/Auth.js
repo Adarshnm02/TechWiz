@@ -5,7 +5,7 @@ module.exports = {
 
 isLogged (req, res, next){
     if (req.session.user) {
-        console.log("rendering indes");
+        console.log("rendering indes"); 
          res.redirect("/index")
     } else {
           next()

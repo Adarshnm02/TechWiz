@@ -39,31 +39,6 @@
         }
     </style>
 
-
-
-
-
-
-
-
-    <!-- Breadcrumb Section Begin -->
-    <!-- <section class="breadcrumb-section set-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="breadcrumb__text">
-                        <h2>Shopping Cart</h2>
-                        <div class="breadcrumb__option">
-                            <a href="/index">Home</a>
-                            <span>Shopping Cart</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- Breadcrumb Section End -->
-
     <!-- Shoping Cart Section Begin -->
     <section class="shoping-cart spad">
         <div class="container">
@@ -85,9 +60,10 @@
 
                                 <% cart.forEach((element)=> { %>
                                     <% if (element.product && element.product._id) { %>
-                                        <tr id="<%=element.product._id%>">
+                                        <tr id="<%=element.product._id%>" class="items">
                                             <td class="shoping__cart__item">
-                                                <% if (element.product.image.length> 0 && element.product.image[0].data)
+                                                <% if (element.product.image.length>= 0 &&
+                                                    element.product.image[0].data)
                                                     {
                                                     %>
                                                     <img src="data:<%= element.product.image[0].contentType %>;base64, <%= element.product.image[0].data.toString('base64') %>"
@@ -191,13 +167,14 @@
                                     <%= user.grandTotal %>
                                 </span></li>
                         </ul>
-                        <a href="/checkout" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        <a href="<%= (cart.length === 0) ? '/cart' : '/checkout' %>" class="primary-btn">PROCEED TO
+                            CHECKOUT</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Shoping Cart Section End -->
+
 
 
     <script>
@@ -211,8 +188,6 @@
                 totalAmont += parseInt(e.innerHTML)
 
             })
-
-            console.log(totalAmont, "fsdaff");
 
             grandTtl.innerHTML = totalAmont;
 
@@ -247,10 +222,12 @@
                             toast.onmouseleave = Swal.resumeTimer;
                         }
                     });
+
                     Toast.fire({
                         icon: "success",
                         title: "Quantity Updated successfuly"
                     })
+
                     console.log('Success:', data);
                     showTotalAmount()
                     // Update the quantity displayed on the page
@@ -268,6 +245,14 @@
                         grandTotal.innerHTML = `${data.grandTotal}`
                         grandTtl.innerHTML = `${data.grandTotal}`
                     }
+                    if (data.stock_count === data.quantity) {
+                        Toast.fire({
+                            icon: "warning",
+                            title: "Quantity is exeeded"
+                        })
+
+                    }
+
 
 
                     // if (totalAmountElement) {
@@ -288,32 +273,60 @@
 
 
         function removeProduct(productId) {
-            fetch("/removeFromCart", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    product: productId,
-                }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log("Success:", data.grandTotal);
-                    const grandTotal = document.getElementById('grandTtl')
-                    grandTotal.innerHTML = `${data.grandTotal}`
-                    const grandTtl = document.getElementById('grandTtle')
-                    grandTtl.innerHTML = `${data.grandTotal}`
+            const canCanceladress = true;
 
-                    const deletedItem = document.getElementById(productId);
-                    if (deletedItem) {
-                        deletedItem.remove();
+            if (canCanceladress) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: "Yes, Delete",
+                    cancelButtonText: "Close",
+                }).then((result) => {
+
+                    if (result.isConfirmed && result.value) {
+                        fetch("/removeFromCart", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                product: productId,
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log("Success:", data.grandTotal);
+                                const grandTotal = document.getElementById('grandTtl')
+                                grandTotal.innerHTML = `${data.grandTotal}`
+                                const grandTtl = document.getElementById('grandTtle')
+                                grandTtl.innerHTML = `${data.grandTotal}`
+
+                                const deletedItem = document.getElementById(productId);
+                                if (deletedItem) {
+
+                                    deletedItem.remove();
+                                    const items = document.querySelectorAll('.items')
+
+                                    if (items.length === 0) {
+
+                                        window.location.reload()
+                                    }
+
+
+                                }
+                                console.log(deletedItem);
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+
                     }
-                    console.log(deletedItem);
                 })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
+            }
         }
 
 
@@ -322,52 +335,3 @@
 
 
     <%- include('../partials/user/footer') %>
-
-
-
-        // <!-- 
-// <tr>
-//     <td class="shoping__cart__item">
-//         <img src="img/cart/cart-1.jpg" alt="">
-//         <h5>Vegetable’s Package</h5>
-//     </td>
-//     <td class="shoping__cart__price">
-//         $55.00
-//     </td>
-//     <td class="shoping__cart__quantity">
-//         <div class="quantity">
-//             <div class="pro-qty">
-//                 <input type="text" value="1">
-//             </div>
-//         </div>
-//     </td>
-//     <td class="shoping__cart__total">
-//         $110.00
-//     </td>
-//     <td class="shoping__cart__item__close">
-//         <span class="icon_close"></span>
-//     </td>
-// </tr> -->
-
-
-        // <td class="shoping__cart__quantity">
-            // <div class="quantity">
-                // <div class="pro-qty">
-                    // <input type="text" value=" element.quantity%>">
-                    // </div>
-                // </div>
-            // </td>
-
-
-
-        // <div class="col-lg-6">
-            // <div class="shoping__continue">
-                // <div class="shoping__discount">
-                    // <h5>Discount Codes</h5>
-                    // <form action="#">
-                        // <input type="text" placeholder="Enter your coupon code">
-                        // <button type="submit" class="site-btn">APPLY COUPON</button>
-                        // </form>
-                    // </div>
-                // </div>
-            // </div>

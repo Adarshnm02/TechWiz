@@ -46,7 +46,7 @@
 
                             <div class="form-group">
                                 <label for="category">Category</label>
-                                <select class="form-control" name="category">
+                                <select class="form-control" name="categorys">
                                     <% category.forEach((category)=> { %>
                                         <option value="<%= category._id %>">
                                             <%= category.categoryName %>
@@ -185,6 +185,13 @@
         }
 
 
+        const isValidImage = (file) => {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            return file && allowedTypes.includes(file.mimetype);
+        };
+
+
+
 
 
         productEditingForm.addEventListener("submit", function (event) {
@@ -204,7 +211,7 @@
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: "Product Updated successfuly",
+                    title: "Product Detials Submitted",
                     showConfirmButton: false,
                     timer: 1500
                 });

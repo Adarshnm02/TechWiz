@@ -1,21 +1,41 @@
 <%- include('../partials/user/shortHeader') %>
 
 
-<style>
-    .btn-qunty {
-            border: 0;
-            height: 30px;
-            width: 30px;
+    <style>
+        .imgof {
+            /* background: rgb(202, 233, 247); */
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            height: 100vh;
         }
-    .quantity {
-            width: 63px;
+
+        .image {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+            /* border: 5px solid #fff; */
+            /* box-shadow: -1px 5px; */
         }
-</style>
+
+        .image img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform: scale(var(--zoom, 1));
+            transform-origin: var(--x) var(--y);
+            transition: transform 0.3s ease;
+
+        }
 
 
+        .image:hover {
+            --zoom: 3;
 
-
-
+        }
+    </style>
 
 
     <!-- Product Details Section Begin -->
@@ -24,44 +44,15 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__pic">
-                        <div class="product__details__pic__item slick-slider">
-
-                            <div class="item-slick3">
-                                <div class="wrap-pic-w pos-relative"
-                                    style="min-width: 422px ; display:flex ; align-content: center; justify-content: center;">
-                                    <% if (details.image) { %>
-                                        <img src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" style="width: 253px;height: 435px;" />
-                                        <% } else { %>
-                                            <p>Image is not available</p>
-                                            <% } %>
-                                                <div id="zoom"></div>
-                                </div>
-                            </div>
-
+                        <div class="product__details__pic__item image">
+                            <img class="product__details__pic__item--large "
+                                src="data:<%= details.image[0].contentType %>;base64,<%= details.image[0].data.toString('base64')%>">
                         </div>
-
-
-
-                        <div class="product__details__pic__slider owl-carousel">
-                            <% if (details.image && details.image[1]) { %>
-                                <img src="data:<%= details.image[1].contentType %>;base64,<%= details.image[1].data.toString('base64')%>"
-                                    alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
-                                <% } %>
-                                    <% if (details.image && details.image[2]) { %>
-                                        <img src="data:<%= details.image[2].contentType %>;base64,<%= details.image[2].data.toString('base64')%>"
-                                            alt="IMG-PRODUCT" style="width: 342px;height: 140px !important;" />
-                                        <% } %>
-
-
-                                            <!-- <img data-imgbigurl="img/product/details/product-details-2.jpg"
-                                src="/user/img/product/details/thumb-1.jpg" alt="">
-                            <img data-imgbigurl="img/product/details/product-details-3.jpg"
-                                src="/user/img/product/details/thumb-2.jpg" alt="">
-                            <img data-imgbigurl="img/product/details/product-details-5.jpg"
-                                src="/user/img/product/details/thumb-3.jpg" alt="">
-                            <img data-imgbigurl="img/product/details/product-details-4.jpg"
-                                src="/user/img/product/details/thumb-4.jpg" alt=""> -->
+                        <div class="product__details__pic__slider owl-carousel ">
+                            <%details.image.forEach(item=>{%>
+                                <img data-imgbigurl="data:<%= item.contentType %>;base64,<%= item.data.toString('base64')%>"
+                                    src="data:<%= item.contentType %>;base64,<%= item.data.toString('base64')%>" alt="">
+                                <%})%>
                         </div>
                     </div>
                 </div>
@@ -73,11 +64,15 @@
                             </p>
                         </h3>
                         <ul>
-                            <li>Brand : <%= details.brand_name %></li>
+                            <li><b>Brand : </b> <span><%= details.brand_name %></span></li>
+                            <li><b>Color : </b> <span><%= details.color %></span></li>
+
                         </ul>
                         <p></p>
 
                         <div class="product__details__rating">
+                            <i><b>Rating : </b></i>
+                            <i></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -85,21 +80,36 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
-
                         <div class="product__details__price">
                             ₹ <%= details.price%>
+                        </div>
+
+                        <div class="product__details__quantity">
+                            <div class="quantity">
+                                <div class="pro-qty">
+                                    <input type="text" value="1">
+                                </div>
+                            </div>
                         </div>
 
 
                         <button class="primary-btn" onclick="addToCart('<%= details._id %>')">ADD TO CARD</button>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
 
-
                         <ul>
                             <li><b>Availability</b> <span>
                                     <%= details.stock_count%>
                                 </span></li>
-                           
+                            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
+                            <li><b>Weight</b> <span>0.5 kg</span></li>
+                            <li><b>Share on</b>
+                                <div class="share">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -136,22 +146,14 @@
                                     </p>
                                 </div>
                             </div>
-                            <!-- <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <div class="product__details__tab__desc">
                                     <h6>Products Infomation</h6>
-                                    <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                                        Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
-                                        Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
-                                        sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
-                                        eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
-                                        Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent
-                                        sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac
-                                        diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante
-                                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-                                        Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
-                                        Proin eget tortor risus.</p>
+                                    <p>
+                                        <%= details.description %>.
+                                    </p>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,22 +164,29 @@
 
 
 
+
+
     <script>
+        document.querySelectorAll('.image').forEach(elem => {
+            let x, y, width, height;
+            elem.onmouseenter = () => {
+                const size = elem.getBoundingClientRect();
 
-        // $(document).ready(function(){
-        //     $('.slick-slider').slick({
-        //         slidesToShow: 1,
-        //         slidesToScroll: 1,
-        //         autoplay: true,
-        //         autoplaySpeed: 2000,
-        //         dots: true,
-        //         arrows: true
-        //         // Add other settings as needed
-        //     });
-        // });
+                x = size.x
+                y = size.y
+                width = size.width;
+                height = size.height;
+            }
+            elem.onmousemove = e => {
+                const horizontal = (e.clientX - x) / width * 100;
+                const vertical = (e.clientY - y) / height * 100;
+
+                elem.style.setProperty('--x', horizontal + '%');
+                elem.style.setProperty('--y', vertical + '%');
+
+            };
+        })
     </script>
-
-
 
 
     <%- include('../partials/user/footer') %>

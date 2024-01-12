@@ -121,7 +121,7 @@
             if (errorMessage) {
                 errorMessage.style.display = "none"
             }
-        }, 3000);
+        }, 4000);
     </script>
 
     <script>
@@ -195,8 +195,8 @@
                 colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
                 return false;
             }
-            colorTypes_error.innerHTML = ""; // Clear error message if validation succeeds
-            return true; // Return true when validation passes
+            colorTypes_error.innerHTML = ""; 
+            return true; 
         }
 
         function validateStockCount() {
@@ -244,7 +244,7 @@
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: "Product added successfuly",
+                    title: "Product Detialse Submitted",
                     showConfirmButton: false,
                     timer: 1500
                 });

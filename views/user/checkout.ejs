@@ -1,18 +1,32 @@
 <%- include('../partials/user/header') %>
-<style>
-    .btn {
-        background-color: #333333bd;
-        border: none;
-        border-radius: 10px;
-        padding: 6px 13px;
-        transition: background-color 0.3s ease;
-    }
+    <style>
+        .btn {
+            background-color: #333333bd;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 13px;
+            transition: background-color 0.3s ease;
+        }
 
-    .btn:hover {
-        background-color: #000000;
-        color: #fff;
-    }
-</style>
+        .btn:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .btnAdd {
+            background-color: #db0808bd;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 13px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnAdd:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+    </style>
 
 
     <!-- Checkout Section Begin -->
@@ -73,7 +87,7 @@
                                                 <div class="address-info">
 
                                                     <input type="radio" id="address_<%= address._id %>"
-                                                        value="<%= address._id %>" name="address" checked>
+                                                        value="<%= address._id %>" name="selectedAddress" checked>
 
                                                     <label for="address1">
                                                         <%= address.userName %>
@@ -93,10 +107,11 @@
                                                 </div>
                                                 <div class="address-actions">
                                                     <a href="/editAddress/<%=address._id %>" class="btn btn-success">
-                                                            Edit</a>
+                                                        Edit</a>
                                                     <!-- onclick="editAddress('address1')" -->
-                                                    <button onclick="deleteAddress('address1')"
-                                                        class=" btn btn-success" style="background-color: #f31a1abd;">Delete</button>
+                                                    <button onclick="removeAddress('<%=address._id %>')"
+                                                        class=" btn btn-success"
+                                                        style="background-color: #f31a1abd;">Delete</button>
                                                 </div>
                                             </div>
 
@@ -126,7 +141,7 @@
                                     </div>
 
                                     <div class="edit-address">
-                                        <a href="/addAddress"><button>Add New Address</button></a>
+                                        <a href="/addAddress" class="btnAdd">Add New Address</a>
                                     </div>
 
                                 </div>
@@ -208,13 +223,13 @@
 
 
     <script>
-        const address = document.getElementById(`addressOption`);
-        const payment = document.getElementById('paymentOption');
-
-        const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').value;
 
         async function checkOut() {
             try {
+                const address = document.getElementById(`addressOption`);
+                const payment = document.getElementById('paymentOption');
+                const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
+                console.log(selectedAddrerssOption, " fdsfdsf ", address);
                 // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
                 const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
 
@@ -239,8 +254,8 @@
 
                     const data = { address: selectedAddrerssOption, payment: selectedPaymentOption };
 
-                    console.log("frond end things :-", address, "/n", payment)
-
+                    // console.log("frond end things :-", address, "/n", payment)
+                    console.log("data ", data);
                     // Fetch the stock check result
                     const stockCheckResponse = await fetch('/checkStock', {
                         method: 'POST',
@@ -292,8 +307,6 @@
 
 
     </script>
-
-
     <!-- // Reference to the PLACE ORDER button
         const placeOrderButton = document.getElementById('placeOrderBtn');
         
@@ -375,20 +388,60 @@
         }
 
     </script>
+    <script>
+        function removeAddress(addressId) {
+            console.log("dfsdagfsdgdsgvsdvsdffvsdf sdfasdf ");
+            const canCanceladress = true;
+
+            if (canCanceladress) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: "Yes, Delete",
+                    cancelButtonText: "Close",
+                }).then((result) => {
+
+                    if (result.isConfirmed && result.value) {
+                        console.log("dhrjheilbg");
+                        fetch(`/removeAddress/${addressId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                addressId: addressId,
+                            }),
+                        })
+
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log("Success:", data);
+
+                                const deletedItem = document.getElementById(addressId);
+                                if (deletedItem) {
+                                    Swal.fire({
+                                        title: "Deleted!",
+                                        text: "Your file has been deleted.",
+                                        icon: "success"
+                                    });
+
+                                    setTimeout(() => {
+                                        deletedItem.remove();
+                                    }, 1500)
+                                }
+                                console.log(deletedItem);
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                    }
+                })
+            }
+        }
+    </script>
 
     <%- include('../partials/user/footer') %>
-
-
-
-
-        <!-- <div class="col-lg-6">
-                                    <div class="shoping__continue">
-                                        <div class="shoping__discount">
-                                            <h5>Discount Codes</h5>
-                                            <form action="#">
-                                                <input type="text" placeholder="Enter your coupon code">
-                                                <button type="submit" class="site-btn">APPLY COUPON</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div> -->
