@@ -57,4 +57,11 @@ adminRoute.get('/order',authCtrl.isLogedout, adminCtrl.loadOrder)
 adminRoute.get('/orderList',authCtrl.isLogedout, adminCtrl.loadOrderList)
 adminRoute.post('/userlist/updateStatus/:userId',authCtrl.isLogedout, adminCtrl.changeDeliveryStatus);
 
+//return 
+adminRoute.get('/returnRequest', authCtrl.isLogedout, adminCtrl.loadReturnReq)
+adminRoute.post('/returnRequests', authCtrl.isLogedout, adminCtrl.returnUpdation)
+
+
+
+
 module.exports = adminRoute;

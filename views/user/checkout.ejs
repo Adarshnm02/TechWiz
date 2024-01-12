@@ -87,7 +87,7 @@
                                                 <div class="address-info">
 
                                                     <input type="radio" id="address_<%= address._id %>"
-                                                        value="<%= address._id %>" name="address" checked>
+                                                        value="<%= address._id %>" name="selectedAddress" checked>
 
                                                     <label for="address1">
                                                         <%= address.userName %>
@@ -223,13 +223,13 @@
 
 
     <script>
-        const address = document.getElementById(`addressOption`);
-        const payment = document.getElementById('paymentOption');
-
-        const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').value;
 
         async function checkOut() {
             try {
+                const address = document.getElementById(`addressOption`);
+                const payment = document.getElementById('paymentOption');
+                const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
+                console.log(selectedAddrerssOption, " fdsfdsf ", address);
                 // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
                 const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
 
@@ -254,8 +254,8 @@
 
                     const data = { address: selectedAddrerssOption, payment: selectedPaymentOption };
 
-                    console.log("frond end things :-", address, "/n", payment)
-
+                    // console.log("frond end things :-", address, "/n", payment)
+                    console.log("data ", data);
                     // Fetch the stock check result
                     const stockCheckResponse = await fetch('/checkStock', {
                         method: 'POST',
@@ -431,7 +431,7 @@
 
                                     setTimeout(() => {
                                         deletedItem.remove();
-                                    },1500)
+                                    }, 1500)
                                 }
                                 console.log(deletedItem);
                             })

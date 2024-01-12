@@ -1,0 +1,172 @@
+<%- include('../partials/admin/adminHeader') %>
+
+
+
+    <div class="container-fluid">
+
+        <!-- Layout container -->
+        <div class="layout-page">
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+
+                <div class="container-xxl flex-grow-1 container-p-y" style="margin-left: -15px; margin-right: -15px;">
+
+                    <a href="/admin/order">
+                        <button style="margin-top: 20px;" type="button" class="btn btn-primary mb-3">Back to
+                            order</button>
+                    </a>
+
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+
+                            <div class="d-flex justify-content-between" style="margin-left: 25px; margin-top: 25px;">
+                                <h4 class="card-title">Return Requests</h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Details</th>
+                                            <th>Return To</th>
+                                            <th>Reason and Condition</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (!returnRequests.length) { %>
+                                            <tr>
+                                                <td colspan="5">No requests found.</td>
+                                            </tr>
+                                            <% } else { %>
+                                                <% returnRequests.forEach((request)=> { %>
+                                                    <tr>
+                                                        <td>
+                                                            <p>
+                                                                <!-- </%= request.user.userName %> -->
+                                                                <%= request.deliveryAddress[0].userName %>,<br>
+                                                            </p> <br>
+                                                            <p class="text-dark mb-1">
+                                                                <!-- </%= request.user.email %> -->
+                                                                <%= request.deliveryAddress[0].email %>,<br>
+                                                            </p><br>
+                                                            <!-- </%= request.user.mobile %> -->
+                                                            <%= request.deliveryAddress[0].mobile %>,<br>
+                                                        </td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="mb-2">
+                                                                    <span class="h6 text-uppercase">
+                                                                        <%= request.products[0].product.product_name
+                                                                            || 'Product Name N/A' %>
+                                                                    </span><br>
+                                                                    Total price: ₹<%= request.products[0].totalAmount %>
+                                                                        <br>
+                                                                        Quantity: <%= request.products[0].quantity %>
+                                                                            <br>
+                                                                </div>
+                                                                Requested Date: <%=
+                                                                    request.orderDate.toLocaleDateString() %>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <%= request.deliveryAddress[0].city %>,<br>
+                                                                <%= request.deliveryAddress[0].district %>,<br>
+                                                                    <%= request.deliveryAddress[0].state %>,<br>
+                                                                        <%= request.deliveryAddress[0].postCode %>,<br>
+                                                        </td>
+                                                        <td>
+                                                            <%= request.returnReason %>,<br>
+                                                                <!-- Adjust the property names based on your schema -->
+                                                                <%= request.cancelReason %>
+                                                        </td>
+                                                        <td>
+                                                            <!-- action="/admin/returnRequests" method="post" -->
+                                                            <form class="status-form">
+                                                                <select name="status" class="status-dropdown"
+                                                                    data-request-id="<%= request._id %>"
+                                                                    onclick="updateRequest(this)">
+                                                                    <option value="Return Approved">Approved</option>
+                                                                    <option value="Return Rejected">Rejected</option>
+                                                                    <option value="Return Complited">Complited</option>
+                                                                </select>
+                                                            </form>
+
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- Pagination controls -->
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- / Content -->
+
+                <div class="content-backdrop fade"></div>
+            </div>
+            <!-- Content wrapper -->
+
+        </div>
+        <!-- Layout page -->
+
+    </div>
+
+    <script>
+        // Define the updateRequest function outside the event listener
+        function updateRequest(selectElement) {
+            const requestId = selectElement.dataset.requestId;
+            const status = selectElement.value;
+    
+            console.log('Selected Request ID F:', requestId);
+            console.log('Selected Status F:', status);
+    
+            fetch('/admin/returnRequests', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ requestId, status }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Handle success response if needed
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+    
+        // Add this script to handle form submission when dropdown value changes
+        document.querySelectorAll('.status-dropdown').forEach(function (dropdown) {
+            console.log('Dropdown found:', dropdown);
+            dropdown.addEventListener('change', function () {
+                // Call the updateRequest function passing the current select element
+                updateRequest(this);
+            });
+        });
+    </script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+
+
+
+    <%- include('../partials/admin/adminFooter') %>

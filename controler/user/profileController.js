@@ -3,6 +3,8 @@ const User = require('../../models/userModel')
 const Product = require('../../models/productModel')
 const Address = require('../../models/addressModel')
 const Order = require('../../models/orderModel')
+
+
 const { render } = require('ejs')
 
 module.exports = {
@@ -256,7 +258,7 @@ module.exports = {
 
             const result = await Order.findOneAndUpdate(
                 { orderId: id },
-                { $set: { status: 'Returned', returnReason: reason } },
+                { $set: { status: 'Return Processing', returnReason: reason } },
                 { new: true }
             );
 
@@ -270,6 +272,40 @@ module.exports = {
         }
 
     },
+
+    // async returnOrder(req, res, next){
+    //     try {
+    //       let { id } = req.params;
+    //       const { reason } = req.body;
+    //       const foundOrder = await Order.findById(id).populate(
+    //         "products.product"
+    //       );
+    //       console.log("dddddddddddddddd", foundOrder);
+
+    //       const foundProduct = await Product.findOne({
+    //         product_name: req.body.product,
+    //       });
+    //       // console.log("ffffffffffffffffffffffffff",foundProduct);
+    //       const returnProduct = new Return({
+    //         user: req.session.user,
+    //         order: foundOrder._id,
+    //         product: foundProduct._id,
+    //         quantity: parseInt(req.body.quantity),
+    //         reason: reason,
+    //         address: foundOrder.deliveryAddress,
+    //       });
+    //       await returnProduct.save();
+    //       foundOrder.products.forEach((product) => {
+    //         if (product.product._id.toString() === foundProduct._id.toString()) {
+    //           product.returnRequested = "Pending";
+    //         }
+    //       });
+    //       await foundOrder.save();
+    //       res.redirect("/user/orders");
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   },
 
 
 
