@@ -170,6 +170,7 @@ module.exports = {
             })
             
             cart = user.cart
+            console.log("Detials", details);
             if (details) {
                 console.log("Product Details Rendering");
                 res.render('user/productDetails', { details, session, id, cart})

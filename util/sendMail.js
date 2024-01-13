@@ -14,25 +14,25 @@ async function generateSalt() {
 generateSalt();
 
 
-const sendToMail = (req,res, userId,email) =>{
+const sendToMail = (req, res, userId, email) => {
     console.log("mailoption");
-    console.log(email,"form sendMail");
+    console.log(email, "form sendMail");
     console.log(userId, "userId");
     const transporter = nodeMailer.createTransport({
-        service:'Gmail',
-        auth:{
-            user:"techwiz.official02@gmail.com",
+        service: 'Gmail',
+        auth: {
+            user: "techwiz.official02@gmail.com",
             pass: "xfkl nkqv jlhx jmbp"
         }
     })
-    
 
-    function generateOTP(length){
+
+    function generateOTP(length) {
         const charset = '0123456789';
         let otp = "";
 
-        for(let i = 0; i<length;i++){
-            const randomIndex = Math.floor(Math.random()*charset.length)
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length)
             otp += charset[randomIndex]
         }
         return otp
@@ -42,41 +42,43 @@ const sendToMail = (req,res, userId,email) =>{
 
     const mailOptions = {
         from: {
-            name:"TechWiz.com",
+            name: "TechWiz.com",
             address: process.env.USER,
         },
-        to:req.body.email || email,
+        to: req.body.email || email,
         subject: 'OTP Verification',
         html: `<p> Your otp for varification is ${OTP} </p>`,
     }
 
     console.log(OTP, "otp");
-    const sendMail = async (transporter,options) =>{
-        try{
+    const sendMail = async (transporter, options) => {
+        try {
             const hashedOTP = await bcrypt.hash(OTP, salt)
             const newUserOPTVerification = new userOTPVerification({
-                userId:userId,
-                otp:hashedOTP,
-                createAt:Date.now(),
-                expireAt:Date.now()+ 60000*60
+                userId: userId,
+                otp: hashedOTP,
+                createAt: Date.now(),
+                expireAt: Date.now() + 5000,  // Adding 3000 milliseconds (3 seconds) to the current timestamp
+
+                // expireAt:Date.now()+ 60000*60
             })
             await newUserOPTVerification.save()
             await transporter.sendMail(options)
-            res.render('user/otpVerification',{
+            res.render('user/otpVerification', {
                 userId,
-                email:req.body.mail,
-                error:'',
-                id:userId
+                email: req.body.mail,
+                error: '',
+                id: userId
             })
-            console.log(email ,"email");
-        }catch(error){
+            console.log(email, "email");
+        } catch (error) {
             res.status(500).json({
-                status:"FAILED",
-                message:'error sending verification email:'+error.message,
+                status: "FAILED",
+                message: 'error sending verification email:' + error.message,
             })
         }
     }
-    sendMail(transporter,mailOptions)
+    sendMail(transporter, mailOptions)
 }
 
 module.exports = sendToMail;

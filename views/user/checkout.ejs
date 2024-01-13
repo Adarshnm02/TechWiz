@@ -390,23 +390,23 @@
     </script>
     <script>
         function removeAddress(addressId) {
-            console.log("dfsdagfsdgdsgvsdvsdffvsdf sdfasdf ");
-            const canCanceladress = true;
+            console.log("Hlolo from remove  ");
+            
 
-            if (canCanceladress) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: "Yes, Delete",
-                    cancelButtonText: "Close",
-                }).then((result) => {
+            // const canCanceladress = Swal.fire({
+            //         icon: 'warning',
+            //         title: 'Are you sure?',
+            //         text: "You won't be able to revert this!",
+            //         showCancelButton: true,
+            //         confirmButtonColor: '#d33',
+            //         cancelButtonColor: '#3085d6',
+            //         confirmButtonText: "Yes, Delete",
+            //         cancelButtonText: "Close",
+            //     })
+            const canCanceladress = true
 
-                    if (result.isConfirmed && result.value) {
-                        console.log("dhrjheilbg");
+                    if (canCanceladress) {
+                        console.log("inside conformed ");
                         fetch(`/removeAddress/${addressId}`, {
                             method: "POST",
                             headers: {
@@ -429,9 +429,9 @@
                                         icon: "success"
                                     });
 
-                                    setTimeout(() => {
+                                    // setTimeout(() => {
                                         deletedItem.remove();
-                                    }, 1500)
+                                    // }, 3500)
                                 }
                                 console.log(deletedItem);
                             })
@@ -439,9 +439,9 @@
                                 console.error("Error:", error);
                             });
                     }
-                })
-            }
-        }
+                }
+            
+        
     </script>
 
     <%- include('../partials/user/footer') %>

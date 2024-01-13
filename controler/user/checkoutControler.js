@@ -44,6 +44,9 @@ module.exports = {
             // const currentAddress = addres[address]
             console.log(addres)
 
+            
+            console.log("grandTotal :", user.grandTotal);
+
             const orderId = uuidv4()
 
             const order = new OrderDB({
@@ -63,6 +66,7 @@ module.exports = {
                 await product.save();
             }
             user.cart = [];
+            user.grandTotal = 0;
             await user.save();
 
             return res.json(data);

@@ -15,17 +15,19 @@ const authCtrl = require('../controler/admin/authControle')
 //Login
 adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
 // adminRoute.post('/admin', authCtrl.checkAdmin)
+// user_Route.get('/logout', Auth.logouting, userControle.logout)
+// adminRoute.route('/logout', adminCtrl.logout)
 
 adminRoute.get('/', adminCtrl.loadLogin)
 adminRoute.get('/index', adminCtrl.loadIndex)
 
 //Product
 adminRoute.get('/addProduct', authCtrl.isLogedout, loadAddProduct)
-adminRoute.post('/addProduct', upload.array('image', 3), addProduct)
+adminRoute.post('/addProduct',  authCtrl.isLogedout, upload.array('image', 3), addProduct)
 
 adminRoute.get('/products', authCtrl.isLogedout, productControl.loadProductList)
 adminRoute.get('/products/:id/edit', authCtrl.isLogedout, productControl.loadedit)
-adminRoute.post("/products/edit/:id", upload.array('image'), productControl.editproduct)
+adminRoute.post("/products/edit/:id",  authCtrl.isLogedout, upload.array('image'), productControl.editproduct)
 adminRoute.get("/products/:imageId/:id/deleteImg", authCtrl.isLogedout, productControl.deleteImgDelete)
 
 
@@ -36,11 +38,11 @@ adminRoute.get('/products/deactive/:id', authCtrl.isLogedout, productControl.pro
 
 adminRoute.get('/category', authCtrl.isLogedout, categoryCtrl.category)
 adminRoute.get('/addCategory', authCtrl.isLogedout, categoryCtrl.loadAddCategory)
-adminRoute.post('/addCategory', upload.single('image'), categoryCtrl.addProductCategory);
+adminRoute.post('/addCategory', authCtrl.isLogedout, upload.single('image'), categoryCtrl.addProductCategory);
 adminRoute.get('/category/activate/:id', authCtrl.isLogedout, categoryCtrl.categoryActive)
 adminRoute.get('/category/deactivate/:id', authCtrl.isLogedout, categoryCtrl.categoryDisable)
 adminRoute.get('/category/:id/edit', authCtrl.isLogedout, categoryCtrl.loadCategoryEdit)
-adminRoute.post('/category/edit/:id', upload.single('image'), categoryCtrl.updateCategory)
+adminRoute.post('/category/edit/:id', authCtrl.isLogedout, upload.single('image'), categoryCtrl.updateCategory)
 adminRoute.get('/category/:id/deleteImg', authCtrl.isLogedout, categoryCtrl.imageDelete)
 
 

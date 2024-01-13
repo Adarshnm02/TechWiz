@@ -130,7 +130,9 @@ module.exports = {
                         default: (otherAddress.length === 0) ? true : false
                     })
                     await newAddress.save();
-                    res.redirect('/profile/address')
+                    // res.redirect('/profile/address')
+                    const url = req.session?.url ? req.session.url : "/index"
+                        return res.redirect(url)
 
                 } else {
                     res.send({ status: 'fail', message: 'You can only have up to three addresses.' })
@@ -170,13 +172,16 @@ module.exports = {
                     }
                 }
             );
-            if (result) {
+            if (!result) {
                 // console.log("updated result ", result);
-                res.redirect('/profile/address');
-            } else {
-
+                // res.redirect('/profile/address');
                 res.status(404).send('Address not found');
             }
+            
+            const url = req.session?.url ? req.session.url : "/index"
+            return res.redirect(url)
+                // res.status(404).send('Address not found');
+               
         } catch (error) {
             console.log(error.message);
             res.status(500).send('Internal Server Error');
@@ -187,6 +192,7 @@ module.exports = {
             const { addressId } = req.body;
 
             const result = await Address.findByIdAndDelete(addressId);
+            console.log("result ", result);
 
             if (result) {
                 console.log("Deleted address:", result);
@@ -206,18 +212,23 @@ module.exports = {
         try {
             // const userId = req.session.user
             const session = req.session.user
+            const page = parseInt(req.query.page) || 1;
+            const limit = 10;
+            const skip = (page - 1) * limit;
 
             const address = await Address.find({ userId: req.session.user })
-            const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').sort({ orderDate: -1 });
+            const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
+            .limit(limit)
+            .sort({ _id: -1 });
             console.log(orders[0].user.userName);
-            // console.log(orders[0].products[0].quantity);
-            // console.log("from back address:-", address, "orders from back", orders);
 
             const user = await User.findById(req.session.user)
-            // console.log("from profile", session)
+            const totalCount = await Order.countDocuments({});
+            const totalPages = Math.ceil(totalCount / limit);
 
+            console.log( page, totalPages, totalCount);
             // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
-            res.render('user/orders', { user, address, session, orders })
+            res.render('user/orders', { user, address, session, orders ,currentPage: page, totalPages, totalCount})
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -231,23 +242,32 @@ module.exports = {
         const { reason } = req.body;
         console.log(id, reason);
         try {
-            // const order = await Order.findOne({ orderId: id });
-            // await order.save();
-
             const result = await Order.findOneAndUpdate(
                 { orderId: id },
                 { $set: { status: 'Cancelled', cancelReason: reason } },
                 { new: true }
             );
-
-
-
+    
+            console.log("from cancel ", result.products[0].quantity);
+    
+            for (const item of result.products) {
+                let product = await Product.findById(item.product);
+    
+                console.log("befor ", product.stock_count);
+                product.stock_count += item.quantity;
+    
+                console.log("after ", product.stock_count);
+    
+                await product.save();
+            }
+    
             return res.json({ success: true, message: 'Order cancelled successfully.', result });
         } catch (err) {
             console.error('Error cancelling order:', err);
             return res.status(500).json({ success: false, message: 'Failed to cancel order. Please try again.' });
         }
     },
+    
 
     async returnOrder(req, res) {
         try {
@@ -272,6 +292,40 @@ module.exports = {
         }
 
     },
+
+    async loadOrderDetials(req, res){
+        try{
+            console.log("dfasdmfkm asdfoasdpmkfkms adfmasdfm lasdmfsdf");
+            const session = req.session.user
+            const user = await User.findById(req.session.user)
+            const orderId = req.query.orderId;
+            console.log(orderId , "fsdfasdfsdfsdfsdsdf");
+
+
+            const order = await Order.find({orderId : orderId}).populate('user').populate('products.product')
+            console.log(order[0].products);
+
+
+
+            res.render('user/orderDetials', {session, user, order})
+        }catch(err){
+            console.log(err);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // async returnOrder(req, res, next){
     //     try {

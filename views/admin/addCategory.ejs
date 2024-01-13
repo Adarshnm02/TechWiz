@@ -31,6 +31,7 @@
                                         <label for="image" class="form-label">Image Upload</label>
                                         <input type="file" id="image" name="image"
                                             class="form-control file-upload-info">
+                                            <p class="text-danger" id="image_error"></p>
                                     </div>
                                     <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
 
@@ -66,6 +67,11 @@
         const CategoryDescription = document.getElementById("exampleTextarea1")
         const descriptionError = document.getElementById("description-error")
 
+
+        const imageInput = document.getElementById("image");
+        const imageError = document.getElementById("image_error");
+
+
         function nameValidation() {
             const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
 
@@ -98,12 +104,32 @@
             }
         }
 
+        function isValidImageType(file) {
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            return file && allowedImageTypes.includes(file.type);
+        }
+
+        function validateImages() {
+            const files = Array.from(imageInput.files);
+
+            const invalidFiles = files.filter(file => !isValidImageType(file));
+
+            if (invalidFiles.length > 0) {
+                imageError.innerHTML = "Invalid file type. Please upload a valid image.";
+                return false;
+            } else {
+                imageError.innerHTML = "";
+                return true;
+            }
+        }
+
 
         CategoryForm.addEventListener("submit", function (event) {
             event.preventDefault();
             const validations = [
                 nameValidation(),
-                descriptionValidation()
+                descriptionValidation(),
+                validateImages(),
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {

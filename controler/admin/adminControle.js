@@ -10,6 +10,16 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
+    // logout(req, res) {
+    //     try {
+    //         req.session.destroy();
+    //         res.redirect('admin/')
+
+    //     } catch (err) {
+    //         console.log(err);
+    //         res.render('user/500')
+    //     }
+    // },
 
 
     loadIndex(req, res) {
@@ -45,7 +55,7 @@ module.exports = {
                 users = await User.find()
                     .skip(skip)
                     .limit(limit)
-                    .sort({ _id: -1 });;
+                    .sort({ _id: -1 });
 
                 totalCount = await User.countDocuments();
             }
@@ -114,7 +124,7 @@ module.exports = {
         try {
             const session = req.session.admin
 
-            const orders = await Order.find().populate('products.product')
+            const orders = await Order.find().populate('products.product').sort({ _id: -1 });
 
             // orders.forEach(value =>{
             //     value.forEach(item => {

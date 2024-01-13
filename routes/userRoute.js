@@ -30,10 +30,11 @@ user_Route.post('/changePass', userControle.changepass)
 
 //Signup
 user_Route.get('/signup', Auth.isLogged, userControle.loadSignup)
-user_Route.post('/signup', Auth.isLogged,userControle.insertUser)
+user_Route.post('/signup', Auth.isLogged, userControle.insertUser)
 
-user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
-user_Route.post('/verification', userControle.otpVerification) 
+// user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
+user_Route.post('/verification', userControle.otpVerification)
+user_Route.get('/resendOtp', userControle.resendOtp);
 
 //pages
 user_Route.get('/shop-grid', productControl.loadShop )
@@ -43,7 +44,7 @@ user_Route.get('/product/Details/:id', Auth.isLogedout, cartCtrl.productDetails)
 //Cart
 user_Route.get('/cart', Auth.isLogedout, cartCtrl.load_cart)
 user_Route.post('/addToCart', Auth.isLogedout, cartCtrl.addToCart)
-user_Route.post('/removeFromCart', cartCtrl.deleteFromCart)
+user_Route.post('/removeFromCart',Auth.isLogedout, cartCtrl.deleteFromCart)
 user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
 // user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
 
@@ -55,10 +56,11 @@ user_Route.post('/checkStock', Auth.isLogedout, checkoutCtrl.checkStock)
 user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
 
 // order
-user_Route.get('/order', profileCtrl.loadOrder)
-user_Route.post('/cancelOrder/:id', profileCtrl.cancelOrder)
-user_Route.get('/orderSuccess',  userControle.loadHome)
-user_Route.post('/returnProduct/:id' , profileCtrl.returnOrder)
+user_Route.get('/order',Auth.isLogedout, profileCtrl.loadOrder)
+user_Route.post('/cancelOrder/:id',Auth.isLogedout, profileCtrl.cancelOrder)
+user_Route.get('/orderSuccess', Auth.isLogedout, userControle.loadHome)
+user_Route.post('/returnProduct/:id' ,Auth.isLogedout, profileCtrl.returnOrder)
+user_Route.get('/orderDetials', Auth.isLogedout, profileCtrl.loadOrderDetials)
 
 //profile
 user_Route.get("/profile", Auth.isLogedout, profileCtrl.loadProfile)

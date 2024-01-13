@@ -54,7 +54,9 @@ function isValidPassword(password) {
 module.exports = {
 
     login(req, res) {
-        res.render('user/user_login')
+        if(!req.session.user){
+            res.render('user/user_login')
+        }
     },
 
 
@@ -71,10 +73,7 @@ module.exports = {
     },
 
 
-    load_otp(req, res) {
-        const id = '123';
-        res.render('user/otpVerification', { id })
-    },
+    
 
     logout(req, res) {
         try {
@@ -177,9 +176,11 @@ module.exports = {
                         });
 
                         await newUser.save();
-                        console.log("User saved successfully ", newUser);
+                        // console.log("User saved successfully ", newUser);
                         const savedUser = await User.findOne({ userName: username })
+                        console.log('ttt',savedUser._id);
                         sendMail(req, res, savedUser._id, email)
+                        res.render('user/otpVerification', { id:savedUser._id })
                         
 
                     } else {
@@ -204,6 +205,7 @@ module.exports = {
     async otpVerification(req, res) {
         try {
             const { OTP, ID } = req.body;
+            console.log("from verification ", ID);
             console.log(OTP);
             if (!OTP) {
                 return res.render('user/otpVerification', { message: "Cannot send empty message", id: ID })
@@ -231,6 +233,21 @@ module.exports = {
             res.render('user/500')
         }
 
+    },
+
+    async resendOtp(req, res) {
+        try {
+            console.log("from resernd");
+            const userId = req.query.userId;  // Corrected access
+            console.log("UserId from resend", userId);
+            const user = await User.findById(userId);
+            console.log(user.email, "dfsdfsd");
+            sendMail(req, res, userId, user.email);
+            res.status(200)
+        } catch (err) {
+            console.log(err);
+            res.redirect("/signup");
+        }
     },
 
 

@@ -111,6 +111,29 @@
             background-color: #000000;
             color: #fff;
         }
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination-container a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .pagination-container a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+   
     </style>
 
 
@@ -145,21 +168,25 @@
                                                 <% if(order.status==="Delivered" ) { %>
                                                     <a class="btnc btn-danger mr-2" id="<%= order.orderId %>"
                                                         onclick="returnProduct('<%= order.orderId %>')">Return</a>
+
                                                     <% } else if(order.status==="Cancelled" ) {%>
                                                         <p class="text-danger">Canceled</p>
-                                                        <%} else {%>
-                                                            <% if( order.status !=='Returned' ) { %>
-                                                                <a class="btnc btn-danger mr-2"
-                                                                    id="<%= order.orderId %>"
-                                                                    onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
-                                                                <!-- <button class="btn btn-sm btn-danger">Delete</button> -->
-                                                                <% } %>
+                                                        <%} else if( order.status === 'Pending' || order.status === 'Processing' || order.status === 'Shipped') {%>
+                                                            <a class="btnc btn-danger mr-2" id="<%= order.orderId %>"
+                                                                onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
+                                                            
+                                                            <% }else if(order.status === 'Return Processing' || order.status === 'Return Approved' || order.status === 'Return Rejected' || order.status === 'Return Completed') { %>
+                                                                    <h2></h2>
                                                                     <%}%>
+
+
+
                                             </div>
                                         </div>
 
-                                        <table class="table">
+                                        <table class="table" onclick="redirectToOrderDetails(`<%= order.orderId %>`)">
                                             <tbody class="border-bottom">
+
                                                 <!-- Display limited rows -->
                                                 <tr data-toggle="collapse" data-target="#expandableRows"
                                                     aria-expanded="false" aria-controls="expandableRows">
@@ -193,48 +220,37 @@
                                                         <%=address.email %>
                                                     </td>
                                                 </tr>
-                                                <!-- Collapsible rows -->
-                                                <tr id="expandableRows" class="collapse">
-                                                    <!-- Include additional rows here -->
-                                                    <td>Address</td>
-                                                    <td>:</td>
-                                                    <td>
-                                                        <%=address.houseName%>, <%=address.city%>, <%=address.district%>
 
-                                                    </td>
-                                                </tr>
-
-                                                <% order.products.forEach( (product, i)=>{ %>
-                                                    <tr id="expandableRows" class="collapse">
-                                                        <!-- Include additional rows here -->
-                                                        <td>Product <%=i+1%>
-                                                        </td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <%=product.product.product_name%>
-                                                        </td>
-                                                    <tr id="expandableRows" class="collapse">
-                                                        <td> </td>
-                                                        <td><span class="mr-3">Quantity : </span>
-                                                            <%= product.quantity %>
-                                                        </td>
-                                                        <td><span class="mr-3">Total Price : </span>
-                                                            <%= product.totalAmount %>
-                                                        </td>
-                                                    </tr>
-
-                                                    </tr>
-                                                    <!-- Add more collapsible rows as needed -->
-
-                                                    <%})%>
                                             </tbody>
                                         </table>
+                                        <!-- <a href="/admin/order" class="btn btn-primary mb-3" style="margin-top: 20px;">Back to Order</a> -->
 
                                         <%})%>
                                 </div>
                                 <%})%>
                         </div>
+
+                       
                     </div>
+                    <div class="pagination-container">
+                    
+                        <% if (currentPage > 1) { %>
+                            <a href="/order?page=1">First</a>
+                            <a href="/order?page=<%= currentPage - 1 %>">Previous</a>
+                        <% } %>
+                    
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <a href="/order?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                                <%= i %>
+                            </a>
+                        <% } %>
+                    
+                        <% if (currentPage < totalPages) { %>
+                            <a href="/order?page=<%= currentPage + 1 %>">Next</a>
+                            <a href="/order?page=<%= totalPages %>">Last</a>
+                        <% } %>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -243,7 +259,13 @@
         </div>
     </div>
 
-
+    <script>
+        // JavaScript function to redirect to order details page
+        function redirectToOrderDetails(orderId) {
+            console.log(orderId, "adfsdsfsdafdf")
+            window.location.href = `/orderDetials?orderId=${orderId}`;
+        }
+    </script>
 
     <script>
         function cancelOrder(orderid) {
