@@ -25,10 +25,11 @@ module.exports = {
 
             const user = await User.findById(userId).select("-password").populate('cart.product')
             const cart = await user.cart;
+            const cartLen = cart? user.cart.length : 0;
 
             // console.log("from loadcheckout ", user);
 
-            res.render('user/checkout', { session: req.session.user, user, cart, address })
+            res.render('user/checkout', { session: req.session.user, user, cart, address , cartLen})
         } catch (err) {
             res.render('user/500')
         }

@@ -61,10 +61,14 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li>
-                    <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
+                    <a href="#"><i class="fa fa-heart"></i> <span>0</span></a>
                 </li>
                 <li>
-                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                    <!-- <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a> -->
+                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span id="cartLen"><% if(cartLen){%>
+                        <%= cartLen %>
+                    <%} else {%>
+                    0 <%}%></span></a>
                 </li>
             </ul>
             <a href="/profile"><i class="fa solid fa-user" style="font-size: 18px !important; color: #1c1c1c !important;"></i></a>
@@ -195,10 +199,13 @@
                     <div class="header__cart">
                         <ul>
                             <li>
-                                <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
+                                <a href="#"><i class="fa fa-heart"></i> <span>0</span></a>
                             </li>
                             <li>
-                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span id="cartLen"><% if(cartLen){%>
+                                    <%= cartLen %>
+                                <%} else {%>
+                                0 <%}%></span></a>
                             </li>
                         </ul>
                         <a href="/profile"><i class="fa solid fa-user" style="font-size: 18px !important; color: #1c1c1c !important;"></i></a>

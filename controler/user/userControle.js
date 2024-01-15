@@ -140,17 +140,53 @@ module.exports = {
             }
 
             // console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+    
+            console.log("cartLen", cartLen);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
             const totalPages = Math.ceil(totalCount / limit);
 
-            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
+            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd, cartLen });
 
 
         } catch (err) {
             console.log("Error From loadHome", err);
             res.render("user/500");
+        }
+    },
+
+    async loadShop(req, res) {
+        try {
+            const session = req.session.user;
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
+            const skip = (page - 1) * limit;
+
+            const products = await Product
+                .find({ is_delete: false })
+                .populate({
+                    path: 'category',
+                    match: { is_disable: false }
+                })
+                .skip(skip)
+                .limit(limit)
+                .sort({ _id: -1 });
+
+            const totalCount = await Product.countDocuments({ is_delete: false });
+
+            const totalPages = Math.ceil(totalCount / limit);
+
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount ,cartLen});
+
+        } catch (err) {
+            console.log(err);
+            res.render("/500");
         }
     },
 

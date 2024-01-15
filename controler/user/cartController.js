@@ -23,8 +23,10 @@ module.exports = {
                 const totalPages = Math.ceil(totalCount / limit);
 
                 // console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
-                console.log(cart.length)
-                res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount })
+                console.log("from load cart", cart.length)
+                let cartLen = cart.length;
+                
+                res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount ,cartLen, message: cartLen === 0? "The Cart Is Empty" : ""})
             }
         } catch (err) {
             console.log(err);
@@ -56,7 +58,9 @@ module.exports = {
                         }
                     }
                 );
-                return res.json({ message: "The product quantity incremented" })
+                const user = await User.findById(userId);
+                const cartLen = user && user.cart ? user.cart.length : 0;
+                return res.json({ message: "The product quantity incremented" ,cartLen})
             } else {
                 await User.updateOne(
                     { _id: userId },
@@ -69,7 +73,9 @@ module.exports = {
                         }
                     }
                 );
-                return res.json({ message: "Product added to Cart" })
+                const user = await User.findById(userId);
+                const cartLen = user && user.cart ? user.cart.length : 0;
+                return res.json({ message: "Product added to Cart" ,cartLen})
             }
         } catch (error) {
             console.log("Error in adding the product to the cart", error);
@@ -96,7 +102,10 @@ module.exports = {
 
                 await User.updateOne({ _id: userId }, { grandTotal: updatedGrandTotal });
 
-                res.json({ message: `Item with ID=${product} removed`, grandTotal: updatedGrandTotal });
+                const user1 = await User.findById(userId);
+                const cartLen = user1 && user1.cart ? user1.cart.length : 0;
+
+                res.json({ message: `Item with ID=${product} removed`, grandTotal: updatedGrandTotal, cartLen });
             } else {
                 return res.status(404).json({ message: 'Item not found in the cart' });
             }
@@ -170,10 +179,11 @@ module.exports = {
             })
             
             cart = user.cart
-            console.log("Detials", details);
+            const cartLen = cart ? user.cart.length : 0; 
+            // console.log("Detials", details);
             if (details) {
-                console.log("Product Details Rendering");
-                res.render('user/productDetails', { details, session, id, cart})
+                // console.log("Product Details Rendering");
+                res.render('user/productDetails', { details, session, id, cart, cartLen})
                 // res.render('user/forDelete', { details, session, id, cart})
             }
             // console.log("gdfg", details.category);

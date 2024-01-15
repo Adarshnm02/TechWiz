@@ -37,7 +37,7 @@ user_Route.post('/verification', userControle.otpVerification)
 user_Route.get('/resendOtp', userControle.resendOtp);
 
 //pages
-user_Route.get('/shop-grid', productControl.loadShop )
+user_Route.get('/shop-grid', userControle.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
 user_Route.get('/product/Details/:id', Auth.isLogedout, cartCtrl.productDetails)
 

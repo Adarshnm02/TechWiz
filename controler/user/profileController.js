@@ -18,7 +18,8 @@ module.exports = {
             const user = await User.findById(req.session.user)
             // console.log(address);
             // console.log("from profile", session)
-            res.render('user/user_profile', { user, address, session })
+            const cartLen = user && user.cart ? user.cart.length : 0; 
+            res.render('user/user_profile', { user, address, session , cartLen})
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -33,7 +34,8 @@ module.exports = {
             const address = await Address.find({ userId: req.session.user })
             console.log("from load addres", address);
             const user = await User.findById(req.session.user)
-            res.render('user/profile_address', { user, address, session })
+            const cartLen = user && user.cart ? user.cart.length : 0; 
+            res.render('user/profile_address', { user, address, session, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -46,7 +48,8 @@ module.exports = {
         try {
             const session = req.session.user;
             const user = await User.findById(session)
-            res.render('user/editProfile', { user, session });
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/editProfile', { user, session, cartLen });
 
         } catch (err) {
             console.log(err);
@@ -88,19 +91,23 @@ module.exports = {
             let session = req.session.user
             const addressId = req.params.id
             const address = await Address.findOne({ _id: addressId }).populate('userId')
-            console.log("from adderere ", address);
-            console.log("form params ", req.params);
-            return res.render('user/editAddress', { session, address })
+            // console.log("from adderere ", address);
+            // console.log("form params ", req.params);
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            return res.render('user/editAddress', { session, address ,cartLen})
 
         } catch (err) {
             console.log(err);
             res.render('user/500')
         }
     },
-    loadAddAddress(req, res) {
+    async loadAddAddress(req, res) {
         try {
             let session = req.session.user
-            return res.render('user/addAddress', { session })
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;   
+            return res.render('user/addAddress', { session, cartLen })
 
         } catch (err) {
             console.log(err);
@@ -228,7 +235,9 @@ module.exports = {
 
             console.log( page, totalPages, totalCount);
             // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
-            res.render('user/orders', { user, address, session, orders ,currentPage: page, totalPages, totalCount})
+            const cartLen = user && user.cart ? user.cart.length : 0; 
+            
+            res.render('user/orders', { user, address, session, orders ,currentPage: page, totalPages, totalCount, cartLen})
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -295,19 +304,18 @@ module.exports = {
 
     async loadOrderDetials(req, res){
         try{
-            console.log("dfasdmfkm asdfoasdpmkfkms adfmasdfm lasdmfsdf");
             const session = req.session.user
             const user = await User.findById(req.session.user)
             const orderId = req.query.orderId;
-            console.log(orderId , "fsdfasdfsdfsdfsdsdf");
 
 
             const order = await Order.find({orderId : orderId}).populate('user').populate('products.product')
             console.log(order[0].products);
 
 
+            const cartLen = user && user.cart ? user.cart.length : 0;
 
-            res.render('user/orderDetials', {session, user, order})
+            res.render('user/orderDetials', {session, user, order, cartLen})
         }catch(err){
             console.log(err);
 
