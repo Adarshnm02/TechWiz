@@ -11,6 +11,7 @@ const { loadAddProduct, addProduct } = require('../controler/admin/productContro
 const categoryCtrl = require('../controler/admin/categoryControle');
 const productControl = require('../controler/admin/productControl');
 const authCtrl = require('../controler/admin/authControle')
+const couponCtrl = require('../controler/admin/couponController')
 
 //Login
 adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
@@ -62,6 +63,11 @@ adminRoute.post('/userlist/updateStatus/:userId',authCtrl.isLogedout, adminCtrl.
 //return 
 adminRoute.get('/returnRequest', authCtrl.isLogedout, adminCtrl.loadReturnReq)
 adminRoute.post('/returnRequests', authCtrl.isLogedout, adminCtrl.returnUpdation)
+
+//Coupon
+adminRoute.get('/coupons', authCtrl.isLogedout, couponCtrl.loadCoupon)
+adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
+adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 
 
 
