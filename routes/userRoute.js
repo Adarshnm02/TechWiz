@@ -79,5 +79,9 @@ user_Route.post('/removeAddress/:id', Auth.isLogedout, profileCtrl.removeAddress
 user_Route.get('/newPassword', userControle.loadnewPassword)
 user_Route.post('/newPassword', userControle.saveChangePassword)
 
+//coupon
+user_Route.get('/couponShow', Auth.isLogedout, cartCtrl.showCoupons)
+user_Route.post('/applyCoupon', Auth.isLogedout, cartCtrl.applyCouponCode)
+
 
 module.exports = user_Route;

@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('../../models/userModel')
 const Product = require("../../models/productModel")
+const Coupon = require('../../models/couponModel')
 
 
 
@@ -195,6 +196,83 @@ module.exports = {
         }
 
     },
+
+    async showCoupons(req,res){
+        try{
+            const coupons = await Coupon.find({})
+            console.log("coupon backend");
+            res.json(coupons)
+        }catch(err){
+            console.log(err);
+        }
+    },
+
+
+    // async applyCouponCode(req, rea){
+    //     try{
+    //         const {code} = req.body;
+    //         code.trim()
+    //         console.log("From appllyCouponCode :-  ", code);
+    //         const currentCoupon = await Coupon.find({code : code})
+    //         if(currentCoupon.length === 0){
+    //             console.log("There is no copon same as user enterd ");
+    //         }
+    //         const user = await User.findById(req.session.user).populate('cart.product')
+    //         console.log(user);
+    //         let grandTtl = user.grandTotal
+    //         let minAmount =  currentCoupon[0].minimumPurchaseAmount
+    //         console.log("GrandTtl and minAmount ", grandTtl, minAmount);            
+    //         if(grandTtl <= minAmount){
+    //             console.log("This is not possible");
+    //         }
+    //         user.grandTotal -= currentCoupon[0].minimumPurchaseAmount
+
+    //     }catch(err){
+    //         console.log(err);
+    //     }
+    // },
+
+
+    // applyCoupen
+const applyCoupen = async (req, res) => {
+    try {
+        const { code } = req.body
+        const user = await User.findById(req.session.user).populate('cart.product')
+        const Coupon = await Coupon.findOne({ code: code })
+        console.log(Coupon.minimumPurchaseAmount, user.grandTotal)
+        if (Coupon.minimumPurchaseAmount > user.grandTotal) {
+            return res.status(403).json({ success: false, message: "Your cart value is less than the minimum purchase Amount" })
+        }
+        if (Coupon.couponDone) {
+            console.log("This coupon has been used")
+            return res.status(400).json({ success: false, message: "This coupon has been used." })
+        } else {
+            if (Coupon.discountType == 'Amount') {
+                user.grandTotal -= Coupon.discountAmountOrPercentage
+                const total = user.grandTotal
+                const discount = Coupon.discountAmountOrPercentage
+                await user.save()
+                res.json({ success: true, total, discount, code })
+            } else {
+                const discount =Math.floor((user.grandTotal * Coupon.discountAmountOrPercentage) / 100);
+                user.grandTotal -= discount
+                const total = user.grandTotal;
+                await user.save()
+                res.json({ success: true, total, discount, code })
+            }
+
+        }
+        await CoupenDB.findByIdAndUpdate(coupen._id, { couponDone: true })
+    } catch (error) {
+        console.log(error)
+        res.redirect('/500')
+
+    }
+}
+
+
+
+
 };
 
 

@@ -72,4 +72,5 @@ adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 
 
 
+
 module.exports = adminRoute;

@@ -26,6 +26,59 @@
             background-color: #000000;
             color: #fff;
         }
+
+        a {
+            color: #5e96d3;
+            background-color: #f5f5f5;
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        /* Remove hover effect */
+        a:hover {
+            color: #5e96d3;
+            /* Set the same color as the default state */
+            background-color: #f5f5f5;
+            /* Set the same background color as the default state */
+        }
+
+        /* Custom styles for sweet-card */
+        .sweet-card {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom styles for sweet-card-body */
+        .sweet-card-body {
+            text-align: left;
+        }
+
+        .sweet-card-body .card-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .sweet-card-body .card-text {
+            color: #555;
+        }
+
+        .sweet-card-body button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .sweet-card-body button:hover {
+            background-color: #0056b3;
+        }
     </style>
 
 
@@ -175,14 +228,24 @@
 
                                 <div class="coupon-section">
                                     <!-- <h5>Discount Code</h5> -->
-                                    <form action="#" class="coupon-form">
-                                        <input type="text" placeholder="Enter your coupon code" class="coupon-input">
-                                        <button type="submit" class="coupon-btn">APPLY COUPON</button>
-                                    </form>
+                                    <!-- <form action="#" class="coupon-form"> -->
+                                    <input type="text" id="couponCode" placeholder="Enter your coupon code"
+                                        class="coupon-input">
+                                    <button type="button" onclick="applyCoupon()" class="coupon-btn">APPLY
+                                        COUPON</button>
+                                    <!-- </form> -->
+
+                                </div>
+                                <div class="modal-header">
+                                    <button type="button" onclick="loadAvailableCoupons()">Available Coupons</button>
+                                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
                                 </div>
 
                                 <div class="checkout__order__subtotal">Subtotal <span>
                                         <%= user.grandTotal %>
+                                    </span></div>
+                                <div class="checkout__order__subtotalCen">Discount <span>
+                                        0
                                     </span></div>
                                 <div class="checkout__order__total">Total <span>
                                         <%= user.grandTotal %>
@@ -214,11 +277,99 @@
 
 
 
+    <script>
+
+        async function applyCoupon(req, res) {
+            try {
+                const code = document.getElementById('couponCode').value
+                console.log(code);
+                const responce = await fetch('/applyCoupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code }),
+
+                })
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    </script>
 
 
 
 
 
+    <script>
+        async function fetchCoupons() {
+            try {
+                const response = await fetch('/couponShow');
+                const coupons = await response.json();
+                console.log(coupons);
+                return coupons;
+            } catch (error) {
+                console.error('Error fetching coupons:', error);
+                return [];
+            }
+        }
+
+        async function loadAvailableCoupons() {
+            const coupons = await fetchCoupons();
+            const couponsListContainer = document.createElement('div');
+            if (coupons.length === 0) {
+                couponsListContainer.innerHTML = '<p>No coupons available.</p>';
+                return;
+            }
+
+
+
+
+            couponsListContainer.innerHTML = ''; // Clear previous content
+
+            coupons.forEach(coupon => {
+                const couponElement = document.createElement('div');
+                couponElement.innerHTML = `
+              <div class="sweet-card">
+                <div class="sweet-card-body">
+                  <h5 class="card-title">${coupon.description}</h5>
+                  <p class="card-text">Code: <span style="color: #e44d26;">${coupon.code}</span></p>
+                  <button class="btn btn-primary" onclick="copyToClipboard('${coupon.code}')">Copy Code</button>
+                </div>
+              </div>
+            `;
+                couponsListContainer.appendChild(couponElement);
+            });
+
+            Swal.fire({
+                title: 'Available Coupons',
+                html: couponsListContainer,
+                confirmButtonText: 'OK',
+                customClass: {
+                    container: 'custom-swal-container', // Custom class for the container
+                    title: 'custom-swal-title', // Custom class for the title
+                    htmlContainer: 'custom-swal-html', // Custom class for the HTML content
+                    confirmButton: 'btn btn-custom', // Custom class for the confirm button
+                },
+            });
+
+            // Show Bootstrap modal
+            // $('#couponsModal').modal('show');
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            // You can display a notification or perform any other action here
+            // alert('Code Copied!');
+        }
+    </script>
 
 
 
@@ -391,7 +542,7 @@
     <script>
         function removeAddress(addressId) {
             console.log("Hlolo from remove  ");
-            
+
 
             // const canCanceladress = Swal.fire({
             //         icon: 'warning',
@@ -405,43 +556,43 @@
             //     })
             const canCanceladress = true
 
-                    if (canCanceladress) {
-                        console.log("inside conformed ");
-                        fetch(`/removeAddress/${addressId}`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                addressId: addressId,
-                            }),
-                        })
+            if (canCanceladress) {
+                console.log("inside conformed ");
+                fetch(`/removeAddress/${addressId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        addressId: addressId,
+                    }),
+                })
 
-                            .then((response) => response.json())
-                            .then((data) => {
-                                console.log("Success:", data);
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("Success:", data);
 
-                                const deletedItem = document.getElementById(addressId);
-                                if (deletedItem) {
-                                    Swal.fire({
-                                        title: "Deleted!",
-                                        text: "Your file has been deleted.",
-                                        icon: "success"
-                                    });
-
-                                    // setTimeout(() => {
-                                        deletedItem.remove();
-                                    // }, 3500)
-                                }
-                                console.log(deletedItem);
-                            })
-                            .catch((error) => {
-                                console.error("Error:", error);
+                        const deletedItem = document.getElementById(addressId);
+                        if (deletedItem) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
                             });
-                    }
-                }
-            
-        
+
+                            // setTimeout(() => {
+                            deletedItem.remove();
+                            // }, 3500)
+                        }
+                        console.log(deletedItem);
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        }
+
+
     </script>
 
     <%- include('../partials/user/footer') %>
