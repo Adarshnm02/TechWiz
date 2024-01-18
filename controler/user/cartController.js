@@ -10,8 +10,8 @@ module.exports = {
     async load_cart(req, res) {
         try {
             if (req.session.user) {
-                const page = parseInt(req.query.page) || 1; 
-                const limit = 6; 
+                const page = parseInt(req.query.page) || 1;
+                const limit = 6;
                 const skip = (page - 1) * limit;
 
                 const userId = req.session.user;
@@ -20,21 +20,21 @@ module.exports = {
                     options: { skip, limit }
                 });
                 const cart = user.cart;
-                const totalCount = cart.length; 
+                const totalCount = cart.length;
                 const totalPages = Math.ceil(totalCount / limit);
 
                 // console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
                 console.log("from load cart", cart.length)
                 let cartLen = cart.length;
-                
-                res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount ,cartLen, message: cartLen === 0? "The Cart Is Empty" : ""})
+
+                res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount, cartLen, message: cartLen === 0 ? "The Cart Is Empty" : "" })
             }
         } catch (err) {
             console.log(err);
             res.render('user/500')
         }
     },
-    
+
 
     async addToCart(req, res) {
         const userId = req.session.user;
@@ -61,7 +61,7 @@ module.exports = {
                 );
                 const user = await User.findById(userId);
                 const cartLen = user && user.cart ? user.cart.length : 0;
-                return res.json({ message: "The product quantity incremented" ,cartLen})
+                return res.json({ message: "The product quantity incremented", cartLen })
             } else {
                 await User.updateOne(
                     { _id: userId },
@@ -76,7 +76,7 @@ module.exports = {
                 );
                 const user = await User.findById(userId);
                 const cartLen = user && user.cart ? user.cart.length : 0;
-                return res.json({ message: "Product added to Cart" ,cartLen})
+                return res.json({ message: "Product added to Cart", cartLen })
             }
         } catch (error) {
             console.log("Error in adding the product to the cart", error);
@@ -178,17 +178,17 @@ module.exports = {
                 path: 'cart.product',
 
             })
-            
+
             cart = user.cart
-            const cartLen = cart ? user.cart.length : 0; 
+            const cartLen = cart ? user.cart.length : 0;
             // console.log("Detials", details);
             if (details) {
                 // console.log("Product Details Rendering");
-                res.render('user/productDetails', { details, session, id, cart, cartLen})
+                res.render('user/productDetails', { details, session, id, cart, cartLen })
                 // res.render('user/forDelete', { details, session, id, cart})
             }
             // console.log("gdfg", details.category);
-            
+
 
         } catch (error) {
             console.log(error.message);
@@ -197,80 +197,43 @@ module.exports = {
 
     },
 
-    async showCoupons(req,res){
-        try{
-            const coupons = await Coupon.find({})
+    async showCoupons(req, res) {
+        try {
+            const user = await User.findById(req.session.user)
+            const { grandTotal } = user
+            console.log("Grad from shwoe ", grandTotal);
+            const coupons = await Coupon.find({
+                minimumPurchaseAmount: { $lte: grandTotal + 500 },
+                isActive: true,
+            })
             console.log("coupon backend");
             res.json(coupons)
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     },
 
 
-    // async applyCouponCode(req, rea){
-    //     try{
-    //         const {code} = req.body;
-    //         code.trim()
-    //         console.log("From appllyCouponCode :-  ", code);
-    //         const currentCoupon = await Coupon.find({code : code})
-    //         if(currentCoupon.length === 0){
-    //             console.log("There is no copon same as user enterd ");
-    //         }
-    //         const user = await User.findById(req.session.user).populate('cart.product')
-    //         console.log(user);
-    //         let grandTtl = user.grandTotal
-    //         let minAmount =  currentCoupon[0].minimumPurchaseAmount
-    //         console.log("GrandTtl and minAmount ", grandTtl, minAmount);            
-    //         if(grandTtl <= minAmount){
-    //             console.log("This is not possible");
-    //         }
-    //         user.grandTotal -= currentCoupon[0].minimumPurchaseAmount
-
-    //     }catch(err){
-    //         console.log(err);
-    //     }
-    // },
-
-
-    // applyCoupen
-const applyCoupen = async (req, res) => {
-    try {
-        const { code } = req.body
-        const user = await User.findById(req.session.user).populate('cart.product')
-        const Coupon = await Coupon.findOne({ code: code })
-        console.log(Coupon.minimumPurchaseAmount, user.grandTotal)
-        if (Coupon.minimumPurchaseAmount > user.grandTotal) {
-            return res.status(403).json({ success: false, message: "Your cart value is less than the minimum purchase Amount" })
-        }
-        if (Coupon.couponDone) {
-            console.log("This coupon has been used")
-            return res.status(400).json({ success: false, message: "This coupon has been used." })
-        } else {
-            if (Coupon.discountType == 'Amount') {
-                user.grandTotal -= Coupon.discountAmountOrPercentage
-                const total = user.grandTotal
-                const discount = Coupon.discountAmountOrPercentage
-                await user.save()
-                res.json({ success: true, total, discount, code })
+    async applyCouponCode(req, res) {
+        try {
+            const { code } = req.body;
+            code.trim()
+            console.log("From appllyCouponCode :-  ", code);
+            const currentCoupon = await Coupon.findOne({ code })
+            if (currentCoupon.length === 0) {
+                console.log("There is no copon same as user enterd ");
             } else {
-                const discount =Math.floor((user.grandTotal * Coupon.discountAmountOrPercentage) / 100);
-                user.grandTotal -= discount
-                const total = user.grandTotal;
-                await user.save()
-                res.json({ success: true, total, discount, code })
+                req.session.coupon = currentCoupon;
+                return res.json(currentCoupon)
             }
 
+
+
+
+        } catch (err) {
+            console.log(err);
         }
-        await CoupenDB.findByIdAndUpdate(coupen._id, { couponDone: true })
-    } catch (error) {
-        console.log(error)
-        res.redirect('/500')
-
-    }
-}
-
-
+    },
 
 
 };

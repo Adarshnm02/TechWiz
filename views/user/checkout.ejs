@@ -244,10 +244,10 @@
                                 <div class="checkout__order__subtotal">Subtotal <span>
                                         <%= user.grandTotal %>
                                     </span></div>
-                                <div class="checkout__order__subtotalCen">Discount <span>
+                                <div class="checkout__order__subtotalCen" >Discount <span id="DiscountAmount">
                                         0
                                     </span></div>
-                                <div class="checkout__order__total">Total <span>
+                                <div class="checkout__order__total">Total <span id="totalAmount">
                                         <%= user.grandTotal %>
                                     </span></div>
 
@@ -278,10 +278,13 @@
 
 
     <script>
+        let total = parseInt("<%= user.grandTotal %>")
 
         async function applyCoupon(req, res) {
             try {
                 const code = document.getElementById('couponCode').value
+                const discountShow = document.getElementById('DiscountAmount')
+                const totalAmount = document.getElementById('totalAmount')
                 console.log(code);
                 const responce = await fetch('/applyCoupon', {
                     method: 'POST',
@@ -291,6 +294,19 @@
                     body: JSON.stringify({ code }),
 
                 })
+                responce.json().then(data => {
+                    console.log(data)
+                    console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
+                    if (total >= data.minimumPurchaseAmount + 500) {
+                        discountShow.innerHTML = data.discountAmount
+                        totalAmount.innerHTML  = total -= data.discountAmount
+                        console.log("Discount ", data.discountAmount);
+                        return
+                    }else{
+                        console.log("from else");
+                        discountShow.innerHTML = 0
+                    }
+                });
 
             } catch (err) {
                 console.log(err);
