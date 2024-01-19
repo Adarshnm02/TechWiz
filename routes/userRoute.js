@@ -83,5 +83,8 @@ user_Route.post('/newPassword', userControle.saveChangePassword)
 user_Route.get('/couponShow', Auth.isLogedout, cartCtrl.showCoupons)
 user_Route.post('/applyCoupon', Auth.isLogedout, cartCtrl.applyCouponCode)
 
+//filter
+user_Route.post('/filterCategory', Auth.isLogedout, cartCtrl.filtering)
+
 
 module.exports = user_Route;

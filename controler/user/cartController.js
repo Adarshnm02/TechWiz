@@ -235,8 +235,29 @@ module.exports = {
         }
     },
 
+    async filtering(req, res) {
+        try {
+            const { category } = req.body
+            if(category === "All"){
+               const products = await
+            }
+            console.log(category, "backend")
+
+
+            // res.status(200).json({ success: true, message: 'Successfully processed the request' });
+
+
+        } catch (err) {
+            console.log(err);
+            // res.status(500).json({ success: false, message: 'Internal server error' });
+
+        }
+    }
+
 
 };
+
+
 
 
 
