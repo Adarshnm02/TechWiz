@@ -267,9 +267,29 @@ module.exports = {
     async returnUpdation(req, res) {
         try {
             const { requestId, status } = req.body;
-            console.log('Received Request ID:', requestId);
+            // console.log('Received Request ID:', requestId);
             // console.log('Received Status:', status);
-            console.log("From backend");
+            // console.log("From backend");
+            const order = await Order.findById(requestId).populate('user.User')
+            // console.log("Order finded", order, order.grandTotal);
+            // order.user.wallet.balance += order.grandTotal;
+            // console.log("asdf", order.user.wallet.balance);
+            // await order.save()
+
+            const user = await User.findById(order.user)
+            // console.log("User ", user, user.wallet.balance);
+            user.wallet.balance += order.grandTotal
+            const transactionData = {
+                amount: order.grandTotal,
+                description: "Order cancelled",
+                type: "Credit",
+            };
+            user.wallet.transactions.push(transactionData);
+            // console.log("wallet ", user.wallet);
+            await user.save();
+
+         
+
 
             const updatedOrder = await Order.findByIdAndUpdate(
                 requestId,

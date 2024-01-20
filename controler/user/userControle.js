@@ -7,6 +7,7 @@ const sendMail = require('../../util/sendMail')
 const User = require('../../models/userModel')
 const userOTP = require('../../models/userOtpModel')
 const Product = require('../../models/productModel')
+const Category = require('../../models/categoryModel')
 
 
 
@@ -140,6 +141,7 @@ module.exports = {
             }
 
             // console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
+            const categorys = await Category.find({});
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
     
@@ -149,7 +151,7 @@ module.exports = {
             const totalCount = await Product.countDocuments({ is_delete: false });
             const totalPages = Math.ceil(totalCount / limit);
 
-            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd, cartLen });
+            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd, cartLen, categorys });
 
 
         } catch (err) {
@@ -175,6 +177,8 @@ module.exports = {
                 .limit(limit)
                 .sort({ _id: -1 });
 
+            const categorys = await Category.find({});
+
             const totalCount = await Product.countDocuments({ is_delete: false });
 
             const totalPages = Math.ceil(totalCount / limit);
@@ -182,7 +186,7 @@ module.exports = {
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
 
-            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount ,cartLen});
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount ,cartLen, categorys});
 
         } catch (err) {
             console.log(err);

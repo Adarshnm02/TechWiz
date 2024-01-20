@@ -1,4 +1,4 @@
-<%- include('../partials/user/header') %>
+<%- include('../partials/user/shortHeader') %>
     <style>
         .btn {
             background-color: #333333bd;
@@ -260,6 +260,10 @@
                                         <input type="radio" id="payment-cod" name="payment" value="cod" checked>
                                         <label for="payment-cod">Cash on Delivery</label>
                                     </div>
+                                    <div class="checkout__input__checkbox">
+                                        <input type="radio" id="payment-wallet" name="payment" value="wallet" checked>
+                                        <label for="payment-wallet">Wallet</label>
+                                    </div>
                                 </div>
 
                                 <button onclick="checkOut()" type="button" class="site-btn checkout__place-order-btn "
@@ -497,6 +501,13 @@
 
 
         function razorpay(id) {
+
+            const address = document.getElementById(`addressOption`);
+                const payment = document.getElementById('paymentOption');
+                const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
+                console.log(selectedAddrerssOption, " fdsfdsf ", address);
+                // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
+                const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
 
 
             var options = {

@@ -86,5 +86,8 @@ user_Route.post('/applyCoupon', Auth.isLogedout, cartCtrl.applyCouponCode)
 //filter
 user_Route.post('/filterCategory', Auth.isLogedout, cartCtrl.filtering)
 
+//wallet
+user_Route.get('/wallet', Auth.isLogedout, checkoutCtrl.loadWallet)
+
 
 module.exports = user_Route;

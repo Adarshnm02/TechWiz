@@ -1,7 +1,8 @@
 const express = require('express')
 const User = require('../../models/userModel')
 const Product = require("../../models/productModel")
-const Coupon = require('../../models/couponModel')
+const Coupon = require('../../models/couponModel');
+const { default: mongoose } = require('mongoose');
 
 
 
@@ -238,18 +239,71 @@ module.exports = {
     async filtering(req, res) {
         try {
             const { category } = req.body
-            if(category === "All"){
-               const products = await
-            }
-            console.log(category, "backend")
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
 
+            const aggregationPipeline = [];
+
+
+
+
+
+            // if (category === "All") {
+            //     const products = await Product
+            //         .find({ is_delete: false })
+            //         .populate({
+            //             path: 'category',
+            //             match: { is_disable: false }
+            //         })
+            //     res.render('user/shop-grid', { products });
+            // }
+
+            if (category && category !== 'null') {
+                console.log("category", category);
+
+                // Assuming 'category' is an array of category IDs
+                const categoryObjectId = new mongoose.Types.ObjectId(category);
+                aggregationPipeline.push({
+                    $match: {
+                        $and: [
+                            { category: categoryObjectId },
+                            { is_delete: false }
+                            // Add more conditions if needed
+                        ]
+                    }
+                });
+            }
+
+
+
+            // Count total products for pagination calculation
+            const totalCount = await Product.countDocuments({ is_delete: false });
+            const totalPages = Math.ceil(totalCount / limit);
+            const skip = (page - 1) * limit;
+            aggregationPipeline.push({ $skip: skip });
+            aggregationPipeline.push({ $limit: limit });
+
+            // Execute the aggregation pipeline on your Product model
+            console.log("dd", aggregationPipeline);
+            const products = await Product.aggregate(aggregationPipeline);
+            console.log('Found Products:', products.length);
+
+
+            res.json({
+                success: true,
+                products,
+                currentPage: page,
+                totalPages: totalPages,
+                totalCount
+
+            });
 
             // res.status(200).json({ success: true, message: 'Successfully processed the request' });
 
 
         } catch (err) {
             console.log(err);
-            // res.status(500).json({ success: false, message: 'Internal server error' });
+            res.status(500).json({ success: false, message: 'Internal server error' });
 
         }
     }

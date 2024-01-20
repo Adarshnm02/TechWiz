@@ -47,33 +47,33 @@ module.exports = {
             const user = await User.findById(req.session.user).populate('cart')
             const addres = await Address.findById(address)
             const coupon = req.session.coupon ? await Coupon.findById(req.session.coupon) : null;
-            
+
             const orderId = uuidv4()
-            let discountTotal ;
+            let discountTotal;
             console.log("jhnjnn", coupon);
 
-            if(coupon){
-                req.session.coupon=null
-                discountTotal  = user.grandTotal - coupon?.discountAmount
+            if (coupon) {
+                req.session.coupon = null
+                discountTotal = user.grandTotal - coupon?.discountAmount
                 coupon.usedCount += 1
 
-                if(coupon.usageLimit === coupon.usedCount){
+                if (coupon.usageLimit === coupon.usedCount) {
                     coupon.isActive = false
                 }
 
                 await coupon.save()
-                
+
             }
 
             const order = new OrderDB({
                 orderId: orderId,
                 user: req.session.user,
                 products: user.cart,
-                totalPrice: (discountTotal)? discountTotal : user.grandTotal,
+                totalPrice: (discountTotal) ? discountTotal : user.grandTotal,
                 deliveryAddress: [addres],
                 paymentMethod: payment,
                 grandTotal: user.grandTotal,
-                discountAmount: (coupon)? coupon.discountAmount : 0,
+                discountAmount: (coupon) ? coupon.discountAmount : 0,
             })
             const data = await order.save()
 
@@ -139,7 +139,27 @@ module.exports = {
             console.log("Error creating ID")
         }
 
-    }
+    },
+
+    async loadWallet(req, res) {
+        try {
+            if (req.session.user) {
+                const user = await User.findById(req.session.user);
+                const cartLen = user && user.cart ? user.cart.length : 0;
+                const session = req.session.user;
+                const currentUser = await User.findById(req.session.user);
+                currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
+
+                console.log("fffffffffffffffffff", currentUser);
+                res.render("user/wallet", { session, currentUser, cartLen });
+            }else{
+                console.log("Session is not found");
+                res.render('user/login')
+            }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
 
 
 

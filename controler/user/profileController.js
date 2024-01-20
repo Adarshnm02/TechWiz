@@ -18,8 +18,8 @@ module.exports = {
             const user = await User.findById(req.session.user)
             // console.log(address);
             // console.log("from profile", session)
-            const cartLen = user && user.cart ? user.cart.length : 0; 
-            res.render('user/user_profile', { user, address, session , cartLen})
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/user_profile', { user, address, session, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -34,7 +34,7 @@ module.exports = {
             const address = await Address.find({ userId: req.session.user })
             console.log("from load addres", address);
             const user = await User.findById(req.session.user)
-            const cartLen = user && user.cart ? user.cart.length : 0; 
+            const cartLen = user && user.cart ? user.cart.length : 0;
             res.render('user/profile_address', { user, address, session, cartLen })
 
         } catch (err) {
@@ -95,7 +95,7 @@ module.exports = {
             // console.log("form params ", req.params);
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
-            return res.render('user/editAddress', { session, address ,cartLen})
+            return res.render('user/editAddress', { session, address, cartLen })
 
         } catch (err) {
             console.log(err);
@@ -106,7 +106,7 @@ module.exports = {
         try {
             let session = req.session.user
             const user = await User.findById(session);
-            const cartLen = user && user.cart ? user.cart.length : 0;   
+            const cartLen = user && user.cart ? user.cart.length : 0;
             return res.render('user/addAddress', { session, cartLen })
 
         } catch (err) {
@@ -139,7 +139,7 @@ module.exports = {
                     await newAddress.save();
                     // res.redirect('/profile/address')
                     const url = req.session?.url ? req.session.url : "/index"
-                        return res.redirect(url)
+                    return res.redirect(url)
 
                 } else {
                     res.send({ status: 'fail', message: 'You can only have up to three addresses.' })
@@ -184,11 +184,11 @@ module.exports = {
                 // res.redirect('/profile/address');
                 res.status(404).send('Address not found');
             }
-            
+
             const url = req.session?.url ? req.session.url : "/index"
             return res.redirect(url)
-                // res.status(404).send('Address not found');
-               
+            // res.status(404).send('Address not found');
+
         } catch (error) {
             console.log(error.message);
             res.status(500).send('Internal Server Error');
@@ -225,19 +225,19 @@ module.exports = {
 
             const address = await Address.find({ userId: req.session.user })
             const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
-            .limit(limit)
-            .sort({ _id: -1 });
+                .limit(limit)
+                .sort({ _id: -1 });
             console.log(orders[0].user.userName);
 
             const user = await User.findById(req.session.user)
             const totalCount = await Order.countDocuments({});
             const totalPages = Math.ceil(totalCount / limit);
 
-            console.log( page, totalPages, totalCount);
+            console.log(page, totalPages, totalCount);
             // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
-            const cartLen = user && user.cart ? user.cart.length : 0; 
-            
-            res.render('user/orders', { user, address, session, orders ,currentPage: page, totalPages, totalCount, cartLen})
+            const cartLen = user && user.cart ? user.cart.length : 0;
+
+            res.render('user/orders', { user, address, session, orders, currentPage: page, totalPages, totalCount, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -256,27 +256,45 @@ module.exports = {
                 { $set: { status: 'Cancelled', cancelReason: reason } },
                 { new: true }
             );
-    
+
             console.log("from cancel ", result.products[0].quantity);
-    
+
             for (const item of result.products) {
                 let product = await Product.findById(item.product);
-    
-                console.log("befor ", product.stock_count);
+
                 product.stock_count += item.quantity;
-    
-                console.log("after ", product.stock_count);
-    
+
+
                 await product.save();
             }
-    
+            const order = await Order.find({orderId: id})
+                console.log("order", order[0].paymentMethod, order[0].status);
+
+            if (order[0].paymentMethod !== "cod" && order[0].status === 'Cancelled' || order[0].status === 'Return Complited') {
+
+                const user = await User.findById(req.session.user)
+                console.log(user);
+
+                user.wallet.balance += order[0].grandTotal;
+                const transactionData = {
+                    amount: order[0].grandTotal,
+                    description: "Order cancelled",
+                    type: "Credit",
+                };
+                user.wallet.transactions.push(transactionData);
+                console.log("wallet ", user.wallet);
+                await user.save();
+            } else {
+                console.log("User not found");
+            }
+
             return res.json({ success: true, message: 'Order cancelled successfully.', result });
         } catch (err) {
             console.error('Error cancelling order:', err);
             return res.status(500).json({ success: false, message: 'Failed to cancel order. Please try again.' });
         }
     },
-    
+
 
     async returnOrder(req, res) {
         try {
@@ -302,21 +320,21 @@ module.exports = {
 
     },
 
-    async loadOrderDetials(req, res){
-        try{
+    async loadOrderDetials(req, res) {
+        try {
             const session = req.session.user
             const user = await User.findById(req.session.user)
             const orderId = req.query.orderId;
 
 
-            const order = await Order.find({orderId : orderId}).populate('user').populate('products.product')
+            const order = await Order.find({ orderId: orderId }).populate('user').populate('products.product')
             console.log(order[0].products);
 
 
             const cartLen = user && user.cart ? user.cart.length : 0;
 
-            res.render('user/orderDetials', {session, user, order, cartLen})
-        }catch(err){
+            res.render('user/orderDetials', { session, user, order, cartLen })
+        } catch (err) {
             console.log(err);
 
         }
