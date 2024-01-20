@@ -1,0 +1,221 @@
+<%- include('../partials/user/shortHeader') %>
+
+    <style>
+        /* Custom CSS for enhanced design */
+        /* You can add these styles to your existing CSS file */
+
+        /* Main Content Styles */
+        .main {
+            margin-top: 20px;
+        }
+
+        .main h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .table td {
+            border-top: none;
+            padding: 8px 0;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .border-bottom {
+            border-bottom: 4px solid #c8c8c8 !important;
+        }
+
+        .address-div {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-details p {
+            margin-bottom: 10px;
+        }
+
+        .product-details th,
+        .product-details td {
+            text-align: center;
+        }
+
+        .btnc {
+            background-color: #dc3545;
+            color: #fff !important;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 13px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnc:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .order-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-detail-item .label {
+            font-weight: bold;
+            width: 150px;
+            /* Adjust the width as needed */
+        }
+
+        .order-detail-item .value {
+            flex-grow: 1;
+        }
+
+        .label-space {
+            width: 20px;
+            /* Adjust the width for the desired space */
+        }
+
+
+
+        .left-section,
+        .right-section {
+            width: 48%;
+            /* Adjust the width for the desired partition size */
+        }
+    </style>
+
+
+    <div class="container">
+        <!-- <div>
+
+            <a href="/admin/order" class="btn btn-primary mb-3" style="margin-top: 20px;">Back to Order</a>
+        </div> -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <!-- Main Content -->
+                <div class="main">
+                    <h2>My Orders</h2>
+                    <div class="card">
+                        <div class="order-details border-bottom">
+                            <div class="left-section">
+                                <div class="order-detail-item">
+                                    <span class="label">Order ID:</span>
+                                    <span class="value">
+                                        <%= order[0].orderId %>
+                                    </span>
+                                </div>
+                                <div class="order-detail-item">
+                                    <span class="label">User Name:</span>
+                                    <span class="value">
+                                        <%= order[0].user.userName %>
+                                    </span>
+                                </div>
+                                <div class="order-detail-item">
+                                    <span class="label">Email:</span>
+                                    <span class="value">
+                                        <%= order[0].user.email %>
+                                    </span>
+                                </div>
+                                <div class="order-detail-item">
+                                    <span class="label">Mobile:</span>
+                                    <span class="value">1234567898</span>
+                                </div>
+                            </div>
+                            <div class="right-section">
+                                <div class="order-detail-item">
+                                    <span class="label">Grand Total Price:</span>
+                                    <span class="value">₹ <%= order[0].totalPrice %></span>
+                                </div>
+                                <div class="order-detail-item">
+                                    <span class="label">Delivery Address:</span>
+                                    <span class="value">Pantheerankave, Calicut, Kerala, India, 673019</span>
+                                </div>
+                                <div class="order-detail-item">
+                                    <span class="label">Payment:</span>
+                                    <span class="value">
+                                        <%= order[0].paymentMethod %>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Products Table -->
+                        <table class="table product-details">
+                            <thead>
+                                <tr>
+                                    <!-- <th>Image</th> -->
+                                    <th>Product Name</th>
+                                    <th>Product Brand</th>
+                                    <th>Product Price</th>
+                                    <th>Product Quantity</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are products and if products array is defined -->
+                                <% if (order[0].products && order[0].products.length > 0) { %>
+                                    <!-- Check if there are multiple products -->
+                                    <% if (order[0].products.length > 1) { %>
+                                        <!-- Loop through each product -->
+                                        <% order[0].products.forEach(item => { %>
+                                            <tr>
+                                                <td><%= item.product.product_name %></td>
+                                                <td><%= item.product.brand_name %></td>
+                                                <td>₹<%= item.product.price %></td>
+                                                <td><%= item.quantity %></td>
+                                                <td>₹<%= item.totalAmount %></td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <!-- Use details for a single product -->
+                                        <tr>
+                                            <td><%= order[0].products[0].product.product_name %></td>
+                                            <td><%= order[0].products[0].product.brand_name %></td>
+                                            <td>₹<%= order[0].products[0].product.price %></td>
+                                            <td><%= order[0].products[0].quantity %></td>
+                                            <td>₹<%= order[0].products[0].totalAmount %></td>
+                                        </tr>
+                                    <% } %>
+                                <% } else { %>
+                                    <!-- Handle case when there are no products -->
+                                    <tr>
+                                        <td colspan="5">No products available</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                            
+
+
+                        </table>
+                        <!-- Back to Order Button -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <%- include('../partials/user/footer') %>

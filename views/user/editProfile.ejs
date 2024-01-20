@@ -1,4 +1,4 @@
-<%- include('../partials/user/header') %>
+<%- include('../partials/user/shortHeader') %>
 
 
 
@@ -85,8 +85,13 @@
 
 
         function nameValidation() {
+            const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+
             if (nameInput.value.trim() === "") {
-                nameError.innerHTML = "Please enter your Full Name!";
+                nameError.innerHTML = "Please enter your Name!";
+                return false;
+            } else if (!nameRegex.test(nameInput.value)) {
+                nameError.innerHTML = "Please enter a valid Name.";
                 return false;
             } else {
                 nameError.innerHTML = "";
@@ -94,10 +99,33 @@
             }
         }
 
+        // function phoneValidation() {
+        //     const phoneValue = phoneInput.value.trim();
+
+        //     if (/^-?0{10}$/.test(phoneValue) || /^0{10}$/.test(phoneValue)|| phoneValue[0]==="-"||phoneValue[0]==="+") {
+        //         phoneError.innerHTML = "Phone number is not valid";
+        //         return false;
+        //     }
+
+        //     if (phoneValue.length !== 10 || isNaN(phoneValue) || parseInt(phoneValue) < 0) {
+        //         if (phoneValue.length !== 10) {
+        //             phoneError.innerHTML = "Phone number should be of length 10";
+        //         } else if (isNaN(phoneValue)) {
+        //             phoneError.innerHTML = "Should not contain any non-numeric characters";
+        //         } else if (parseInt(phoneValue) < 0 || phoneValue.charAt(0) === '-') {
+        //             phoneError.innerHTML = "Phone number should not be negative";
+        //         }
+        //         return false;
+        //     } else {
+        //         phoneError.innerHTML = "";
+        //         return true;
+        //     }
+        // }
+
         function phoneValidation() {
             const phoneValue = phoneInput.value.trim();
 
-            if (/^-?0{10}$/.test(phoneValue) || /^0{10}$/.test(phoneValue)|| phoneValue[0]==="-"||phoneValue[0]==="+") {
+            if (/^-?0{10}$/.test(phoneValue) || /^0{10}$/.test(phoneValue) || phoneValue[0] === "-" || phoneValue[0] === "+") {
                 phoneError.innerHTML = "Phone number is not valid";
                 return false;
             }
@@ -111,11 +139,19 @@
                     phoneError.innerHTML = "Phone number should not be negative";
                 }
                 return false;
-            } else {
-                phoneError.innerHTML = "";
-                return true;
             }
+
+            // Check for repeated digits
+            const repeatedDigitsRegex = /(\d).*\1.*\1.*\1.*\1/;
+            if (repeatedDigitsRegex.test(phoneValue)) {
+                phoneError.innerHTML = "Phone number should not have a digit repeated more than 5 times";
+                return false;
+            }
+
+            phoneError.innerHTML = "";
+            return true;
         }
+
 
 
 

@@ -51,19 +51,19 @@
 
 
 
-            <div class="row">
+            <div class="row" id="product_list">
 
 
-                <% products.forEach(product=> { %>
+                <% products.forEach(element=> { %>
 
 
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
 
                             <div class="product__item__pic set-bg"  style="display: flex; justify-content: center;">
-                                <% if(product.image[0] && product.image[0].contentType && product.image[0].data) { %>
+                                <% if(element.image[0] && element.image[0].contentType && element.image[0].data) { %>
 
-                                    <img onclick="productDetails('<%= product._id %>')" src="data:<%= product.image[0].contentType %>;base64,<%= product.image[0].data.toString('base64')%>"
+                                    <img onclick="productDetails('<%= element._id %>')" src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
                                         alt="IMG-PRODUCT" style="height: 260.34px" />
 
                                     <% } else { %>
@@ -74,17 +74,17 @@
                                             <ul class="product__item__pic__hover">
                                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                                 </li>
-                                                <li><a onclick="addToCart('<%= product._id %>')"><i
+                                                <li><a onclick="addToCart('<%= element._id %>')"><i
                                                             class="fa fa-shopping-cart"></i></a>
                                                 </li>
                                             </ul>
                             </div>
-                            <div class="product__item__text link" onclick="productDetails('<%= product._id %>')">
+                            <div class="product__item__text link" onclick="productDetails('<%= element._id %>')">
                                 <h6><a>
-                                        <%= product.product_name %>
+                                        <%= element.product_name %>
                                     </a>
                                 </h6>
-                                <h6>₹<%= product.price %></h6>
+                                <h6>₹<%= element.price %></h6>
                             </div>
                         </div>
                     </div>

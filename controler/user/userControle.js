@@ -7,6 +7,7 @@ const sendMail = require('../../util/sendMail')
 const User = require('../../models/userModel')
 const userOTP = require('../../models/userOtpModel')
 const Product = require('../../models/productModel')
+const Category = require('../../models/categoryModel')
 
 
 
@@ -54,7 +55,9 @@ function isValidPassword(password) {
 module.exports = {
 
     login(req, res) {
-        res.render('user/user_login')
+        if(!req.session.user){
+            res.render('user/user_login')
+        }
     },
 
 
@@ -71,10 +74,7 @@ module.exports = {
     },
 
 
-    load_otp(req, res) {
-        const id = '123';
-        res.render('user/otpVerification', { id })
-    },
+    
 
     logout(req, res) {
         try {
@@ -141,17 +141,56 @@ module.exports = {
             }
 
             // console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
+            const categorys = await Category.find({});
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+    
+            console.log("cartLen", cartLen);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
             const totalPages = Math.ceil(totalCount / limit);
 
-            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd });
+            res.render('user/index', { products, session, currentPage: page, totalPages, totalCount, latestPrd, cartLen, categorys });
 
 
         } catch (err) {
             console.log("Error From loadHome", err);
             res.render("user/500");
+        }
+    },
+
+    async loadShop(req, res) {
+        try {
+            const session = req.session.user;
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
+            const skip = (page - 1) * limit;
+
+            const products = await Product
+                .find({ is_delete: false })
+                .populate({
+                    path: 'category',
+                    match: { is_disable: false }
+                })
+                .skip(skip)
+                .limit(limit)
+                .sort({ _id: -1 });
+
+            const categorys = await Category.find({});
+
+            const totalCount = await Product.countDocuments({ is_delete: false });
+
+            const totalPages = Math.ceil(totalCount / limit);
+
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount ,cartLen, categorys});
+
+        } catch (err) {
+            console.log(err);
+            res.render("/500");
         }
     },
 
@@ -177,9 +216,11 @@ module.exports = {
                         });
 
                         await newUser.save();
-                        console.log("User saved successfully ", newUser);
+                        // console.log("User saved successfully ", newUser);
                         const savedUser = await User.findOne({ userName: username })
+                        console.log('ttt',savedUser._id);
                         sendMail(req, res, savedUser._id, email)
+                        res.render('user/otpVerification', { id:savedUser._id })
                         
 
                     } else {
@@ -204,6 +245,7 @@ module.exports = {
     async otpVerification(req, res) {
         try {
             const { OTP, ID } = req.body;
+            console.log("from verification ", ID);
             console.log(OTP);
             if (!OTP) {
                 return res.render('user/otpVerification', { message: "Cannot send empty message", id: ID })
@@ -231,6 +273,21 @@ module.exports = {
             res.render('user/500')
         }
 
+    },
+
+    async resendOtp(req, res) {
+        try {
+            console.log("from resernd");
+            const userId = req.query.userId;  // Corrected access
+            console.log("UserId from resend", userId);
+            const user = await User.findById(userId);
+            console.log(user.email, "dfsdfsd");
+            sendMail(req, res, userId, user.email);
+            res.status(200)
+        } catch (err) {
+            console.log(err);
+            res.redirect("/signup");
+        }
     },
 
 

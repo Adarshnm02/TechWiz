@@ -107,35 +107,6 @@ module.exports = {
         }
     },
 
-    async loadShop(req, res) {
-        try {
-            const session = req.session.user;
-            const page = parseInt(req.query.page) || 1;
-            const limit = 12;
-            const skip = (page - 1) * limit;
-
-            const products = await Product
-                .find({ is_delete: false })
-                .populate({
-                    path: 'category',
-                    match: { is_disable: false }
-                })
-                .skip(skip)
-                .limit(limit)
-                .sort({ _id: -1 });
-
-            const totalCount = await Product.countDocuments({ is_delete: false });
-
-            const totalPages = Math.ceil(totalCount / limit);
-
-            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount });
-
-        } catch (err) {
-            console.log(err);
-            res.render("/500");
-        }
-    },
-
     async loadProductList(req, res) {
         const page = parseInt(req.query.page) || 1;
         const limit = 10;

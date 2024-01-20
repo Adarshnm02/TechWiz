@@ -59,13 +59,14 @@
                                 <label for="exampleInputPassword4">Price</label>
                                 <input type="number" name="price" class="form-control" id="price" placeholder="Price"
                                     value="<%= products.price %>">
-                                <p class="text-danger" id="stockCount_error"></p>
+                                <p class="text-danger" id="price_error"></p>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputCity1">Stock Count</label>
-                                <input type="number" name="stockCount" class="form-control" id="exampleInputCity1"
+                                <input type="text" name="stockCount" class="form-control" id="stockCount"
                                     placeholder="Count" value="<%= products.stock_count%>">
+                                <p class="text-danger" id="stockCount_error"></p>
                             </div>
 
                             <div class="form-group">
@@ -75,7 +76,7 @@
                                 <p class="text-danger" id="description_error"></p>
                             </div>
 
-                            < <div class="form-group">
+                            <div class="form-group">
                                 <label>Images Upload (Required: 3)</label>
                                 <div class="input-group">
                                     <div class="row">
@@ -93,23 +94,24 @@
                                     <input type="file" id="images" name="image" multiple
                                         class="form-control file-upload-info">
                                 </div>
+                                <p class="text-danger" id="image_error"></p>
+                            </div>
+                            <% if (typeof message !="undefined" ) {%>
+
+                                <p class="mt-3 text-danger">
+                                    <%= message %>
+                                </p>
+
+                                <%} %>
+
+
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        <button type="reset" class="btn btn-light">Cancel</button>
+                                    </div>
+                </form>
             </div>
-            <% if (typeof message !="undefined" ) {%>
-
-                <p class="mt-3 text-danger">
-                    <%= message %>
-                </p>
-
-                <%} %>
-
-
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                        <button type="reset" class="btn btn-light">Cancel</button>
-                    </div>
-                    </form>
         </div>
-    </div>
     </div>
 
 
@@ -128,12 +130,20 @@
 
         const productName = document.getElementById("productName")
         const brandName = document.getElementById("brandName")
+        const stockCountInput = document.getElementById("stockCount");
         const description = document.getElementById("description")
+        const priceInput = document.getElementById("price");
 
 
         const name_error = document.getElementById("name_error")
         const brandName_error = document.getElementById("brandName_error")
+        const stockCountError = document.getElementById("stockCount_error");
         const description_error = document.getElementById("description_error")
+        const priceError = document.getElementById("price_error");
+
+        const imageInput = document.getElementById("images");
+        const imageError = document.getElementById("image_error");
+
 
 
 
@@ -166,6 +176,18 @@
                 return true
             }
         }
+        function validateStockCount() {
+            const stockCountValue = parseInt(stockCountInput.value, 10);
+
+            if (stockCountInput.value.trim() === '' || isNaN(stockCountValue) || stockCountValue <= 0) {
+                stockCountError.innerHTML = "Please enter a valid stock quantity greater than 0.";
+                return false;
+            } else {
+                stockCountError.innerHTML = "";
+                return true;
+            }
+        }
+
 
         function description_Validation() {
 
@@ -185,10 +207,38 @@
         }
 
 
-        const isValidImage = (file) => {
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-            return file && allowedTypes.includes(file.mimetype);
-        };
+        function isValidImageType(file) {
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            return file && allowedImageTypes.includes(file.type);
+        }
+
+        function validateImages() {
+            const files = Array.from(imageInput.files);
+
+            const invalidFiles = files.filter(file => !isValidImageType(file));
+
+            if (invalidFiles.length > 0) {
+                imageError.innerHTML = "Invalid file type. Please upload a valid image.";
+                return false;
+            } else {
+                imageError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function validatePrice() {
+            const priceValue = parseInt(priceInput.value, 10);
+
+            if (priceInput.value.trim() === '' || isNaN(priceValue) || priceValue <= 0) {
+                console.log("Price is not valid");
+                priceError.innerHTML = "Please enter a valid price greater than 0.";
+                return false;
+            } else {
+                priceError.innerHTML = "";
+                return true;
+            }
+        }
+
 
 
 
@@ -200,7 +250,10 @@
             const validations = [
                 nameValidation(),
                 brandName_validation(),
+                validateStockCount(),
                 description_Validation(),
+                validatePrice(),
+                validateImages(),
 
             ];
 

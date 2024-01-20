@@ -70,6 +70,7 @@
                                         <label for="mainImage" class="form-label mt-4">Main Image / File</label>
                                         <input type="file" name="image" multiple class="form-control" id="mainImage"
                                             placeholder="Main Image / File">
+                                            <p class="text-danger" id="image_error"></p>
                                     </div>
                                 </div>
 
@@ -142,6 +143,10 @@
         const stockCountError = document.getElementById("stockCount_error");
         const priceError = document.getElementById("price_error");
 
+        const imageInput = document.getElementById("mainImage");
+        const imageError = document.getElementById("image_error");
+
+
 
         function nameValidation() {
 
@@ -202,7 +207,7 @@
         function validateStockCount() {
             const stockCountValue = parseInt(stockCountInput.value, 10);
 
-            if (stockCountValue <= 0) {
+            if (stockCountInput.value.trim() === '' || isNaN(stockCountValue) || stockCountValue <= 0) {
                 stockCountError.innerHTML = "Please enter a valid stock quantity greater than 0.";
                 return false;
             } else {
@@ -214,12 +219,31 @@
         function validatePrice() {
             const priceValue = parseInt(priceInput.value, 10);
 
-            if (priceValue <= 0) {
+            if (priceInput.value.trim() === '' || isNaN(priceValue) || priceValue <= 0) {
                 console.log("Price is not valid");
                 priceError.innerHTML = "Please enter a valid price greater than 0.";
                 return false;
             } else {
                 priceError.innerHTML = "";
+                return true;
+            }
+        }
+
+        function isValidImageType(file) {
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            return file && allowedImageTypes.includes(file.type);
+        }
+
+        function validateImages() {
+            const files = Array.from(imageInput.files);
+
+            const invalidFiles = files.filter(file => !isValidImageType(file));
+
+            if (invalidFiles.length > 0) {
+                imageError.innerHTML = "Invalid file type. Please upload a valid image.";
+                return false;
+            } else {
+                imageError.innerHTML = "";
                 return true;
             }
         }
@@ -234,7 +258,8 @@
                 description_Validation(),
                 colorTypes_validation(),
                 validateStockCount(),
-                validatePrice()
+                validatePrice(),
+                validateImages(),
             ];
 
             const hasErrors = validations.some(validation => validation === false);

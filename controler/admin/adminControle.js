@@ -10,6 +10,16 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
+    // logout(req, res) {
+    //     try {
+    //         req.session.destroy();
+    //         res.redirect('admin/')
+
+    //     } catch (err) {
+    //         console.log(err);
+    //         res.render('user/500')
+    //     }
+    // },
 
 
     loadIndex(req, res) {
@@ -45,7 +55,7 @@ module.exports = {
                 users = await User.find()
                     .skip(skip)
                     .limit(limit)
-                    .sort({ _id: -1 });;
+                    .sort({ _id: -1 });
 
                 totalCount = await User.countDocuments();
             }
@@ -114,7 +124,7 @@ module.exports = {
         try {
             const session = req.session.admin
 
-            const orders = await Order.find().populate('products.product')
+            const orders = await Order.find().populate('products.product').sort({ _id: -1 });
 
             // orders.forEach(value =>{
             //     value.forEach(item => {
@@ -257,9 +267,29 @@ module.exports = {
     async returnUpdation(req, res) {
         try {
             const { requestId, status } = req.body;
-            console.log('Received Request ID:', requestId);
+            // console.log('Received Request ID:', requestId);
             // console.log('Received Status:', status);
-            console.log("From backend");
+            // console.log("From backend");
+            const order = await Order.findById(requestId).populate('user.User')
+            // console.log("Order finded", order, order.grandTotal);
+            // order.user.wallet.balance += order.grandTotal;
+            // console.log("asdf", order.user.wallet.balance);
+            // await order.save()
+
+            const user = await User.findById(order.user)
+            // console.log("User ", user, user.wallet.balance);
+            user.wallet.balance += order.grandTotal
+            const transactionData = {
+                amount: order.grandTotal,
+                description: "Order cancelled",
+                type: "Credit",
+            };
+            user.wallet.transactions.push(transactionData);
+            // console.log("wallet ", user.wallet);
+            await user.save();
+
+         
+
 
             const updatedOrder = await Order.findByIdAndUpdate(
                 requestId,

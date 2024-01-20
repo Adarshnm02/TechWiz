@@ -76,11 +76,26 @@
                                             placeholder="Enter Your OTP">
                                     </div>
                                     <input type="hidden" name="ID" id="userId" value="<%= id %>">
+                                    <p>After 5 seconds, this OTP will expire.</p>
 
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <button type="submit" value="submit" id="resend"
                                             class="btn btn-primary">Verify</button>
+                                    </div> -->
+                                    <div class="form-group">
+                                        <!-- Initially show the Verify button -->
+                                        <button type="submit" value="submit" id="verifyButton" class="btn btn-primary">Verify</button>
                                     </div>
+                                    
+                                    <!-- Add a hidden container for the Resend OTP button -->
+                                    <div id="resendContainer" class="form-group" style="display: none;">
+                                        <form action=""method="post">
+                                            <input type="hidden" name="userId" value="<%= id %>">
+                                            <a href="/resendOtp?userId=<%=id %>" style="color: #5e96d3;"  id="resendButton">Resend OTP</a>
+                                        </form>
+                                    </div>
+                                    
+                                    
 
                                     <!-- Error message -->
                                     <% if (typeof message !=="undefined" ) { %>
@@ -108,10 +123,43 @@
     </main>
 
 
-    <script>
+    
 
-        let countdownTime = Number("300");
+<script>
+    // Show the Resend OTP button after 3 seconds
+    setTimeout(function () {
+        // document.getElementById("verifyButton").style.display = "none";
+        document.getElementById("resendContainer").style.display = "block";
+    }, 5000);
+    
+
+    function resendOtpFun(id) {
+        fetch(`/resendOtp?orderId=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .catch(err => {
+            console.log(err.message);
+        });
+    }
+</script>
+
+
+    <!-- <script>
+        let countdownTime;
         let timerElement = document.getElementById("timer");
+
+        // Retrieve the remaining time from localStorage
+        if (localStorage.getItem("expire")) {
+            countdownTime = Number(localStorage.getItem("expire"));
+        } else {
+            // Set the countdown time to 5 minutes (300 seconds) if not in localStorage
+            countdownTime = Number(300);
+            localStorage.setItem("expire", countdownTime);
+        }
 
         function startTimer() {
             let minutes, seconds;
@@ -125,25 +173,25 @@
                 timerElement.innerHTML = minutes + ":" + seconds;
 
                 countdownTime--;
+                localStorage.setItem("expire", countdownTime);
 
                 if (countdownTime < 0) {
                     clearInterval(countdown);
-                    timerElement.innerHTML = "New Otp ! Pls click resendOTP";
+                    timerElement.innerHTML = "New OTP! Please click Resend OTP.";
+                    localStorage.removeItem("expire");
 
+                    // Uncomment this line if you have a "Resend OTP" button
+                    // document.getElementById("resendButton").style.display = "block";
 
-                    document.getElementById("resendOTP").innerHTML = ` <a href="/resendOTP/" class="btn btn-primary custom-btn">Resend OTP</a> `
-
-
-                    document.getElementById("Verify").remove();
-                    document.getElementById("info").remove();
+                    // Remove the Verify and info elements
+                    // document.getElementById("Verify").remove();
+                    // document.getElementById("info").remove();
                 }
-            }, 1000); 
+            }, 1000); // Update the timer every 1 second (1000 milliseconds)
         }
 
-        // Call the startTimer function when the page is loaded
         window.onload = startTimer;
-    </script>
-
+    </script> -->
 
     <!-- Js Plugins -->
     <script src="/user/js/jquery-3.3.1.min.js"></script>

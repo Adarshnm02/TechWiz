@@ -1,4 +1,4 @@
-<%- include('../partials/user/header') %>
+<%- include('../partials/user/shortHeader') %>
 
     <style>
         .quantity {
@@ -14,6 +14,19 @@
         .delButton {
             border: 0;
         }
+
+        .cartEmpty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-family: "Cairo", sans-serif;
+            color: red;
+            font-weight: 300;
+            line-height: 26px;
+            margin: 75px 0 75px 0;
+        }
+        
 
         .pagination-container {
             display: flex;
@@ -56,6 +69,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+
 
 
                                 <% cart.forEach((element)=> { %>
@@ -112,8 +126,16 @@
                                         <% } %>
                                             <% }) %>
 
+
+
                             </tbody>
+
                         </table>
+
+                        <% if (typeof message !="undefined" ) {%>
+                            <p class="cartEmpty"> <%= message %> </p>
+                        <%}%>
+                        
                     </div>
                 </div>
             </div>
@@ -299,11 +321,13 @@
                         })
                             .then((response) => response.json())
                             .then((data) => {
+                                document.getElementById("cartLen").innerHTML = data.cartLen
                                 console.log("Success:", data.grandTotal);
                                 const grandTotal = document.getElementById('grandTtl')
                                 grandTotal.innerHTML = `${data.grandTotal}`
                                 const grandTtl = document.getElementById('grandTtle')
                                 grandTtl.innerHTML = `${data.grandTotal}`
+
 
                                 const deletedItem = document.getElementById(productId);
                                 if (deletedItem) {

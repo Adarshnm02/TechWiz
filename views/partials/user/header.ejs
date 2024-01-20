@@ -79,10 +79,14 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li>
-                    <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
+                    <a href="#"><i class="fa fa-heart"></i> <span>0</span></a>
                 </li>
                 <li>
-                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                    <!-- <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a> -->
+                    <a href="/cart"><i class="fa fa-shopping-bag"></i> <span id="cartLen"><% if(cartLen){%>
+                        <%= cartLen %>
+                    <%} else {%>
+                    0 <%}%></span></a>
                 </li>
                 <li>
                     <a href="/profile"><i class="fa solid fa-user"></i></a>
@@ -219,10 +223,14 @@
                     <div class="header__cart">
                         <ul>
                             <li>
-                                <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
+                                <a href="#"><i class="fa fa-heart"></i> <span>0</span></a>
                             </li>
                             <li>
-                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a>
+                                
+                                <a href="/cart"><i class="fa fa-shopping-bag"></i> <span id="cartLen"><% if(cartLen){%>
+                                    <%= cartLen %>
+                                <%} else {%>
+                                0 <%}%></span></a>
                             </li>
                             <li>
                                 <!-- <a href="/profile"><img class="fa user_avathar" src="/user/img/user-1.jpg"
@@ -257,14 +265,17 @@
                             <span class="toggle-btn">All departments</span>
                         </div>
                         <ul class="departments-list" style="display: none;">
-                            <li><a href="/shop-grid">Mobile</a></li>
-                            <li><a href="/shop-grid">Laptop</a></li>
-                            <li><a href="/shop-grid">Camera</a></li>
-                            <li><a href="/shop-grid">Mobile Accessories</a></li>
-                            <li><a href="/shop-grid">Laptop Accessories</a></li>
-                            <li><a href="/shop-grid">Camera Accessories</a></li>
-                            <li><a href="/shop-grid">Other</a></li>
+                            <% categorys.forEach(category =>{ %>
+                                <li><a href="#" onclick="categoryFilter('<%=category._id%>')"><%=category.categoryName%></a></li>
+                        <%})%>
+
+                            <!-- <li><a href="#" onclick="categoryFilter('Mobile')">Mobile</a></li>
+                            <li><a href="#" onclick="categoryFilter('Laptop')">Laptop</a></li>
+                            <li><a href="#" onclick="categoryFilter('Camera')">Camera</a></li>
+                            <li><a href="#" onclick="categoryFilter('All')">All</a></li> -->
                         </ul>
+
+                        
                     </div>
                 </div>
                 <div class="col-lg-9">
@@ -305,7 +316,68 @@
     </section>
     <!-- Hero Section End -->
 
+    <script>
+        async function categoryFilter(category) {
+          console.log(category, "asdfgasdf");
+      
+          // Make a POST request
+          let response = await fetch('/filterCategory', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ category })
+          });
+      
+          // // Handle the response if needed
+          if (response.ok) {
+              const data = await response.json();
+              console.log('Response data:', data);
+              let showProducts = document.getElementById("product_list")
+              showProducts.innerHTML = ''
+      
+              data.products.forEach(element => {
+                  let div = document.createElement('div')
+                  div.classList.add('col-lg-4', 'col-md-6', 'col-sm-6')
+                  div.innerHTML = `
+                
+                <div class="product__item">
+      
+      <div class="product__item__pic set-bg"
+          style="display: flex; justify-content: center;">
+         
+              <img onclick="productDetails('${element._id}')" src="data: ${element.image[0].contentType};base64, ${element.image[0].data.toString('base64')}"
+                  alt="IMG-PRODUCT" style="height: 260.34px" />
+             
+                      <ul class="product__item__pic__hover">
+                          <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                          <li><a onclick="addToCart('${element._id}')"><i
+                                      class="fa fa-shopping-cart"></i></a>
+                          </li>
+                      </ul>
+      </div>
+      <div class="product__item__text" >
+          <h6><a href="/product/Details/${element._id}">
+                  ${element.product_name}
+              </a>
+              <h6>₹${element.price}</h6>
+          </h6>
+      </div>
+      </div>
+                
+                
+                `
+                  showProducts.appendChild(div)
+              })
+      
+          } else {
+              console.error('Error:', response.status, response.statusText);
+          }
+      }
+      </script>
+      
 
 </body>
 
 </html>
+

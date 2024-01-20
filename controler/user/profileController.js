@@ -18,7 +18,8 @@ module.exports = {
             const user = await User.findById(req.session.user)
             // console.log(address);
             // console.log("from profile", session)
-            res.render('user/user_profile', { user, address, session })
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/user_profile', { user, address, session, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -33,7 +34,8 @@ module.exports = {
             const address = await Address.find({ userId: req.session.user })
             console.log("from load addres", address);
             const user = await User.findById(req.session.user)
-            res.render('user/profile_address', { user, address, session })
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/profile_address', { user, address, session, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -46,7 +48,8 @@ module.exports = {
         try {
             const session = req.session.user;
             const user = await User.findById(session)
-            res.render('user/editProfile', { user, session });
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/editProfile', { user, session, cartLen });
 
         } catch (err) {
             console.log(err);
@@ -88,19 +91,23 @@ module.exports = {
             let session = req.session.user
             const addressId = req.params.id
             const address = await Address.findOne({ _id: addressId }).populate('userId')
-            console.log("from adderere ", address);
-            console.log("form params ", req.params);
-            return res.render('user/editAddress', { session, address })
+            // console.log("from adderere ", address);
+            // console.log("form params ", req.params);
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            return res.render('user/editAddress', { session, address, cartLen })
 
         } catch (err) {
             console.log(err);
             res.render('user/500')
         }
     },
-    loadAddAddress(req, res) {
+    async loadAddAddress(req, res) {
         try {
             let session = req.session.user
-            return res.render('user/addAddress', { session })
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            return res.render('user/addAddress', { session, cartLen })
 
         } catch (err) {
             console.log(err);
@@ -130,7 +137,9 @@ module.exports = {
                         default: (otherAddress.length === 0) ? true : false
                     })
                     await newAddress.save();
-                    res.redirect('/profile/address')
+                    // res.redirect('/profile/address')
+                    const url = req.session?.url ? req.session.url : "/index"
+                    return res.redirect(url)
 
                 } else {
                     res.send({ status: 'fail', message: 'You can only have up to three addresses.' })
@@ -170,13 +179,16 @@ module.exports = {
                     }
                 }
             );
-            if (result) {
+            if (!result) {
                 // console.log("updated result ", result);
-                res.redirect('/profile/address');
-            } else {
-
+                // res.redirect('/profile/address');
                 res.status(404).send('Address not found');
             }
+
+            const url = req.session?.url ? req.session.url : "/index"
+            return res.redirect(url)
+            // res.status(404).send('Address not found');
+
         } catch (error) {
             console.log(error.message);
             res.status(500).send('Internal Server Error');
@@ -187,6 +199,7 @@ module.exports = {
             const { addressId } = req.body;
 
             const result = await Address.findByIdAndDelete(addressId);
+            console.log("result ", result);
 
             if (result) {
                 console.log("Deleted address:", result);
@@ -206,18 +219,25 @@ module.exports = {
         try {
             // const userId = req.session.user
             const session = req.session.user
+            const page = parseInt(req.query.page) || 1;
+            const limit = 10;
+            const skip = (page - 1) * limit;
 
             const address = await Address.find({ userId: req.session.user })
-            const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').sort({ orderDate: -1 });
+            const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
+                .limit(limit)
+                .sort({ _id: -1 });
             console.log(orders[0].user.userName);
-            // console.log(orders[0].products[0].quantity);
-            // console.log("from back address:-", address, "orders from back", orders);
 
             const user = await User.findById(req.session.user)
-            // console.log("from profile", session)
+            const totalCount = await Order.countDocuments({});
+            const totalPages = Math.ceil(totalCount / limit);
 
+            console.log(page, totalPages, totalCount);
             // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
-            res.render('user/orders', { user, address, session, orders })
+            const cartLen = user && user.cart ? user.cart.length : 0;
+
+            res.render('user/orders', { user, address, session, orders, currentPage: page, totalPages, totalCount, cartLen })
 
         } catch (err) {
             console.log("Profile loading error ", err);
@@ -231,16 +251,42 @@ module.exports = {
         const { reason } = req.body;
         console.log(id, reason);
         try {
-            // const order = await Order.findOne({ orderId: id });
-            // await order.save();
-
             const result = await Order.findOneAndUpdate(
                 { orderId: id },
                 { $set: { status: 'Cancelled', cancelReason: reason } },
                 { new: true }
             );
 
+            console.log("from cancel ", result.products[0].quantity);
 
+            for (const item of result.products) {
+                let product = await Product.findById(item.product);
+
+                product.stock_count += item.quantity;
+
+
+                await product.save();
+            }
+            const order = await Order.find({orderId: id})
+                console.log("order", order[0].paymentMethod, order[0].status);
+
+            if (order[0].paymentMethod !== "cod" && order[0].status === 'Cancelled' || order[0].status === 'Return Complited') {
+
+                const user = await User.findById(req.session.user)
+                console.log(user);
+
+                user.wallet.balance += order[0].grandTotal;
+                const transactionData = {
+                    amount: order[0].grandTotal,
+                    description: "Order cancelled",
+                    type: "Credit",
+                };
+                user.wallet.transactions.push(transactionData);
+                console.log("wallet ", user.wallet);
+                await user.save();
+            } else {
+                console.log("User not found");
+            }
 
             return res.json({ success: true, message: 'Order cancelled successfully.', result });
         } catch (err) {
@@ -248,6 +294,7 @@ module.exports = {
             return res.status(500).json({ success: false, message: 'Failed to cancel order. Please try again.' });
         }
     },
+
 
     async returnOrder(req, res) {
         try {
@@ -272,6 +319,39 @@ module.exports = {
         }
 
     },
+
+    async loadOrderDetials(req, res) {
+        try {
+            const session = req.session.user
+            const user = await User.findById(req.session.user)
+            const orderId = req.query.orderId;
+
+
+            const order = await Order.find({ orderId: orderId }).populate('user').populate('products.product')
+            console.log(order[0].products);
+
+
+            const cartLen = user && user.cart ? user.cart.length : 0;
+
+            res.render('user/orderDetials', { session, user, order, cartLen })
+        } catch (err) {
+            console.log(err);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // async returnOrder(req, res, next){
     //     try {

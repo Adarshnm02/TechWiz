@@ -41,6 +41,7 @@ module.exports = {
           console.log(req.session.admin);
            next()
         } else {
+            console.log("Admin not found");
             res.redirect("/admin/")
         }
     }

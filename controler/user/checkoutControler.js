@@ -2,6 +2,7 @@ const User = require('../../models/userModel')
 const Product = require('../../models/productModel')
 const Address = require('../../models/addressModel')
 const OrderDB = require('../../models/orderModel')
+const Coupon = require('../../models/couponModel')
 const { v4: uuidv4 } = require("uuid");
 const { query } = require('express');
 const Razorpay = require('razorpay')
@@ -9,7 +10,7 @@ const Razorpay = require('razorpay')
 const instance = new Razorpay({
     key_id: process.env.key_id,
     key_secret: process.env.key_secret,
-  });
+});
 module.exports = {
 
 
@@ -17,6 +18,7 @@ module.exports = {
         try {
             console.log('form checkout');
             let userId = req.session.user;
+
             // console.log("userId:- ", userId);
             // const session = req.session.user
 
@@ -25,35 +27,53 @@ module.exports = {
 
             const user = await User.findById(userId).select("-password").populate('cart.product')
             const cart = await user.cart;
+            const cartLen = cart ? user.cart.length : 0;
 
             // console.log("from loadcheckout ", user);
 
-            res.render('user/checkout', { session: req.session.user, user, cart, address })
+            res.render('user/checkout', { session: req.session.user, user, cart, address, cartLen, coupon: req.session?.coupon || "" })
         } catch (err) {
             res.render('user/500')
         }
     },
 
     async saveOrder(req, res) {
-        const { address, payment } = req.body
-        console.log("from res.body", req.body);
-        console.log("form payment save", payment, address);
+
         try {
+            const { address, payment } = req.body
+            console.log("from res.body", req.body);
+            console.log("form payment save", payment, address);
+
             const user = await User.findById(req.session.user).populate('cart')
             const addres = await Address.findById(address)
-            // const currentAddress = addres[address]
-            console.log(addres)
+            const coupon = req.session.coupon ? await Coupon.findById(req.session.coupon) : null;
 
             const orderId = uuidv4()
+            let discountTotal;
+            console.log("jhnjnn", coupon);
+
+            if (coupon) {
+                req.session.coupon = null
+                discountTotal = user.grandTotal - coupon?.discountAmount
+                coupon.usedCount += 1
+
+                if (coupon.usageLimit === coupon.usedCount) {
+                    coupon.isActive = false
+                }
+
+                await coupon.save()
+
+            }
 
             const order = new OrderDB({
                 orderId: orderId,
                 user: req.session.user,
                 products: user.cart,
-                totalPrice: user.grandTotal,
+                totalPrice: (discountTotal) ? discountTotal : user.grandTotal,
                 deliveryAddress: [addres],
                 paymentMethod: payment,
-                grandTotal: user.grandTotal
+                grandTotal: user.grandTotal,
+                discountAmount: (coupon) ? coupon.discountAmount : 0,
             })
             const data = await order.save()
 
@@ -63,6 +83,7 @@ module.exports = {
                 await product.save();
             }
             user.cart = [];
+            user.grandTotal = 0;
             await user.save();
 
             return res.json(data);
@@ -96,29 +117,49 @@ module.exports = {
             return res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     },
-    async createId(req,res){
-        try{
+    async createId(req, res) {
+        try {
 
-            
+
             const user = await User.findOne({ _id: req.session.user });
-        
+
 
             options = {
-                amount: (user.grandTotal + 5) * 100,  
+                amount: (user.grandTotal + 5) * 100,
                 currency: "INR",
                 receipt: `${Math.floor(Math.random() * 10000)
                     .toString()
                     .padStart(4, "0")}${Date.now()}`, // Provide a unique receipt ID
-              };
-              instance.orders.create(options, function(err, order) {
+            };
+            instance.orders.create(options, function (err, order) {
                 res.status(200).json(order.id)
-              });
-            
-        }catch(err){
+            });
+
+        } catch (err) {
             console.log("Error creating ID")
         }
 
-    }
+    },
+
+    async loadWallet(req, res) {
+        try {
+            if (req.session.user) {
+                const user = await User.findById(req.session.user);
+                const cartLen = user && user.cart ? user.cart.length : 0;
+                const session = req.session.user;
+                const currentUser = await User.findById(req.session.user);
+                currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
+
+                console.log("fffffffffffffffffff", currentUser);
+                res.render("user/wallet", { session, currentUser, cartLen });
+            }else{
+                console.log("Session is not found");
+                res.render('user/login')
+            }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
 
 
 
