@@ -18,7 +18,8 @@ async isLogedout (req, res, next) {
         const user = await User.findById(req.session.user);
         if (user.is_blocked) {
             console.log("User blocked by admin");
-            return res.redirect('/');
+            req.session.destroy()
+            return res.redirect('/login');
         }
        next()
     } else {

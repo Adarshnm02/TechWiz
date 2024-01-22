@@ -244,7 +244,7 @@
                                 <div class="checkout__order__subtotal">Subtotal <span>
                                         <%= user.grandTotal %>
                                     </span></div>
-                                <div class="checkout__order__subtotalCen" >Discount <span id="DiscountAmount">
+                                <div class="checkout__order__subtotalCen">Discount <span id="DiscountAmount">
                                         0
                                     </span></div>
                                 <div class="checkout__order__total">Total <span id="totalAmount">
@@ -261,7 +261,7 @@
                                         <label for="payment-cod">Cash on Delivery</label>
                                     </div>
                                     <div class="checkout__input__checkbox">
-                                        <input type="radio" id="payment-wallet" name="payment" value="wallet" checked>
+                                        <input type="radio" id="payment-wallet" name="payment" value="wallet">
                                         <label for="payment-wallet">Wallet</label>
                                     </div>
                                 </div>
@@ -279,8 +279,7 @@
     <!-- Checkout Section End -->
 
 
-
-
+    <!-- //Coupon applly -->
     <script>
         let total = parseInt("<%= user.grandTotal %>")
 
@@ -303,10 +302,10 @@
                     console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
                     if (total >= data.minimumPurchaseAmount + 500) {
                         discountShow.innerHTML = data.discountAmount
-                        totalAmount.innerHTML  = total -= data.discountAmount
+                        totalAmount.innerHTML = total -= data.discountAmount
                         console.log("Discount ", data.discountAmount);
                         return
-                    }else{
+                    } else {
                         console.log("from else");
                         discountShow.innerHTML = 0
                     }
@@ -393,16 +392,19 @@
 
 
 
+
     <script>
 
         async function checkOut() {
             try {
+                console.log("Inside checkout");
                 const address = document.getElementById(`addressOption`);
                 const payment = document.getElementById('paymentOption');
                 const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
                 console.log(selectedAddrerssOption, " fdsfdsf ", address);
                 // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
                 const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
+                const totalAmount = document.getElementById('totalAmount').innerText
 
 
                 console.log(selectedPaymentOption)
@@ -417,11 +419,152 @@
                         }
                     })
 
+                } else if (selectedPaymentOption === 'wallet') {
+                    console.log("Inside walletpay ");
+
+                    // Fetch the stock check result
+                    const stockCheckResponse = await fetch('/checkStock', {
+                        method: 'POST',
+                    });
+
+                    const stockCheckResult = await stockCheckResponse.json();
+                    console.log("The check stock ", stockCheckResult.success);
+
+                    if (stockCheckResult) {
+                        console.log("inside res ok");
+
+                        fetch('/getwallet', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then(response => {
+                                // Check if the request was successful
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+
+                                // Parse the JSON data from the response
+                                return response.json();
+                            }).then(result => {
+                                console.log(result.wallet.balance, "efgsdgfdg", result.wallet);
 
 
+                                if (result.wallet.balance === 0) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'wallet is Zero ! cannot do payment using wallet',
+                                    });
+
+                                } else {
+
+                                    if (result.grandTotal > result.wallet.balance) {
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Warning',
+                                            text: `You Purchased above Wallet amount! So Your wallet balance is${result.wallet.balance}. is less than grand Total ${result.grandTotal} Use Razor Pay`,
+                                            showCancelButton: true,
+                                        })
+                                        // .then((result) => {
+                                        //     if (result.isConfirmed) {
+
+                                        //         wallet = true;
+                                        //         // ras()
+                                        //         // payment("razorPay")
+                                        //     }
+                                        // });
+
+                                    } else {
+
+
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: ' After Purchase Balance Will credited to your wallet.',
+
+                                            showCancelButton: true,
+                                            cancelButtonText: 'Cancel',
+
+                                        }).then(async (re) => {
+                                            console.log(re.isConfirmed, "asdfasd", result.wallet.balance);
+                                            if (re.isConfirmed) {
+                                                console.log("Total amount ", totalAmount, result.wallet.balance);
+                                                wallet = true;
+                                                let walletIs = result.wallet.balance
+                                                let lastAmount = walletIs -= Number(totalAmount);
+                                                if (lastAmount <= 0) {
+                                                    Swal.fire({
+                                                        icon: 'warning',
+                                                        title: 'Warning',
+                                                        text: `This payment is not possible`,
+                                                        showCancelButton: true,
+                                                    })
+
+
+                                                } else {
+                                                    // totalAmount.innerHTML = lastAmount
+                                                    // result.wallet.balance = walletIs -= totalAmount;
+                                                    // console.log("after wallet usage ", result.wallet.balance);
+                                                    // result.wallet.save()
+
+                                                    const data = { address: selectedAddrerssOption, payment: selectedPaymentOption };
+                                                    console.log("data", data);
+
+                                                    const orderResponse = await fetch(`/checkout`, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Content-Type': 'application/json',
+                                                        },
+                                                        body: JSON.stringify(data),
+                                                    });
+
+                                                    console.log(orderResponse , "sdfgdfgdfgdfgdfgsdffgsdfdfgdfgdfg");
+
+                                                    if (orderResponse.ok) {
+                                                        Swal.fire({
+                                                            title: 'Order Placed!',
+                                                            text: 'Good job!',
+                                                            icon: 'success'
+                                                        }).then(() => {
+                                                            window.location.href = '/';
+                                                            // /orderSuccess
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            title: 'Insufficient Stock',
+                                                            text: 'The stock for some products is insufficient. Please review your order.',
+                                                            icon: 'error'
+                                                        });
+                                                    }
+
+
+
+
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+
+
+
+                            })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Insufficient Stock',
+                            text: 'The stock for some products is insufficient. Please review your order.',
+                            icon: 'error'
+                        });
+                    }
 
                 } else {
-                    console.log("from payment: ", selectedPaymentOption);
+
+
+                    // console.log("from payment: ", selectedPaymentOption);
 
                     const data = { address: selectedAddrerssOption, payment: selectedPaymentOption };
 
@@ -439,7 +582,7 @@
                     const stockCheckResult = await stockCheckResponse.json();
 
                     if (stockCheckResult.success) {
-                        console.log("22222222222222222222222222")
+                        console.log("Products Have sufficent stock")
                         // Proceed with placing the order
                         const orderResponse = await fetch(`/checkout/?address=${selectedAddrerssOption}&&payment=${selectedPaymentOption}`, {
                             method: 'POST',
@@ -478,19 +621,22 @@
 
 
     </script>
+
+
+
     <!-- // Reference to the PLACE ORDER button
-        const placeOrderButton = document.getElementById('placeOrderBtn');
+        // const placeOrderButton = document.getElementById('placeOrderBtn');
         
-        // Event listener for the button click
-        placeOrderButton.addEventListener('click', () => {
-                // Trigger the SweetAlert
-                Swal.fire({
-                        title: 'Order Placed!',
-                        text: 'Thank you for your purchase!',
-                        icon: 'success',
-                        confirmButtonText: 'Okay'
-                    });
-                }); -->
+        // // Event listener for the button click
+        // placeOrderButton.addEventListener('click', () => {
+        //         // Trigger the SweetAlert
+        //         Swal.fire({
+        //                 title: 'Order Placed!',
+        //                 text: 'Thank you for your purchase!',
+        //                 icon: 'success',
+        //                 confirmButtonText: 'Okay'
+        //             });
+        //         }); -->
 
 
 
@@ -503,11 +649,11 @@
         function razorpay(id) {
 
             const address = document.getElementById(`addressOption`);
-                const payment = document.getElementById('paymentOption');
-                const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
-                console.log(selectedAddrerssOption, " fdsfdsf ", address);
-                // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
-                const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
+            const payment = document.getElementById('paymentOption');
+            const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
+            console.log(selectedAddrerssOption, " fdsfdsf ", address);
+            // const selectedAddrerssOption = address.querySelector('input[name="address"]:checked').id;
+            const selectedPaymentOption = payment.querySelector('input[name="payment"]:checked').value;
 
 
             var options = {
@@ -566,6 +712,10 @@
         }
 
     </script>
+
+
+
+
     <script>
         function removeAddress(addressId) {
             console.log("Hlolo from remove  ");

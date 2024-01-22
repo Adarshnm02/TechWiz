@@ -63,13 +63,38 @@ module.exports = {
 
                 await coupon.save()
 
+            }else{
+                discountTotal=user.grandTotal
+
+            }
+
+            const userN =  await User.findById(req.session.user)
+            const wallet = userN.wallet.balance;
+            console.log("show wallet before register", wallet, "balence", userN.wallet.balance);
+
+            if(payment === 'wallet'){
+                console.log('grand totoal inside wallet ', discountTotal);
+                if(discountTotal > wallet){
+                    throw new Error('Insufficient funds in the wallet!');
+                }else{
+                    userN.wallet.balance -= discountTotal;
+                    // userN.orders.push({id:orderId, ...req.body});
+
+                    const transactionData = {
+                        amount: discountTotal,
+                        description: "Order Placed",
+                        type: "Debit",
+                    };
+                    userN.wallet.transactions.push(transactionData);
+                    await userN.save();
+                }
             }
 
             const order = new OrderDB({
                 orderId: orderId,
                 user: req.session.user,
                 products: user.cart,
-                totalPrice: (discountTotal) ? discountTotal : user.grandTotal,
+                totalPrice: discountTotal,
                 deliveryAddress: [addres],
                 paymentMethod: payment,
                 grandTotal: user.grandTotal,
@@ -82,9 +107,10 @@ module.exports = {
                 product.stock_count -= cartItem.quantity;
                 await product.save();
             }
-            user.cart = [];
-            user.grandTotal = 0;
-            await user.save();
+            const userl =  await User.findById(req.session.user)
+            userl.cart = [];
+            userl.grandTotal = 0;
+            await userl.save();
 
             return res.json(data);
         } catch (error) {
@@ -105,7 +131,7 @@ module.exports = {
                 const product = await Product.findOne({ _id: cartItem.product });
 
                 if (product.stock_count < cartItem.quantity) {
-                    console.log("Insufficient stock for product:", product._id);
+                    // console.log("Insufficient stock for product:", product._id);
                     return res.json({ success: false, insufficientStockProducts: [{ productId: product._id, quantity: product.stock_count }] });
                 }
             }
@@ -117,6 +143,8 @@ module.exports = {
             return res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     },
+
+
     async createId(req, res) {
         try {
 
@@ -152,14 +180,43 @@ module.exports = {
 
                 console.log("fffffffffffffffffff", currentUser);
                 res.render("user/wallet", { session, currentUser, cartLen });
-            }else{
+            } else {
                 console.log("Session is not found");
                 res.render('user/login')
             }
-            } catch (error) {
-                console.log(error.message);
-            }
+        } catch (error) {
+            console.log(error.message);
         }
+    },
+
+
+    async payInWallet(req, res) {
+        try {
+
+        } catch (err) {
+            console.log("pay wallet error ".err);
+        }
+    },
+
+
+    async walletPayment(req, res) {
+        try {
+
+            console.log("ererereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            const user = await User.findById(req.session.user)
+            const wallet = user.wallet
+            const grandTotal = user.grandTotal
+            console.log("asjdfjsdaf", grandTotal, wallet);
+
+
+            res.json({ wallet: wallet, grandTotal: grandTotal })
+
+
+        } catch (error) {
+            res.status(500).render("user/500")
+            console.log(error);
+        }
+    }
 
 
 

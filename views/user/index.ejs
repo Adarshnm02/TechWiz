@@ -37,13 +37,17 @@
                     <div class="section-title">
                         <h2>Featured Product</h2>
                     </div>
-                    <div class="featured__controls">
+                    <div class="featured__controls" style="color: black !important;">
                         <ul>
                             <li class="active link" data-filter="*">All</li>
-                            <li data-filter=".oranges">Mobile</li>
+
+                            <% categorys.forEach(category =>{ %>
+                                <li onclick="categoryFilter('<%=category._id%>')"><%=category.categoryName%></li>
+                        <%})%>
+                            <!-- <li data-filter=".oranges">Mobile</li>
                             <li data-filter=".fresh-meat">Laptop</li>
                             <li data-filter=".vegetables">Camera</li>
-                            <li data-filter=".fastfood">Accessories</li>
+                            <li data-filter=".fastfood">Accessories</li> -->
                         </ul>
                     </div>
                 </div>

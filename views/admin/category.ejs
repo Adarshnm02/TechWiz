@@ -1,11 +1,13 @@
 <%- include('../partials/admin/adminHeader') %>
   <style>
     .tableData {
-      padding-top: 75px !important;
+      padding-top: 35px !important;
+      /* 75 */
     }
 
     .tableDataBtn {
-      padding-top: 46px !important;
+      padding-top: 0px !important;
+      padding-bottom: 30px !important;
     }
   </style>
 
@@ -13,43 +15,52 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title text-center">Categories</h5>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="productSearch">Search:</label>
           <input type="text" class="form-control" id="productSearch" placeholder="Search categories" />
-        </div>
+        </div> -->
+        <div style="margin-top: 20px;">
+          <a href="/admin/addCategory">
+              <button type="button" class="btn btn-primary mb-3" style="margin-left: 782px; width: 153px;">Add Category</button>
+          </a>
+      </div>
         <div class="table-responsive">
           <table id="categoryTable" class="table table-striped">
             <thead>
               <tr>
                 <th>No.</th>
-                <th>Image</th>
+                <!-- <th>Image</th> -->
                 <th>Category Name</th>
                 <th>Status</th>
+                <th>Modify</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               <% category.forEach((category, i)=> { %>
                 <tr>
-                  <td>
+                  <td class="tableData">
                     <%= i + 1 %>
                   </td>
-                  <td>
-                    <% if(category.image && category.image.contentType && category.image.data) { %>
+                  <!-- <td>
+                    <\% if(category.image && category.image.contentType && category.image.data) { %>
                       <img
-                        src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                        src="data:<\%= category.image.contentType %>;base64,<\%= category.image.data.toString('base64')%>"
                         class="category-image" />
-                      <% } else { %>
+                      <\% } else { %>
                         <p>No image available</p>
-                        <% } %>
-                  </td>
+                        <\% } %>
+                  </td> -->
 
                   <td class="tableData">
                     <%= category.categoryName %>
                   </td>
+                  <td style="width:520px; padding-top: 35px;">
+                    <%= category.description %>
+                  </td>
 
                   <% if (category.is_disable===true) { %>
-                    <td class="tableData">
+                    <td class="tableData" >
                       <label class="text-danger">Deactivated</label>
                     </td>
 
