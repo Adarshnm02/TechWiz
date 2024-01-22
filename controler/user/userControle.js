@@ -55,7 +55,7 @@ function isValidPassword(password) {
 module.exports = {
 
     login(req, res) {
-        if(!req.session.user){
+        if(!req.session.user){  
             res.render('user/user_login')
         }
     },
@@ -505,6 +505,18 @@ module.exports = {
             }
         } catch (err) {
             console.log(err)
+        }
+    },
+
+    async loadContact(req,res){
+        try{
+            const session = req.session.user
+            const user = await User.findById(session);
+            const cartLen = user && user.cart ? user.cart.length : 0;
+            res.render('user/contact',{cartLen, session})
+
+        }catch(err){
+            console.log(err);
         }
     }
 

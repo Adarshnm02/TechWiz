@@ -54,26 +54,26 @@
                                     <p class="text-danger" id="description-error"></p>
                             </div>
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="input-group">
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <div style="position: relative;">
-                                                <% if (category.image && category.image.contentType && category.image.data) { %>
-                                                    <img src="data:<%= category.image.contentType %>;base64,<%= category.image.data.toString('base64')%>"
+                                                <\% if (category.image && category.image.contentType && category.image.data) { %>
+                                                    <img src="data:<\%= category.image.contentType %>;base64,<\%= category.image.data.toString('base64')%>"
                                                         class="category-image" />
                                                     <a class="btn btn-danger btn-delete-image"
-                                                        href="/admin/category/<%= category._id %>/deleteImg">Delete</a>
-                                                    <% } else { %>
+                                                        href="/admin/category/<\%= category._id %>/deleteImg">Delete</a>
+                                                    <\% } else { %>
                                                         <p style="width: 145px;">No image available</p>
-                                                        <% } %>
+                                                        <\% } %>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Add a file input for uploading a new image -->
+                                    Add a file input for uploading a new image
                                     <input type="file" id="images" name="image" class="form-control file-upload-info">
                                 </div>
-                            </div>
+                            </div> -->
 
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Submit</button>

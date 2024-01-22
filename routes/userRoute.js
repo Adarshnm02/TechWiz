@@ -12,8 +12,8 @@ const profileCtrl = require('../controler/user/profileController')
 
 
 
-user_Route.get('/', userControle.loadHome)
-user_Route.get('/index', userControle.loadHome)
+user_Route.get('/',Auth.isLogedout, userControle.loadHome)
+user_Route.get('/index',Auth.isLogedout, userControle.loadHome)
 
 //Login 
 user_Route.get('/login', Auth.isLogged, userControle.login)
@@ -37,7 +37,7 @@ user_Route.post('/verification', userControle.otpVerification)
 user_Route.get('/resendOtp', userControle.resendOtp);
 
 //pages
-user_Route.get('/shop-grid', userControle.loadShop )
+user_Route.get('/shop-grid',Auth.isLogedout, userControle.loadShop )
 user_Route.get('/blog', userControle.loadBlog)
 user_Route.get('/product/Details/:id', Auth.isLogedout, cartCtrl.productDetails)
 
@@ -54,6 +54,7 @@ user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 user_Route.post('/checkout', Auth.isLogedout, checkoutCtrl.saveOrder)
 user_Route.post('/checkStock', Auth.isLogedout, checkoutCtrl.checkStock)
 user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
+user_Route.post('/wallet', Auth.isLogedout, checkoutCtrl.payInWallet)
 
 // order
 user_Route.get('/order',Auth.isLogedout, profileCtrl.loadOrder)
@@ -88,6 +89,9 @@ user_Route.post('/filterCategory', Auth.isLogedout, cartCtrl.filtering)
 
 //wallet
 user_Route.get('/wallet', Auth.isLogedout, checkoutCtrl.loadWallet)
+user_Route.post('/getwallet', Auth.isLogedout, checkoutCtrl.walletPayment)
+
+user_Route.get('/contact', userControle.loadContact)
 
 
 module.exports = user_Route;
