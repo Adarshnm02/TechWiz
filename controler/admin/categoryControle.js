@@ -146,25 +146,26 @@ module.exports = {
                 categoryName: editCategoryName,
                 description: description
             };
-            if (req.file) {
-                if (!isValidImage(req.file)) {
-                    return res.render('admin/editCategory', { message: 'Not a valid image file', category });
-                }
-            }
+            // if (req.file) {
+            //     if (!isValidImage(req.file)) {
+            //         return res.render('admin/editCategory', { message: 'Not a valid image file', category });
+            //     }
+            // }
 
 
-            if (req.file) {
-                if (category) {
-                    category.image = {
-                        data: req.file.buffer,
-                        contentType: req.file.mimetype
-                    };
-                    await category.save();
-                } else {
-                    console.log("Category not found");
-                    return res.status(404).send("Category not found");
-                }
-            }
+            // if (req.file) {
+            //     if (category) {
+            //         category.image = {
+            //             data: req.file.buffer,
+            //             contentType: req.file.mimetype
+            //         };
+            //         await category.save();
+            //     } else {
+            //         console.log("Category not found");
+            //         return res.status(404).send("Category not found");
+            //     }
+            // }
+            await category.save();
 
             // Update other category details
             const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });

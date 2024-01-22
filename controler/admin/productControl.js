@@ -217,7 +217,8 @@ module.exports = {
                 });
             }
 
-            await updatedproduct.save();
+            const savedProduct = await updatedproduct.save();
+            console.log("product saved", savedProduct);
             res.redirect(`/admin/products`);
         } catch (error) {
             console.log(error.message);

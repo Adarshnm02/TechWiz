@@ -43,7 +43,7 @@ adminRoute.post('/addCategory', authCtrl.isLogedout, upload.single('image'), cat
 adminRoute.get('/category/activate/:id', authCtrl.isLogedout, categoryCtrl.categoryActive)
 adminRoute.get('/category/deactivate/:id', authCtrl.isLogedout, categoryCtrl.categoryDisable)
 adminRoute.get('/category/:id/edit', authCtrl.isLogedout, categoryCtrl.loadCategoryEdit)
-adminRoute.post('/category/edit/:id', authCtrl.isLogedout, upload.single('image'), categoryCtrl.updateCategory)
+adminRoute.post('/category/edit/:id', authCtrl.isLogedout, categoryCtrl.updateCategory)
 adminRoute.get('/category/:id/deleteImg', authCtrl.isLogedout, categoryCtrl.imageDelete)
 
 

@@ -114,7 +114,7 @@
                                 <div class="edit-delete-buttons ">
                                     <%if(order.status==="Cancelled" ) {%>
                                         <p class="text-danger">Canceled</p>
-                                        <% } else {%>
+                                        <% } else if(order.status !== "Delivered"){%>
                                             <a class="btn btn-sm btn-danger mr-2" id="<%= order.orderId %>"
                                                 onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
                                             <!-- <button class="btn btn-sm btn-danger">Delete</button>  -->
