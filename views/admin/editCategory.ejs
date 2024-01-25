@@ -40,7 +40,7 @@
                             <input type="hidden" name="id" value="<%= category._id %>">
 
                             <div class="form-group">
-                                <label for="exampleInputName1">Category Name</label>
+                                <label for="exampleInputName1"  class="form-label">Category Name</label>
                                 <input type="text" name="categoryName" class="form-control"id="exampleInputName1"
                                     placeholder="<%= category.categoryName %>" value="<%= category.categoryName %>">
                                     <p class="text-danger" id="Category-name-error"></p>
@@ -48,10 +48,19 @@
                             <!-- Other form fields... -->
 
                             <div class="form-group">
-                                <label for="description">Description</label>
+                                <label for="description"  class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="6" id="exampleTextarea1"
                                     placeholder="Write about the Product"><%= category.description %></textarea>
                                     <p class="text-danger" id="description-error"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="offerArea" class="form-label">Category Offer(percentage)</label>
+                                <input type="text" class="form-control" name="categoryOffer" 
+                                id="categoryOfferId" style="width: 50% !important;" value="<%= category.offer%>">
+                                <p class="text-danger" id="offer-error"></p>
+
+
                             </div>
 
                             <!-- <div class="form-group">
@@ -103,6 +112,31 @@
         const nameError = document.getElementById("Category-name-error")
         // const CategoryDescription = document.getElementById("exampleTextarea1")
         const descriptionError = document.getElementById("description-error")
+        const categoryOffer = document.getElementById('categoryOfferId')
+        const catOfferError = document.getElementById('offer-error')
+
+
+
+        function offerValidation(){
+            console.log("cat", categoryOffer, "value", categoryOffer.value);
+            if(categoryOffer.value >= 100){
+                catOfferError.innerHTML = "You can't set offer above 100%"
+                return false;
+            }else if(!categoryOffer.value){
+                catOfferError.innerHTML =  "Category offer must be filled or 0"
+                return false;
+            }else if(categoryOffer.value < 0){
+                catOfferError.innerHTML ="cannot set offer less than 0"
+                return false;
+            }else{
+                catOfferError.innerHTML="";
+                return true;
+            }
+        }
+
+
+
+
 
         function nameValidation() {
             const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
@@ -140,20 +174,21 @@
             event.preventDefault();
             const validations = [
                 nameValidation(),
+                offerValidation(),
                 // descriptionValidation()
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Category Detials Submitted",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(()=>{
+                // Swal.fire({
+                //     position: "top-end",
+                //     icon: "success",
+                //     title: "Category Detials Submitted",
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // });
+                // setTimeout(()=>{
                 CategoryForm.submit(); 
-                },1500)
+                // },1500)
             }
         })
     </script>

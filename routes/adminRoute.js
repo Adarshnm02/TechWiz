@@ -39,7 +39,7 @@ adminRoute.get('/products/deactive/:id', authCtrl.isLogedout, productControl.pro
 
 adminRoute.get('/category', authCtrl.isLogedout, categoryCtrl.category)
 adminRoute.get('/addCategory', authCtrl.isLogedout, categoryCtrl.loadAddCategory)
-adminRoute.post('/addCategory', authCtrl.isLogedout, upload.single('image'), categoryCtrl.addProductCategory);
+adminRoute.post('/addCategory', authCtrl.isLogedout, categoryCtrl.addProductCategory);
 adminRoute.get('/category/activate/:id', authCtrl.isLogedout, categoryCtrl.categoryActive)
 adminRoute.get('/category/deactivate/:id', authCtrl.isLogedout, categoryCtrl.categoryDisable)
 adminRoute.get('/category/:id/edit', authCtrl.isLogedout, categoryCtrl.loadCategoryEdit)

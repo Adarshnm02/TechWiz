@@ -236,6 +236,7 @@
                                     <!-- </form> -->
 
                                 </div>
+                                <p id="couponError" class="text-danger"></p>
                                 <div class="modal-header">
                                     <button type="button" onclick="loadAvailableCoupons()">Available Coupons</button>
                                     <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
@@ -288,6 +289,7 @@
                 const code = document.getElementById('couponCode').value
                 const discountShow = document.getElementById('DiscountAmount')
                 const totalAmount = document.getElementById('totalAmount')
+                const showError = document.getElementById('couponError')
                 console.log(code);
                 const responce = await fetch('/applyCoupon', {
                     method: 'POST',
@@ -300,6 +302,10 @@
                 responce.json().then(data => {
                     console.log(data)
                     console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
+                    let disAmont = total -= data.discountAmount
+                    if(disAmont <= 0 ){
+                        return showError.innerHTML = "This Coupon is not applicable for this order"
+                    }
                     if (total >= data.minimumPurchaseAmount + 500) {
                         discountShow.innerHTML = data.discountAmount
                         totalAmount.innerHTML = total -= data.discountAmount
