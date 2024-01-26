@@ -61,10 +61,12 @@ module.exports = {
                 description,
                 stockCount,
                 category,
+                productOffer,
+                productColor,
             } = req.body;
 
             // Check if any required fields are missing
-            if (!productName || !brandName || !price || !description || !stockCount || !category) {
+            if (!productName || !brandName || !price || !description || !stockCount || !category || !productOffer || !productColor) {
                 return res.render('admin/addProduct', { message: "All fields must be filled", categorys });
             }
 
@@ -81,6 +83,8 @@ module.exports = {
                 stock_count: stockCount,
                 description: description,
                 category: category,
+                offer: productOffer,
+                color: productColor,
                 image: []
             });
 
@@ -180,12 +184,14 @@ module.exports = {
             description,
             stockCount,
             category,
-            offer,
+            productOffer,
             id,
+            productColor,
+            
         } = req.body;
 
 
-        console.log(category)
+        // console.log(category)
 
         try {
             const productId = id;
@@ -196,7 +202,8 @@ module.exports = {
                 stock_count: stockCount,
                 description: description,
                 category: category,
-                offer: offer
+                offer: productOffer,
+                color: productColor,
             };
 
             const updatedproduct = await Product.findByIdAndUpdate(
@@ -218,7 +225,7 @@ module.exports = {
             }
 
             const savedProduct = await updatedproduct.save();
-            console.log("product saved", savedProduct);
+            // console.log("product saved", savedProduct);
             res.redirect(`/admin/products`);
         } catch (error) {
             console.log(error.message);

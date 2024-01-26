@@ -153,7 +153,7 @@ module.exports = {
 
 
             options = {
-                amount: (user.grandTotal + 5) * 100,
+                amount: (user.grandTotal) * 100,
                 currency: "INR",
                 receipt: `${Math.floor(Math.random() * 10000)
                     .toString()

@@ -1,32 +1,32 @@
 <%- include('../partials/user/header') %>
-<style>
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
+    <style>
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
 
-    .pagination-container a {
-        display: inline-block;
-        padding: 8px 12px;
-        margin: 0 4px;
-        text-decoration: none;
-        color: #333;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+        .pagination-container a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    .pagination-container a.active {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-    .link {
-    cursor: pointer;
-}
+        .pagination-container a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
 
-</style>
+        .link {
+            cursor: pointer;
+        }
+    </style>
 
 
     <!-- Featured Section Begin -->
@@ -41,10 +41,12 @@
                         <ul>
                             <li class="active link" data-filter="*">All</li>
 
-                            <% categorys.forEach(category =>{ %>
-                                <li onclick="categoryFilter('<%=category._id%>')"><%=category.categoryName%></li>
-                        <%})%>
-                            <!-- <li data-filter=".oranges">Mobile</li>
+                            <% categorys.forEach(category=>{ %>
+                                <li onclick="categoryFilter('<%=category._id%>')">
+                                    <%=category.categoryName%>
+                                </li>
+                                <%})%>
+                                    <!-- <li data-filter=".oranges">Mobile</li>
                             <li data-filter=".fresh-meat">Laptop</li>
                             <li data-filter=".vegetables">Camera</li>
                             <li data-filter=".fastfood">Accessories</li> -->
@@ -64,11 +66,22 @@
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
 
-                            <div class="product__item__pic set-bg"  style="display: flex; justify-content: center;">
+                            <div class="product__item__pic set-bg" style="display: flex; justify-content: center;">
                                 <% if(element.image[0] && element.image[0].contentType && element.image[0].data) { %>
 
-                                    <img onclick="productDetails('<%= element._id %>')" src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
+                                    <img onclick="productDetails('<%= element._id %>')"
+                                        src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
                                         alt="IMG-PRODUCT" style="height: 260.34px" />
+                                    <div class="product__discount__percent"
+                                        style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; padding: 8px; border-radius: 50%;">
+                                        <%if(element.category.offer > element.offer){%>
+                                           <%= element.category.offer %>%
+                                       <% }else if(element.offer){ %>
+                                            <%= element.offer %>%
+                                        <%} else {%>
+                                            0%
+                                        <%}%>
+                                    </div>
 
                                     <% } else { %>
 
@@ -88,7 +101,8 @@
                                         <%= element.product_name %>
                                     </a>
                                 </h6>
-                                <h6>₹<%= element.price %></h6>
+                                <h6>₹<%= element.price %>
+                                </h6>
                             </div>
                         </div>
                     </div>
@@ -99,7 +113,7 @@
         </div>
     </section>
     <!-- Featured Section End -->
-    
+
     <div class="pagination-container">
         <% if (currentPage> 1) { %>
             <a href="/index?page=1">First</a>
@@ -149,7 +163,7 @@
                         <h4>Latest Products</h4>
                         <div class="latest-product__slider owl-carousel">
                             <% for(let i=0;i < latestPrd.length;i+=3){%>
-                               
+
                                 <div class="latest-prdouct__slider__item">
                                     <a href="#" class="latest-product__item">
                                         <div class="latest-product__item__pic">
