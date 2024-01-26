@@ -45,11 +45,12 @@ module.exports = {
     async addProductCategory(req, res) {
         try {
             const category = await productCategory.find()
-            const { categoryName, description } = req.body;
-            const image = req.file;
+            const { categoryName, description , categoryOffer} = req.body;
+            console.log(categoryName, description , categoryOffer);
+            
     
-            if (!categoryName || !image) {
-                console.log("Category name or image not found");
+            if (!categoryName || !description) {
+                console.log("Category name or description not found");
                 return res.render('admin/addCategory', {
                     message: "All fields must be filled",
                 });
@@ -62,18 +63,11 @@ module.exports = {
             });
     
             if (!existingCategory) {
-                if (!isValidImage(image)) {
-                    console.log("Not a valid image file");
-                    return res.render('admin/addCategory', { message: 'Not a valid image file' });
-                }
-    
                 const categorys = new productCategory({
                     categoryName: categoryNameFormatted,
                     description: description,
-                    image: {
-                        data: image.buffer,
-                        contentType: image.mimetype
-                    }
+                    offer: categoryOffer,
+                    
                 });
     
                 await categorys.save();
@@ -127,7 +121,7 @@ module.exports = {
     async updateCategory(req, res) {
         try {
             const { id } = req.params;
-            const { description } = req.body;
+            const { description ,categoryOffer} = req.body;
 
             const category = await productCategory.findById(id);
 
@@ -144,7 +138,8 @@ module.exports = {
 
             const data = {
                 categoryName: editCategoryName,
-                description: description
+                description: description,
+                offer: categoryOffer,
             };
             // if (req.file) {
             //     if (!isValidImage(req.file)) {
@@ -165,10 +160,10 @@ module.exports = {
             //         return res.status(404).send("Category not found");
             //     }
             // }
-            await category.save();
+            // await category.save();
 
             // Update other category details
-            const updatedCategory = await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
+            await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
 
             console.log("Category updated");
             return res.redirect('/admin/category');

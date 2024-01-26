@@ -13,8 +13,7 @@
                             </p>
                             <%}%>
                                 <h5 class="card-title text-center">Add Category</h5>
-                                <form action="/admin/addCategory" class="forms-sample" method="post"
-                                    enctype="multipart/form-data" id="category-form">
+                                <form action="/admin/addCategory" class="forms-sample" method="post" id="category-form">
                                     <div class="mb-3">
                                         <label for="exampleInputName1" class="form-label">Category Name</label>
                                         <input type="text" name="categoryName" class="form-control"
@@ -27,12 +26,22 @@
                                             rows="4"></textarea>
                                         <p class="text-danger" id="description-error"></p>
                                     </div>
+
                                     <div class="mb-3">
+                                        <label for="offerArea" class="form-label">Category Offer(percentage)</label>
+                                        <input type="text" class="form-control" name="categoryOffer" 
+                                        id="categoryOfferId" style="width: 50% !important;" placeholder="Discount Percentage">
+                                        <p class="text-danger" id="offer-error"></p>
+
+
+                                    </div>
+                                   
+                                    <!-- <div class="mb-3">
                                         <label for="image" class="form-label">Image Upload</label>
                                         <input type="file" id="image" name="image"
                                             class="form-control file-upload-info">
                                             <p class="text-danger" id="image_error"></p>
-                                    </div>
+                                    </div> -->
                                     <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
 
 
@@ -66,10 +75,30 @@
         const nameError = document.getElementById("Category-name-error")
         const CategoryDescription = document.getElementById("exampleTextarea1")
         const descriptionError = document.getElementById("description-error")
+        const categoryOffer = document.getElementById('categoryOfferId')
+        const catOfferError = document.getElementById('offer-error')
 
 
-        const imageInput = document.getElementById("image");
-        const imageError = document.getElementById("image_error");
+        // const imageInput = document.getElementById("image");
+        // const imageError = document.getElementById("image_error");
+
+
+        function offerValidation(){
+            console.log("cat", categoryOffer, "value", categoryOffer.value);
+            if(categoryOffer.value >= 100){
+                catOfferError.innerHTML = "You can't set offer above 100%"
+                return false;
+            }else if(!categoryOffer.value){
+                catOfferError.innerHTML =  "Category offer must be filled or 0"
+                return false;
+            }else if(categoryOffer.value < 0){
+                catOfferError.innerHTML ="cannot set offer less than 0"
+                return false;
+            }else{
+                catOfferError.innerHTML="";
+                return true;
+            }
+        }
 
 
         function nameValidation() {
@@ -104,24 +133,24 @@
             }
         }
 
-        function isValidImageType(file) {
-            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-            return file && allowedImageTypes.includes(file.type);
-        }
+        // function isValidImageType(file) {
+        //     const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+        //     return file && allowedImageTypes.includes(file.type);
+        // }
 
-        function validateImages() {
-            const files = Array.from(imageInput.files);
+        // function validateImages() {
+        //     const files = Array.from(imageInput.files);
 
-            const invalidFiles = files.filter(file => !isValidImageType(file));
+        //     const invalidFiles = files.filter(file => !isValidImageType(file));
 
-            if (invalidFiles.length > 0) {
-                imageError.innerHTML = "Invalid file type. Please upload a valid image.";
-                return false;
-            } else {
-                imageError.innerHTML = "";
-                return true;
-            }
-        }
+        //     if (invalidFiles.length > 0) {
+        //         imageError.innerHTML = "Invalid file type. Please upload a valid image.";
+        //         return false;
+        //     } else {
+        //         imageError.innerHTML = "";
+        //         return true;
+        //     }
+        // }
 
 
         CategoryForm.addEventListener("submit", function (event) {
@@ -129,20 +158,21 @@
             const validations = [
                 nameValidation(),
                 descriptionValidation(),
-                validateImages(),
+                offerValidation(),
+                // validateImages(),
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Category Detials Submitted",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
+            //     Swal.fire({
+            //         position: "top-end",
+            //         icon: "success",
+            //         title: "Category Detials Submitted",
+            //         showConfirmButton: false,
+            //         timer: 1500
+            //     });
+            //     setTimeout(() => {
                     CategoryForm.submit(); 
-                },1500)
+                // },1500)
             }
         })
     </script>
