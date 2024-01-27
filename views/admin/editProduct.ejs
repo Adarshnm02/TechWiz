@@ -31,21 +31,27 @@
                             <input type="hidden" name="id" value="<%= products._id %>">
 
                             <div class="form-group">
-                                <label for="exampleInputName1">Product Name</label>
+                                <label for="exampleInputName1" class="form-label">Product Name</label>
                                 <input type="text" name="productName" class="form-control" id="productName"
                                     placeholder="Product Name" value="<%= products.product_name %>">
                                 <p class="text-danger" id="name_error"></p>
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputEmail3">Brand Name</label>
+                                <label for="exampleInputEmail3" class="form-label">Brand Name</label>
                                 <input type="text" name="brandName" class="form-control" id="brandName"
                                     placeholder="Brand Name" value="<%= products.brand_name %>">
                                 <p class="text-danger" id="brandName_error"></p>
                             </div>
+                            <div class="form-group">
+                                <label for="ColorInputName1" class="form-label">Product Color</label>
+                                <input type="text" name="productColor" class="form-control" id="productColor"
+                                    placeholder="Product Color" value="<%= products.color %>">
+                                <p class="text-danger" id="color_error"></p>
+                            </div>
 
                             <div class="form-group">
-                                <label for="category">Category</label>
+                                <label for="category" class="form-label">Category</label>
                                 <select class="form-control" name="categorys">
                                     <% category.forEach((category)=> { %>
                                         <option value="<%= category._id %>">
@@ -56,28 +62,35 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputPassword4">Price</label>
+                                <label for="exampleInputPassword4" class="form-label">Product Price</label>
                                 <input type="number" name="price" class="form-control" id="price" placeholder="Price"
                                     value="<%= products.price %>">
                                 <p class="text-danger" id="price_error"></p>
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputCity1">Stock Count</label>
+                                <label for="exampleInputCity1" class="form-label">Stock Count</label>
                                 <input type="text" name="stockCount" class="form-control" id="stockCount"
                                     placeholder="Count" value="<%= products.stock_count%>">
                                 <p class="text-danger" id="stockCount_error"></p>
                             </div>
 
                             <div class="form-group">
-                                <label for="description">Description</label>
+                                <label for="productOffer" class="form-label">Product Offer(percentage)</label>
+                                <input type="number" name="productOffer" class="form-control" id="productOffer"
+                                    value="<%= products.offer%>">
+                                <p class="text-danger" id="pedOffer_error"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="8"
                                     placeholder="Write about the Product"><%= products.description %></textarea>
                                 <p class="text-danger" id="description_error"></p>
                             </div>
 
                             <div class="form-group">
-                                <label>Images Upload (Required: 3)</label>
+                                <label class="form-label">Uploaded Images</label>
                                 <div class="input-group">
                                     <div class="row">
                                         <% products.image.forEach(image=> { %>
@@ -133,6 +146,8 @@
         const stockCountInput = document.getElementById("stockCount");
         const description = document.getElementById("description")
         const priceInput = document.getElementById("price");
+        const productOffer = document.getElementById("productOffer")
+        const colorType = document.getElementById("productColor")
 
 
         const name_error = document.getElementById("name_error")
@@ -140,10 +155,38 @@
         const stockCountError = document.getElementById("stockCount_error");
         const description_error = document.getElementById("description_error")
         const priceError = document.getElementById("price_error");
+        const prodOfferError = document.getElementById("pedOffer_error")
+        const colorType_error = document.getElementById("color_error")
 
         const imageInput = document.getElementById("images");
         const imageError = document.getElementById("image_error");
 
+
+        function offerValidation(){
+            console.log("cat", productOffer, "value", productOffer.value);
+            if(productOffer.value >= 100){
+                prodOfferError.innerHTML = "You can't set offer above 100%"
+                return false;
+            }else if(!productOffer.value){
+                prodOfferError.innerHTML =  "Category offer must be filled or 0"
+                return false;
+            }else if(productOffer.value < 0){
+                prodOfferError.innerHTML ="cannot set offer less than 0"
+                return false;
+            }else{
+                prodOfferError.innerHTML="";
+                return true;
+            }
+        }
+
+        function colorTypes_validation() {
+            if (!/^[A-Za-z\s]+$/.test(colorType.value.trim())) {
+                colorType_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
+                return false;
+            }
+            colorType_error.innerHTML = ""; 
+            return true; 
+        }
 
 
 
@@ -254,6 +297,8 @@
                 description_Validation(),
                 validatePrice(),
                 validateImages(),
+                offerValidation(),
+                colorTypes_validation(),
 
             ];
 

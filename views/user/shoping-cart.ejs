@@ -26,7 +26,7 @@
             line-height: 26px;
             margin: 75px 0 75px 0;
         }
-        
+
 
         .pagination-container {
             display: flex;
@@ -64,6 +64,7 @@
                                     <th class="shoping__product">Products</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
+                                    <th>Offer</th>
                                     <th>Total</th>
                                     <th></th>
                                 </tr>
@@ -106,6 +107,17 @@
                                                 <button onclick="updateQuantity('increment','<%=element.product._id%>')"
                                                     class="btn-qunty" type="button">+</button>
                                             </td>
+                                            <td class="shoping__cart__price">
+
+                                                <%if(element.product.category.offer> element.product.offer){%>
+                                                    <%= element.product.category.offer %>%
+                                                        <% }else if(element.product.offer){ %>
+                                                            <%= element.product.offer %>%
+                                                                <%} else {%>
+                                                                    0%
+                                                                    <%}%>
+
+                                            </td>
 
 
                                             <td class="shoping__cart__total">
@@ -133,9 +145,11 @@
                         </table>
 
                         <% if (typeof message !="undefined" ) {%>
-                            <p class="cartEmpty"> <%= message %> </p>
-                        <%}%>
-                        
+                            <p class="cartEmpty">
+                                <%= message %>
+                            </p>
+                            <%}%>
+
                     </div>
                 </div>
             </div>

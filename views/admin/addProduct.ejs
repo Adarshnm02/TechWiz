@@ -65,12 +65,13 @@
                             </div>
 
                             <div class="row">
+                               
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="mainImage" class="form-label mt-4">Main Image / File</label>
-                                        <input type="file" name="image" multiple class="form-control" id="mainImage"
-                                            placeholder="Main Image / File">
-                                            <p class="text-danger" id="image_error"></p>
+                                        <label for="productOffer" class="form-label mt-4">Product Offer(percentage)</label>
+                                        <input type="number" name="productOffer" class="form-control" id="productOffer"
+                                            placeholder="Product Offer(percentage)">
+                                        <p class="text-danger" id="pedOffer_error"></p>
                                     </div>
                                 </div>
 
@@ -84,13 +85,6 @@
                                                     <%= category.categoryName %>
                                                 </option>
                                                 <% }) %>
-
-
-
-                                                    <!-- <option value="mobile">Mobile</option>
-                                <option value="laptop">Laptop</option>
-                                <option value="camera">Camera</option>
-                                <option value="accessories">Accessories</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -98,11 +92,24 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="colorTypes" class="form-label mt-4">Color Types</label>
-                                        <input type="text" name="color" class="form-control" id="colorTypes"
+                                        <input type="text" name="productColor" class="form-control" id="colorTypes"
                                             placeholder="Color Types">
                                         <p class="text-danger" id="colorTypes_error"></p>
                                     </div>
                                 </div>
+
+                                
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="mainImage" class="form-label mt-4">Main Image / File</label>
+                                        <input type="file" name="image" multiple class="form-control" id="mainImage"
+                                            placeholder="Main Image / File">
+                                            <p class="text-danger" id="image_error"></p>
+                                    </div>
+                                </div>
+
+
                             </div>
 
                             <div class="row">
@@ -135,6 +142,7 @@
         const colorTypes = document.getElementById("colorTypes")
         const stockCountInput = document.getElementById("stockCount");
         const priceInput = document.getElementById("price");
+        const productOffer = document.getElementById("productOffer")
 
         const name_error = document.getElementById("name_error")
         const brandName_error = document.getElementById("brandName_error")
@@ -142,9 +150,28 @@
         const colorTypes_error = document.getElementById("colorTypes_error")
         const stockCountError = document.getElementById("stockCount_error");
         const priceError = document.getElementById("price_error");
+        const prodOfferError = document.getElementById("pedOffer_error")
 
         const imageInput = document.getElementById("mainImage");
         const imageError = document.getElementById("image_error");
+
+
+        function offerValidation(){
+            console.log("cat", productOffer, "value", productOffer.value);
+            if(productOffer.value >= 100){
+                prodOfferError.innerHTML = "You can't set offer above 100%"
+                return false;
+            }else if(!productOffer.value){
+                prodOfferError.innerHTML =  "Category offer must be filled or 0"
+                return false;
+            }else if(productOffer.value < 0){
+                prodOfferError.innerHTML ="cannot set offer less than 0"
+                return false;
+            }else{
+                prodOfferError.innerHTML="";
+                return true;
+            }
+        }
 
 
 
@@ -260,6 +287,7 @@
                 validateStockCount(),
                 validatePrice(),
                 validateImages(),
+                offerValidation(),
             ];
 
             const hasErrors = validations.some(validation => validation === false);

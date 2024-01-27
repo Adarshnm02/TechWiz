@@ -145,7 +145,7 @@ module.exports = {
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
     
-            console.log("cartLen", cartLen);
+            console.log("cartLen", cartLen, products[0].category.offer, products[0].offer, products[0].product_name);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });

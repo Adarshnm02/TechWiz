@@ -16,10 +16,26 @@ module.exports = {
                 const skip = (page - 1) * limit;
 
                 const userId = req.session.user;
-                const user = await User.findById(userId).populate({
-                    path: 'cart.product',
-                    options: { skip, limit }
-                });
+                // const user = await User.findById(userId).populate({
+                //     path: 'cart.product',
+                //     options: { skip, limit }
+                // });
+
+                const user = await User.findById(userId)
+                    .populate({
+                        path: 'cart.product',
+                        options: { skip, limit }
+                    })
+                    .populate({
+                        path: 'cart.product',
+                        populate: {
+                            path: 'category',
+                            model: 'productCategory' // Corrected model name
+                        }
+                    });
+
+                // console.log("User", user.cart[1].product);
+
                 const cart = user.cart;
                 const totalCount = cart.length;
                 const totalPages = Math.ceil(totalCount / limit);
@@ -42,10 +58,19 @@ module.exports = {
         const { product } = req.body;
 
         try {
-            const pro = await Product.findOne({ _id: product })
+            const pro = await Product.findOne({ _id: product }).populate('category')
             const user = await User.findById(userId).populate('cart.product')
             const cart = user.cart;
-            const incrementAmount = pro.price;
+            let incrementAmount
+            if (pro.category.offer > pro.offer) {
+                const discountAmount = (pro.price * pro.category.offer) / 100;
+                incrementAmount = pro.price - discountAmount;
+            } else {
+                const discountAmnt = (pro.price * pro.offer) / 100
+                incrementAmount = pro.price - discountAmnt
+            }
+
+
 
             const productInTheCart = cart.find(cartItem => cartItem.product.equals(product));
 
@@ -121,32 +146,26 @@ module.exports = {
     async qntUpdate(req, res) {
         try {
             const user = await User.findById(req.session.user);
-
-
             const cartItem = user.cart.find(item => item.product.toString() === req.body.productId);
 
             if (cartItem) {
-                const product = await Product.findById(cartItem.product);
+                const product = await Product.findById(cartItem.product).populate('category');
 
-                if (req.body.action === "increment" && cartItem.quantity <= product.stock_count - 1) {
-                    if (cartItem.quantity > product.stock_count) {
-                        console.log("from qnt exeed ", cartItem.quantity);
-                        return res.status(400).json({ message: "Insufficient Stock" });
-                    } else {
-                        cartItem.quantity += 1;
-                        cartItem.totalAmount = product.price * cartItem.quantity;
-                    }
+                let offer = product.category.offer > product.offer ? product.category.offer : product.offer;
+
+                if (req.body.action === "increment" && cartItem.quantity < product.stock_count) {
+                    cartItem.quantity += 1;
                 } else if (req.body.action === "decrement" && cartItem.quantity > 1) {
                     if (cartItem.quantity - 1 >= 0) {
-                        cartItem.quantity -= 1;
-                        cartItem.totalAmount = product.price * cartItem.quantity;
+                    cartItem.quantity -= 1;
                     }
+                // } else {
+                //     return res.status(400).json({ message: "Invalid quantity update request" });
                 }
+                console.log("after update ", cartItem.quantity);
+                cartItem.totalAmount = (product.price - (product.price * offer) / 100) * cartItem.quantity;
 
-                let totalCartAmount = 0;
-                user.cart.forEach(item => {
-                    totalCartAmount += item.totalAmount;
-                });
+                let totalCartAmount = user.cart.reduce((total, item) => total + item.totalAmount, 0);
                 user.grandTotal = totalCartAmount;
 
                 await user.save();
@@ -167,12 +186,13 @@ module.exports = {
             return res.status(500).json({ message: "Internal Server Error" });
         }
     },
+    
 
     async productDetails(req, res) {
         try {
             const session = req.session.user;
             const { id } = req.params;
-            const details = await Product.findById({ _id: id })
+            const details = await Product.findById({ _id: id }).populate('category')
             // console.log("from details", details);
 
             const user = await User.findById(req.session.user).populate({
@@ -180,12 +200,21 @@ module.exports = {
 
             })
 
+            console.log(details.category.offer, "cat offer");
+            console.log(details.offer, "prd offer");
+            let offer
+            if (details.category.offer > details.offer) {
+                offer = details.category.offer
+            } else {
+                offer = details.offer
+            }
+
             cart = user.cart
             const cartLen = cart ? user.cart.length : 0;
             // console.log("Detials", details);
             if (details) {
                 // console.log("Product Details Rendering");
-                res.render('user/productDetails', { details, session, id, cart, cartLen })
+                res.render('user/productDetails', { details, session, id, cart, cartLen, offer })
                 // res.render('user/forDelete', { details, session, id, cart})
             }
             // console.log("gdfg", details.category);
