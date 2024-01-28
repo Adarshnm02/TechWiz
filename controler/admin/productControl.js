@@ -65,6 +65,8 @@ module.exports = {
                 productColor,
             } = req.body;
 
+                console.log("Files aer ", req.files)
+
             // Check if any required fields are missing
             if (!productName || !brandName || !price || !description || !stockCount || !category || !productOffer || !productColor) {
                 return res.render('admin/addProduct', { message: "All fields must be filled", categorys });

@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    referal: {
+        type: String,
+    },
     cart:[{
         product:{
             type: mongoose.Schema.Types.ObjectId,

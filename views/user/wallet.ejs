@@ -48,11 +48,29 @@
             <% } %>
         </div>
       </div>
+      <div class="pagination-container">
+        <% if (currentPage> 1) { %>
+            <a href="/wallet?page=1">First</a>
+            <a href="/wallet?page=<%= currentPage - 1 %>">Previous</a>
+            <% } %>
+  
+                <% for (let i=1; i <=totalPages; i++) { %>
+                    <a href="/wallet?page=<%= i %>"
+                        class="<%= currentPage === i ? 'active' : '' %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
+  
+                        <% if (currentPage < totalPages) { %>
+                            <a href="/wallet?page=<%= currentPage + 1 %>">Next</a>
+                            <a href="/wallet?page=<%= totalPages %>">Last</a>
+                            <% } %>
+    </div>
     </div>
   </section>
   
   <!-- Cancel Order Modal -->
-  <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -73,7 +91,7 @@
       </div>
     </div>
   </div>
-  
+   -->
 
 
 

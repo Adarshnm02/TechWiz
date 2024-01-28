@@ -96,26 +96,73 @@
             /* Adjust the width for the desired space */
         }
 
-
-
         .left-section,
         .right-section {
             width: 48%;
             /* Adjust the width for the desired partition size */
         }
+
+        .showGrand {
+            width: 50px !important;
+            height: 25px !important;
+            color: #000000 !important;
+        }
+
+        .showGrandAmt {
+            width: 50px !important;
+            height: 25px !important;
+            color: #000 !important;
+        }
+
+        .totalShowBody {
+            margin-top: 20px !important;
+        }
+
+        /* Additional Styles for Download Button */
+        #downloadButton {
+            padding: 10px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            background-color: #007bff;
+            /* Adjust color as needed */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 25px;
+            margin-left: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .total-label {
+            margin-right: 20px;
+        }
+
+
+        #downloadButton:hover {
+            background-color: #0056b3;
+        }
     </style>
 
+    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
     <div class="container">
-        <!-- <div>
-
-            <a href="/admin/order" class="btn btn-primary mb-3" style="margin-top: 20px;">Back to Order</a>
-        </div> -->
         <div class="row mt-5">
             <div class="col-md-12">
                 <!-- Main Content -->
-                <div class="main">
-                    <h2>My Orders</h2>
+                <div class="main" id="invoice">
+                    <h2>Invoice</h2>
                     <div class="card">
                         <div class="order-details border-bottom">
                             <div class="left-section">
@@ -160,62 +207,109 @@
                             </div>
                         </div>
 
-
-
                         <!-- Products Table -->
                         <table class="table product-details">
                             <thead>
                                 <tr>
-                                    <!-- <th>Image</th> -->
                                     <th>Product Name</th>
                                     <th>Product Brand</th>
                                     <th>Product Price</th>
                                     <th>Product Quantity</th>
+                                    <th>Discount</th>
                                     <th>Total Price</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Check if there are products and if products array is defined -->
-                                <% if (order[0].products && order[0].products.length > 0) { %>
+                                <% if (order[0].products && order[0].products.length> 0) { %>
                                     <!-- Check if there are multiple products -->
-                                    <% if (order[0].products.length > 1) { %>
+                                    <% if (order[0].products.length> 1) { %>
                                         <!-- Loop through each product -->
-                                        <% order[0].products.forEach(item => { %>
+                                        <% order[0].products.forEach(item=> { %>
                                             <tr>
-                                                <td><%= item.product.product_name %></td>
-                                                <td><%= item.product.brand_name %></td>
-                                                <td>₹<%= item.product.price %></td>
-                                                <td><%= item.quantity %></td>
-                                                <td>₹<%= item.totalAmount %></td>
+                                                <td>
+                                                    <%= item.product.product_name %>
+                                                </td>
+                                                <td>
+                                                    <%= item.product.brand_name %>
+                                                </td>
+                                                <td>₹<%= item.product.price %>
+                                                </td>
+                                                <td>
+                                                    <%= item.quantity %>
+                                                </td>
+                                                <td>
+                                                    <%= ((1 - (item.totalAmount / (item.product.price * item.quantity)))
+                                                        * 100).toFixed(0) %>
+                                                </td>
+                                                <td>₹<%= item.totalAmount %>
+                                                </td>
                                             </tr>
-                                        <% }) %>
-                                    <% } else { %>
-                                        <!-- Use details for a single product -->
-                                        <tr>
-                                            <td><%= order[0].products[0].product.product_name %></td>
-                                            <td><%= order[0].products[0].product.brand_name %></td>
-                                            <td>₹<%= order[0].products[0].product.price %></td>
-                                            <td><%= order[0].products[0].quantity %></td>
-                                            <td>₹<%= order[0].products[0].totalAmount %></td>
-                                        </tr>
-                                    <% } %>
-                                <% } else { %>
-                                    <!-- Handle case when there are no products -->
-                                    <tr>
-                                        <td colspan="5">No products available</td>
-                                    </tr>
-                                <% } %>
+                                            <% }) %>
+                                                <% } else { %>
+                                                    <!-- Use details for a single product -->
+                                                    <tr>
+                                                        <td>
+                                                            <%= order[0].products[0].product.product_name %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[0].products[0].product.brand_name %>
+                                                        </td>
+                                                        <td>₹<%= order[0].products[0].product.price %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[0].products[0].quantity %>
+                                                        </td>
+                                                        <td>
+                                                            <%= ((1 - (order[0].products[0].totalAmount /
+                                                                (order[0].products[0].product.price *
+                                                                order[0].products[0].quantity))) * 100).toFixed(0) %>
+                                                        </td>
+                                                        <td>₹<%= order[0].products[0].totalAmount %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                                        <% } else { %>
+                                                            <!-- Handle case when there are no products -->
+                                                            <tr>
+                                                                <td colspan="5">No products available</td>
+                                                            </tr>
+                                                            <% } %>
                             </tbody>
-                            
-
-
                         </table>
-                        <!-- Back to Order Button -->
+                        <!-- Total Section -->
+                        <div class="total-section">
+                            <div class="total-label">Grand Total:</div>
+                            <div class="total-amount">₹ <%= order[0].totalPrice %>
+                            </div>
+                        </div>
+
+                        <!-- Download Button -->
+                        <div class="download-button-container">
+                            <button id="downloadButton" class="btn btn-primary" onclick="generatePDF()">Download
+                                Invoice</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+
+    <script>
+        function generatePDF() {
+            const downloadButton = document.getElementById('downloadButton');
+            downloadButton.style.display = 'none';
+
+            setTimeout(function () {
+                downloadButton.style.display = 'block';
+            }, 1000);
+
+            const element = document.getElementById('invoice');
+            html2pdf()
+                .from(element)
+                .save();
+        }
+    </script>
 
     <%- include('../partials/user/footer') %>

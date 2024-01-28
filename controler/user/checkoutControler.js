@@ -171,15 +171,23 @@ module.exports = {
 
     async loadWallet(req, res) {
         try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = 12;
+            const skip = (page - 1) * limit;
+
+
+
             if (req.session.user) {
                 const user = await User.findById(req.session.user);
                 const cartLen = user && user.cart ? user.cart.length : 0;
                 const session = req.session.user;
                 const currentUser = await User.findById(req.session.user);
                 currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
+                const totalCount = currentUser.wallet.transactions.length
+                const totalPages = Math.ceil(totalCount / limit);
 
                 console.log("fffffffffffffffffff", currentUser);
-                res.render("user/wallet", { session, currentUser, cartLen });
+                res.render("user/wallet", { session, currentUser, cartLen, currentPage: page, totalPages, totalCount  });
             } else {
                 console.log("Session is not found");
                 res.render('user/login')

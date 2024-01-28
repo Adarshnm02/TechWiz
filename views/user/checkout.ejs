@@ -283,6 +283,7 @@
     <!-- //Coupon applly -->
     <script>
         let total = parseInt("<%= user.grandTotal %>")
+        
 
         async function applyCoupon(req, res) {
             try {
@@ -291,6 +292,9 @@
                 const totalAmount = document.getElementById('totalAmount')
                 const showError = document.getElementById('couponError')
                 console.log(code);
+                console.log('Total from script :', total);
+
+                
                 const responce = await fetch('/applyCoupon', {
                     method: 'POST',
                     headers: {
@@ -303,12 +307,13 @@
                     console.log(data)
                     console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
                     let disAmont = total -= data.discountAmount
+                    
                     if(disAmont <= 0 ){
                         return showError.innerHTML = "This Coupon is not applicable for this order"
                     }
                     if (total >= data.minimumPurchaseAmount + 500) {
                         discountShow.innerHTML = data.discountAmount
-                        totalAmount.innerHTML = total -= data.discountAmount
+                        totalAmount.innerHTML = disAmont
                         console.log("Discount ", data.discountAmount);
                         return
                     } else {
