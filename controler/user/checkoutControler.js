@@ -150,7 +150,7 @@ module.exports = {
 
 
             const user = await User.findOne({ _id: req.session.user });
-
+            console.log("Inside create ID");
 
             options = {
                 amount: (user.grandTotal) * 100,
@@ -175,12 +175,11 @@ module.exports = {
             const limit = 12;
             const skip = (page - 1) * limit;
 
-
-
             if (req.session.user) {
                 const user = await User.findById(req.session.user);
                 const cartLen = user && user.cart ? user.cart.length : 0;
                 const session = req.session.user;
+                
                 const currentUser = await User.findById(req.session.user);
                 currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
                 const totalCount = currentUser.wallet.transactions.length

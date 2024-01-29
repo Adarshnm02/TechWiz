@@ -185,7 +185,7 @@ module.exports = {
             price,
             description,
             stockCount,
-            category,
+            categorys,
             productOffer,
             id,
             productColor,
@@ -203,7 +203,7 @@ module.exports = {
                 price: price,
                 stock_count: stockCount,
                 description: description,
-                category: category,
+                category: categorys,
                 offer: productOffer,
                 color: productColor,
             };

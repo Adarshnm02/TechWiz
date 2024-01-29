@@ -3,6 +3,7 @@ const User = require('../../models/userModel')
 const Product = require("../../models/productModel")
 const Coupon = require('../../models/couponModel');
 const { default: mongoose } = require('mongoose');
+const coupon = require('../../models/couponModel');
 
 
 
@@ -232,11 +233,19 @@ module.exports = {
             const user = await User.findById(req.session.user)
             const { grandTotal } = user
             console.log("Grad from shwoe ", grandTotal);
-            const coupons = await Coupon.find({
+            const allCoupons = await Coupon.find({
                 minimumPurchaseAmount: { $lte: grandTotal + 500 },
                 isActive: true,
             })
             console.log("coupon backend");
+            // console.log("discount amount ", coupons[0].discountAmount);
+            const coupons = allCoupons.filter(coupon => {
+                console.log(coupon.discountAmount ," - " , grandTotal  ,"=", coupon.discountAmount - grandTotal)
+                return coupon.discountAmount < grandTotal / 2 && grandTotal - coupon.discountAmount > 0 && coupon.discountAmount > 0;
+            });
+            coupons.forEach( coupon =>{
+                console.log(coupon)
+            })
             res.json(coupons)
         } catch (err) {
             console.log(err);

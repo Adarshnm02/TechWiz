@@ -1,315 +1,319 @@
 <%- include('../partials/user/shortHeader') %>
 
-    <style>
-        /* Custom CSS for enhanced design */
-        /* You can add these styles to your existing CSS file */
+<style>
+    /* Custom CSS for enhanced design */
+    /* You can add these styles to your existing CSS file */
 
-        /* Main Content Styles */
-        .main {
-            margin-top: 20px;
-        }
+    /* Main Content Styles */
+    .main {
+        margin-top: 20px;
+    }
 
-        .main h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #333;
-        }
+    .main h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #333;
+    }
 
-        .card {
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-        }
+    .card {
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+    }
 
-        .table {
-            width: 100%;
-            margin-bottom: 0;
-        }
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+    }
 
-        .table td {
-            border-top: none;
-            padding: 8px 0;
-        }
+    .table td {
+        border-top: none;
+        padding: 8px 0;
+    }
 
-        .table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    .table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-        .border-bottom {
-            border-bottom: 4px solid #c8c8c8 !important;
-        }
+    .border-bottom {
+        border-bottom: 4px solid #c8c8c8 !important;
+    }
 
-        .address-div {
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+    .address-div {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
-        .order-details p {
-            margin-bottom: 10px;
-        }
+    .order-details p {
+        margin-bottom: 10px;
+    }
 
-        .product-details th,
-        .product-details td {
-            text-align: center;
-        }
+    .product-details th,
+    .product-details td {
+        text-align: center;
+    }
 
-        .btnc {
-            background-color: #dc3545;
-            color: #fff !important;
-            border: none;
-            border-radius: 10px;
-            padding: 6px 13px;
-            transition: background-color 0.3s ease;
-        }
+    .btnc {
+        background-color: #dc3545;
+        color: #fff !important;
+        border: none;
+        border-radius: 10px;
+        padding: 6px 13px;
+        transition: background-color 0.3s ease;
+    }
 
-        .btnc:hover {
-            background-color: #000000;
-            color: #fff;
-        }
+    .btnc:hover {
+        background-color: #000000;
+        color: #fff;
+    }
 
-        .order-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+    .order-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
 
-        .order-detail-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+    .order-detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-        .order-detail-item .label {
-            font-weight: bold;
-            width: 150px;
-            /* Adjust the width as needed */
-        }
+    .order-detail-item .label {
+        font-weight: bold;
+        width: 150px;
+        /* Adjust the width as needed */
+    }
 
-        .order-detail-item .value {
-            flex-grow: 1;
-        }
+    .order-detail-item .value {
+        flex-grow: 1;
+    }
 
-        .label-space {
-            width: 20px;
-            /* Adjust the width for the desired space */
-        }
+    .label-space {
+        width: 20px;
+        /* Adjust the width for the desired space */
+    }
 
-        .left-section,
-        .right-section {
-            width: 48%;
-            /* Adjust the width for the desired partition size */
-        }
+    .left-section,
+    .right-section {
+        width: 48%;
+        /* Adjust the width for the desired partition size */
+    }
 
-        .showGrand {
-            width: 50px !important;
-            height: 25px !important;
-            color: #000000 !important;
-        }
+    .showGrand {
+        width: 50px !important;
+        height: 25px !important;
+        color: #000000 !important;
+    }
 
-        .showGrandAmt {
-            width: 50px !important;
-            height: 25px !important;
-            color: #000 !important;
-        }
+    .showGrandAmt {
+        width: 50px !important;
+        height: 25px !important;
+        color: #000 !important;
+    }
 
-        .totalShowBody {
-            margin-top: 20px !important;
-        }
+    .totalShowBody {
+        margin-top: 20px !important;
+    }
 
-        /* Additional Styles for Download Button */
-        #downloadButton {
-            padding: 10px 30px;
-            font-size: 16px;
-            border-radius: 8px;
-            background-color: #007bff;
-            /* Adjust color as needed */
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    /* Additional Styles for Download Button */
 
-        .download-button-container {
-            margin-top: 30px;
-            text-align: center;
-        }
+    .download-button-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+        text-align: center;
+    }
 
-        .total-section {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 25px;
-            margin-left: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+    #downloadButton {
+        padding: 10px 30px;
+        font-size: 16px;
+        border-radius: 8px;
+        /* background-color: #007bff; */
+        /* Adjust color as needed */
+        /* color: #fff;
+        /* border: none; */
+        cursor: pointer;
+        /* transition: background-color 0.3s ease;                               */
+    }
 
-        .total-label {
-            margin-right: 20px;
-        }
+    .total-section {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 25px;
+        margin-left: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
 
+    .total-label {
+        margin-right: 20px;
+    }
 
-        #downloadButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    #downloadButton:hover {
+        background-color: #0056b3 ;
+    }
+</style>
 
-    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
-    <div class="container">
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <!-- Main Content -->
-                <div class="main" id="invoice">
-                    <h2>Invoice</h2>
-                    <div class="card">
-                        <div class="order-details border-bottom">
-                            <div class="left-section">
-                                <div class="order-detail-item">
-                                    <span class="label">Order ID:</span>
-                                    <span class="value">
-                                        <%= order[0].orderId %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">User Name:</span>
-                                    <span class="value">
-                                        <%= order[0].user.userName %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Email:</span>
-                                    <span class="value">
-                                        <%= order[0].user.email %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Mobile:</span>
-                                    <span class="value">1234567898</span>
-                                </div>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <!-- Main Content -->
+            <div class="main" id="invoice">
+                <h2><b>Invoice</b></h2>
+                <div class="card">
+                    <div class="order-details border-bottom">
+                        <div class="left-section">
+                            <div class="order-detail-item">
+                                <span class="label">Order ID:</span>
+                                <span class="value">
+                                    <%= order[0].orderId %>
+                                </span>
                             </div>
-                            <div class="right-section">
-                                <div class="order-detail-item">
-                                    <span class="label">Grand Total Price:</span>
-                                    <span class="value">₹ <%= order[0].totalPrice %></span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Delivery Address:</span>
-                                    <span class="value">Pantheerankave, Calicut, Kerala, India, 673019</span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Payment:</span>
-                                    <span class="value">
-                                        <%= order[0].paymentMethod %>
-                                    </span>
-                                </div>
+                            <div class="order-detail-item">
+                                <span class="label">User Name:</span>
+                                <span class="value">
+                                    <%= order[0].user.userName %>
+                                </span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span class="label">Email:</span>
+                                <span class="value">
+                                    <%= order[0].user.email %>
+                                </span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span class="label">Mobile:</span>
+                                <span class="value">1234567898</span>
                             </div>
                         </div>
-
-                        <!-- Products Table -->
-                        <table class="table product-details">
-                            <thead>
+                        <div class="right-section">
+                            <div class="order-detail-item">
+                                <span class="label">Delivery Address:</span>
+                                <span class="value">Pantheerankave, Calicut, Kerala, India, 673019</span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span class="label">Payment:</span>
+                                <span class="value">
+                                    <%= order[0].paymentMethod %>
+                                </span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span class="label">Coupon Discount:</span>
+                                <span class="value">₹ <%= order[0].discountAmount %></span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span class="label">Grand Total Price:</span>
+                                <span class="value">₹ <%= order[0].totalPrice %></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Products Table -->
+                    <table class="table product-details">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Product Brand</th>
+                                <th>Product Price</th>
+                                <th>Product Quantity</th>
+                                <th>Discount</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Check if there are products and if products array is defined -->
+                            <% if (order[0].products && order[0].products.length > 0) { %>
+                                <!-- Check if there are multiple products -->
+                                <% if (order[0].products.length > 1) { %>
+                                    <!-- Loop through each product -->
+                                    <% order[0].products.forEach(item => { %>
+                                        <tr>
+                                            <td>
+                                                <%= item.product.product_name %>
+                                            </td>
+                                            <td>
+                                                <%= item.product.brand_name %>
+                                            </td>
+                                            <td>₹<%= item.product.price %>
+                                            </td>
+                                            <td>
+                                                <%= item.quantity %>
+                                            </td>
+                                            <td>
+                                                <%= ((1 - (item.totalAmount / (item.product.price * item.quantity))) *
+                                                    100).toFixed(0) %>
+                                            </td>
+                                            <td>₹<%= item.totalAmount %>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <!-- Use details for a single product -->
+                                    <tr>
+                                        <td>
+                                            <%= order[0].products[0].product.product_name %>
+                                        </td>
+                                        <td>
+                                            <%= order[0].products[0].product.brand_name %>
+                                        </td>
+                                        <td>₹<%= order[0].products[0].product.price %>
+                                        </td>
+                                        <td>
+                                            <%= order[0].products[0].quantity %>
+                                        </td>
+                                        <td>
+                                            <%= ((1 - (order[0].products[0].totalAmount /
+                                                (order[0].products[0].product.price *
+                                                    order[0].products[0].quantity))) * 100).toFixed(0) %>
+                                        </td>
+                                        <td>₹<%= order[0].products[0].totalAmount %>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            <% } else { %>
+                                <!-- Handle case when there are no products -->
                                 <tr>
-                                    <th>Product Name</th>
-                                    <th>Product Brand</th>
-                                    <th>Product Price</th>
-                                    <th>Product Quantity</th>
-                                    <th>Discount</th>
-                                    <th>Total Price</th>
+                                    <td colspan="5">No products available</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Check if there are products and if products array is defined -->
-                                <% if (order[0].products && order[0].products.length> 0) { %>
-                                    <!-- Check if there are multiple products -->
-                                    <% if (order[0].products.length> 1) { %>
-                                        <!-- Loop through each product -->
-                                        <% order[0].products.forEach(item=> { %>
-                                            <tr>
-                                                <td>
-                                                    <%= item.product.product_name %>
-                                                </td>
-                                                <td>
-                                                    <%= item.product.brand_name %>
-                                                </td>
-                                                <td>₹<%= item.product.price %>
-                                                </td>
-                                                <td>
-                                                    <%= item.quantity %>
-                                                </td>
-                                                <td>
-                                                    <%= ((1 - (item.totalAmount / (item.product.price * item.quantity)))
-                                                        * 100).toFixed(0) %>
-                                                </td>
-                                                <td>₹<%= item.totalAmount %>
-                                                </td>
-                                            </tr>
-                                            <% }) %>
-                                                <% } else { %>
-                                                    <!-- Use details for a single product -->
-                                                    <tr>
-                                                        <td>
-                                                            <%= order[0].products[0].product.product_name %>
-                                                        </td>
-                                                        <td>
-                                                            <%= order[0].products[0].product.brand_name %>
-                                                        </td>
-                                                        <td>₹<%= order[0].products[0].product.price %>
-                                                        </td>
-                                                        <td>
-                                                            <%= order[0].products[0].quantity %>
-                                                        </td>
-                                                        <td>
-                                                            <%= ((1 - (order[0].products[0].totalAmount /
-                                                                (order[0].products[0].product.price *
-                                                                order[0].products[0].quantity))) * 100).toFixed(0) %>
-                                                        </td>
-                                                        <td>₹<%= order[0].products[0].totalAmount %>
-                                                        </td>
-                                                    </tr>
-                                                    <% } %>
-                                                        <% } else { %>
-                                                            <!-- Handle case when there are no products -->
-                                                            <tr>
-                                                                <td colspan="5">No products available</td>
-                                                            </tr>
-                                                            <% } %>
-                            </tbody>
-                        </table>
-                        <!-- Total Section -->
-                        <div class="total-section">
-                            <div class="total-label">Grand Total:</div>
-                            <div class="total-amount">₹ <%= order[0].totalPrice %>
-                            </div>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    <!-- Total Section -->
+                    <div class="total-section">
+                        <div class="total-label">Grand Total:</div>
+                        <div class="total-amount">₹ <%= order[0].totalPrice %>
                         </div>
-
-                        <!-- Download Button -->
-                        <div class="download-button-container">
-                            <button id="downloadButton" class="btn btn-primary" onclick="generatePDF()">Download
-                                Invoice</button>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function generatePDF() {
-            const downloadButton = document.getElementById('downloadButton');
-            downloadButton.style.display = 'none';
+<!-- Download Button -->
+<div class="download-button-container">
+    <button id="downloadButton" class="btn btn-primary" onclick="generatePDF()">Download Invoice</button>
+</div>
 
-            setTimeout(function () {
-                downloadButton.style.display = 'block';
-            }, 1000);
+<script>
+    function generatePDF() {
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.style.display = 'none';
 
+        setTimeout(function () {
             const element = document.getElementById('invoice');
             html2pdf()
                 .from(element)
                 .save();
-        }
-    </script>
 
-    <%- include('../partials/user/footer') %>
+            downloadButton.style.display = 'block';
+        }, 1000);
+    }
+</script>
+
+<%- include('../partials/user/footer') %>

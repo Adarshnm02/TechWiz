@@ -66,6 +66,9 @@ adminRoute.post('/returnRequests', authCtrl.isLogedout, adminCtrl.returnUpdation
 
 //Coupon
 adminRoute.get('/coupons', authCtrl.isLogedout, couponCtrl.loadCoupon)
+// adminRoute.get('/admin/activateCoupon/:id', authCtrl.isLogedout, couponCtrl.activeCouopn)
+// adminRoute.get('/admin/deactivateCoupon/:id', authCtrl.isLogedout, couponCtrl.deactiveCoupon)
+adminRoute.post('/updateCouponStatus/:id', authCtrl.isLogedout, couponCtrl.updateCouponStatus);
 adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
 adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 
