@@ -155,7 +155,7 @@
                                     <tr>
                                         <td>Mobile</td>
                                         <td>:</td>
-                                        <td><%=user.mobile%></td>
+                                        <td><%= user.mobile ? user.mobile : 'Phone number is not added' %></td>
                                     </tr>
                                     <tr>
                                         <td>Wallet</td>
@@ -165,7 +165,7 @@
                                     <tr>
                                         <td>State</td>
                                         <td>:</td>
-                                        <td><%=address[0]?.state%></td>
+                                        <td><%= address[0]?.state? address[0]?.state : 'State is not defined' %></td>
                                     </tr>
                                    
             

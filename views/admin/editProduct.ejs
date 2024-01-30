@@ -313,6 +313,10 @@
 
         function validateImages() {
             const files = Array.from(imageInput.files);
+            if(files.length <= 0){
+                imageError.innerHTML = "Image is Mandatory"
+                return false
+            }
 
             const invalidFiles = files.filter(file => !isValidImageType(file));
 
@@ -362,16 +366,16 @@
             console.log(hasErrors);
 
             if (!hasErrors) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Product Detials Submitted",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
+                // Swal.fire({
+                //     position: "top-end",
+                //     icon: "success",
+                //     title: "Product Detials Submitted",
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // });
+                // setTimeout(() => {
                     productEditingForm.submit();
-                }, 1500)
+                // }, 1500)
             }
         });
     </script>

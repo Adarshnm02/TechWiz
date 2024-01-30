@@ -220,7 +220,7 @@
                                     <% cart.forEach((element)=> { %>
                                         <li>
                                             <%= element.product.product_name %><span>
-                                                    <%= element.totalAmount %>
+                                                    <%= element.totalAmount.toFixed(1)%>
                                                 </span>
                                         </li>
                                         <% }) %>
@@ -284,7 +284,9 @@
     <!-- //Coupon applly -->
     <script>
         let total = parseInt("<%= user.grandTotal %>")
+       
         let discountStore = 0
+        let couponId
 
 
         async function applyCoupon(req, res) {
@@ -307,11 +309,13 @@
                 })
                 responce.json().then(data => {
                     console.log(data)
+                    couponId = data._id
                     total - discountStore
                     discountStore = data.discountAmount
                     console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
-                    let disAmont = total -= data.discountAmount
-
+                    let disAmont = total - data.discountAmount
+                    
+                    console.log("erferf",total);
                     if (disAmont <= 0) {
                         return showError.innerHTML = "This Coupon is not applicable for this order"
                     }
@@ -410,9 +414,9 @@
                 timer: 2000, // Set the duration for the alert
                 showConfirmButton: false
             });
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
+            // setTimeout(() => {
+            //     // location.reload();
+            // }, 1500);
 
             // You can display a notification or perform any other action here
             // alert('Code Copied!');
@@ -441,7 +445,7 @@
                 if (selectedPaymentOption === 'razorpay') {
                     console.log("selected payment option is razorpay");
 
-                    fetch("/razorpay", { method: "post" }).then(async res => {
+                    fetch("/razorpay", { method: "post", body: new URLSearchParams({couponId}) }).then(async res => {
                         if (res.ok) {
                             let id = await res.json()
                             console.log(id)

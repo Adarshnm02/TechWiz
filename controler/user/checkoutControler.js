@@ -120,9 +120,6 @@ module.exports = {
         }
     },
 
-
-
-
     async checkStock(req, res) {
         try {
             const user = await User.findOne({ _id: req.session.user });
@@ -148,12 +145,15 @@ module.exports = {
     async createId(req, res) {
         try {
 
-
+            const {couponId} = req.body
+            console.log("coupon code ", couponId);
+            const coupon = await Coupon.findById(couponId)
+            const discount = coupon.discountAmount
             const user = await User.findOne({ _id: req.session.user });
             console.log("Inside create ID");
 
             options = {
-                amount: (user.grandTotal) * 100,
+                amount: (user.grandTotal - discount) * 100,
                 currency: "INR",
                 receipt: `${Math.floor(Math.random() * 10000)
                     .toString()
@@ -171,10 +171,6 @@ module.exports = {
 
     async loadWallet(req, res) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = 12;
-            const skip = (page - 1) * limit;
-
             if (req.session.user) {
                 const user = await User.findById(req.session.user);
                 const cartLen = user && user.cart ? user.cart.length : 0;
@@ -182,11 +178,10 @@ module.exports = {
                 
                 const currentUser = await User.findById(req.session.user);
                 currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
-                const totalCount = currentUser.wallet.transactions.length
-                const totalPages = Math.ceil(totalCount / limit);
+              
 
-                console.log("fffffffffffffffffff", currentUser);
-                res.render("user/wallet", { session, currentUser, cartLen, currentPage: page, totalPages, totalCount  });
+                // console.log("fffffffffffffffffff", currentUser);
+                res.render("user/wallet", { session, currentUser, cartLen});
             } else {
                 console.log("Session is not found");
                 res.render('user/login')

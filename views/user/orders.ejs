@@ -157,6 +157,9 @@
                     <h2>My Orders</h2>
                     <div class="card">
                         <div class="card-body border-bottom">
+                            <% if(orders.length === 0) {%>
+                                <p class="text-danger text-center" style="font-size: large;" ><b> No Orders Found </b></p>
+                                <%} else {%>
                             <% orders.forEach(order=>{ %>
                                 <div class="border-bottom address-div">
                                     <% order.deliveryAddress.forEach(address=> { %>
@@ -228,6 +231,7 @@
                                         <%})%>
                                 </div>
                                 <%})%>
+                            <%}%>
                         </div>
 
                        

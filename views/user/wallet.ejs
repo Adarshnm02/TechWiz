@@ -1,34 +1,23 @@
 <%- include('../partials/user/shortHeader') %>
-  <style>
-    .pagination-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
-    }
 
-    .pagination-container a {
-      display: inline-block;
-      padding: 8px 12px;
-      margin: 0 4px;
-      text-decoration: none;
-      color: #333;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
 
-    .pagination-container a.active {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-  </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+
 
 
   <section class="bg0 p-t-100 p-b-120 mainSec">
     <div class="container">
       <div class="form-group">
+        <a href="javascript:history.back();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24" style="margin-left: 47px; margin-bottom: -41px;"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M41.4 278.6L18.7 256l22.6-22.6 160-160L224 50.7 269.3 96l-22.6 22.6L109.3 256 246.6 393.4 269.3 416 224 461.3l-22.6-22.6-160-160zm192 0L210.7 256l22.6-22.6 160-160L416 50.7 461.3 96l-22.6 22.6L301.3 256 438.6 393.4 461.3 416 416 461.3l-22.6-22.6-160-160z"/></svg></a>
+      </div>
         <div class="p-4 border m-5">
+            
           <span class="d-block text-primary h5 text-uppercase">My Wallet</span>
           <span class="d-block h6 text-uppercase">
             Balance: <strong>₹ <%= currentUser.wallet.balance.toFixed(2) %></strong>
@@ -38,8 +27,11 @@
           <% if (!currentUser.wallet.transactions.length) { %>
             <p class="mb-0">No data found.</p>
             <% } else { %>
-              <div class="table-responsive mt-3">
-                <table class="table table-bordered">
+
+              <div class="table-responsive box mt-3">
+           
+
+                <table  id="example" class="table table-striped table-bordered">
                   <thead>
                     <tr>
                       <th>Date & Time</th>
@@ -73,26 +65,13 @@
               <% } %>
         </div>
       </div>
-      <div class="pagination-container">
-        <% if (currentPage> 1) { %>
-          <a href="/wallet?page=1">First</a>
-          <a href="/wallet?page=<%= currentPage - 1 %>">Previous</a>
-          <% } %>
-
-            <% for (let i=1; i <=totalPages; i++) { %>
-              <a href="/wallet?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
-                <%= i %>
-              </a>
-              <% } %>
-
-                <% if (currentPage < totalPages) { %>
-                  <a href="/wallet?page=<%= currentPage + 1 %>">Next</a>
-                  <a href="/wallet?page=<%= totalPages %>">Last</a>
-                  <% } %>
-      </div>
+    
     </div>
   </section>
 
 
 
+
+  <script>new DataTable('#example');</script>
+  
   <%- include('../partials/user/footer') %>

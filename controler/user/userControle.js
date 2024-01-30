@@ -216,6 +216,7 @@ module.exports = {
             const { email, username, referal, password, confirmPassword } = req.body;
 
             let referalFrom
+            let isRefered = false
             if (referal != undefined && referal) {
                 referalFrom = await User.findOne({ referal: referal })
                 const userId = referalFrom._id
@@ -231,7 +232,7 @@ module.exports = {
                 };
                 referedUser.wallet.transactions.push(transactionData);
                 await referedUser.save();
-
+                isRefered = true
             }
             console.log("Referal ", referal, 'an d', referalFrom);
 
@@ -267,6 +268,19 @@ module.exports = {
                         const savedUser = await User.findOne({ userName: username })
                         console.log('ttt', savedUser._id);
                         sendMail(req, res, savedUser._id, email)
+
+                        if (isRefered) {
+                            const NewUser = await User.findOne({ email: email });
+                            NewUser.wallet.balance += 500
+                            const transactionData2 = {
+                                amount: 500,
+                                description: "After using referral link.",
+                                type: "Credit",
+                            };
+                            NewUser.wallet.transactions.push(transactionData2);
+                            await NewUser.save()
+                        }
+
                         res.render('user/otpVerification', { id: savedUser._id })
 
 

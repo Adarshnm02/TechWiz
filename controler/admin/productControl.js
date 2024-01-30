@@ -192,7 +192,9 @@ module.exports = {
             
         } = req.body;
 
-
+        if(req.files.length <= 0 ){
+            return res.redirect('/admin//products/edit/'+ id)
+        }
         // console.log(category)
 
         try {

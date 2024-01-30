@@ -114,7 +114,7 @@
                                 <div class="edit-delete-buttons ">
                                     <%if(order.status==="Cancelled" ) {%>
                                         <p class="text-danger">Canceled</p>
-                                        <% } else if(order.status !== "Delivered"){%>
+                                        <% } else if(order.status !== "Delivered" && order.status !== "Return Complited" && order.status !== "Return Rejected"){%>
                                             <a class="btn btn-sm btn-danger mr-2" id="<%= order.orderId %>"
                                                 onclick="cancelOrder('<%=order.orderId%>')">Cancel</a>
                                             <!-- <button class="btn btn-sm btn-danger">Delete</button>  -->
@@ -138,7 +138,8 @@
                                             <% if (order.status==='Cancelled' ) { %>
                                                 <p class="font-weight-bold text-danger">Cancelled</p>
 
-
+                                                <% } else if(order.status==='Return Complited') {%>
+                                                <p class="font-weight-bold "> Return Complited</p>
                                                 <% } else if(order.status==='Delivered') { %>
                                                     <p class="font-weight-bold "> Delivered</p>
                                                 <% } else { %>
@@ -188,7 +189,7 @@
                                         <td>Total Price</td>
                                         <td>:</td>
                                         <td>
-                                            <%= order.grandTotal %>
+                                            <%= order.totalPrice %>
                                         </td>
                                         <td>Payment Method</td>
                                         <td>:</td>
