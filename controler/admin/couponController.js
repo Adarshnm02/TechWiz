@@ -1,4 +1,4 @@
-const express = require('express') 
+const express = require('express')
 const Coupon = require('../../models/couponModel')
 
 
@@ -21,53 +21,75 @@ function generateCouponCode() {
 
 module.exports = {
 
-    async loadCoupon(req,res){
-        try{
+    async loadCoupon(req, res) {
+        try {
             const coupon = await Coupon.find({})
-            res.render('admin/coupons', {coupon})
-        }catch(err){
+            res.render('admin/coupons', { coupon })
+        } catch (err) {
             console.log(err);
         }
     },
+    async updateCouponStatus(req, res) {
+        try {
+            const couponId = req.params.id;
+            console.log('id id back',   couponId);
+            const coupon = await Coupon.findById(couponId);
+    
+            if (!coupon) {
+                return res.status(404).send('Coupon not found');
+            }
+    
+            // Toggle the isActive status
+            coupon.isActive = !coupon.isActive;
+            await coupon.save();
+    
+            // Redirect back to the coupons page or send a response
+            res.redirect('/admin/coupons');
+        } catch (err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }
+    },
 
-    loadAddCoupon(req,res){
-        try{
+
+    loadAddCoupon(req, res) {
+        try {
             res.render('admin/addCoupons')
-        }catch(err){
+        } catch (err) {
             console.error(err)
         }
     },
 
 
-    async saveCoupon(req, res){
+    async saveCoupon(req, res) {
 
-        try{
+        try {
 
-            const {description, discountType,discountAmount, minimumPurchaseAmount, usageLimit,} = req.body;
-            if(!description || !discountType || !discountAmount || !minimumPurchaseAmount || !usageLimit){
-                res.render('admin/createCoupon',{error:"all fields are require"})
-            }else{
-                if(discountType === "percentage" && discountAmount >=100){
-                    res.render('admin/createCoupon',{error:"discount amount is morethan product price"})
-                }else{
+            const { description, discountType, discountAmount, minimumPurchaseAmount, usageLimit, } = req.body;
+            if (!description || !discountType || !discountAmount || !minimumPurchaseAmount || !usageLimit) {
+                res.render('admin/createCoupon', { error: "all fields are require" })
+            } else {
+                if (discountType === "percentage" && discountAmount >= 100) {
+                    res.render('admin/createCoupon', { error: "discount amount is morethan product price" })
+                } else {
                     const code = await generateCouponCode()
                     const newCoupon = new Coupon({
-                        code:code,
-                        discountType:discountType,
-                        description:description,
-                        discountAmount:discountAmount,
-                        minimumPurchaseAmount:minimumPurchaseAmount,
-                        usageLimit:usageLimit
-    
+                        code: code,
+                        discountType: discountType,
+                        description: description,
+                        discountAmount: discountAmount,
+                        minimumPurchaseAmount: minimumPurchaseAmount,
+                        usageLimit: usageLimit
+
                     })
                     await newCoupon.save();
                     console.log(newCoupon);
                     res.render('admin/addCoupons')
                 }
             }
-        
 
-        }catch(err){
+
+        } catch (err) {
             console.log("from saveCopon", err);
         }
 

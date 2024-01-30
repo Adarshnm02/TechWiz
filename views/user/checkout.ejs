@@ -220,7 +220,7 @@
                                     <% cart.forEach((element)=> { %>
                                         <li>
                                             <%= element.product.product_name %><span>
-                                                    <%= element.totalAmount %>
+                                                    <%= element.totalAmount.toFixed(1)%>
                                                 </span>
                                         </li>
                                         <% }) %>
@@ -241,6 +241,7 @@
                                     <button type="button" onclick="loadAvailableCoupons()">Available Coupons</button>
                                     <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
                                 </div>
+                                <p class="text-danger" id="noCoupons"></p>
 
                                 <div class="checkout__order__subtotal">Subtotal <span>
                                         <%= user.grandTotal %>
@@ -283,6 +284,10 @@
     <!-- //Coupon applly -->
     <script>
         let total = parseInt("<%= user.grandTotal %>")
+       
+        let discountStore = 0
+        let couponId
+
 
         async function applyCoupon(req, res) {
             try {
@@ -291,6 +296,9 @@
                 const totalAmount = document.getElementById('totalAmount')
                 const showError = document.getElementById('couponError')
                 console.log(code);
+                console.log('Total from script :', total);
+
+
                 const responce = await fetch('/applyCoupon', {
                     method: 'POST',
                     headers: {
@@ -301,18 +309,24 @@
                 })
                 responce.json().then(data => {
                     console.log(data)
+                    couponId = data._id
+                    total - discountStore
+                    discountStore = data.discountAmount
                     console.log("From res", data.minimumPurchaseAmount, data.discountAmount)
-                    let disAmont = total -= data.discountAmount
-                    if(disAmont <= 0 ){
+                    let disAmont = total - data.discountAmount
+                    
+                    console.log("erferf",total);
+                    if (disAmont <= 0) {
                         return showError.innerHTML = "This Coupon is not applicable for this order"
                     }
-                    if (total >= data.minimumPurchaseAmount + 500) {
+                    if (total >= data.minimumPurchaseAmount) {
                         discountShow.innerHTML = data.discountAmount
-                        totalAmount.innerHTML = total -= data.discountAmount
+                        totalAmount.innerHTML = disAmont
                         console.log("Discount ", data.discountAmount);
                         return
                     } else {
                         console.log("from else");
+                        return showError.innerHTML = "This Coupon is not applicable for this order"
                         discountShow.innerHTML = 0
                     }
                 });
@@ -343,8 +357,10 @@
         async function loadAvailableCoupons() {
             const coupons = await fetchCoupons();
             const couponsListContainer = document.createElement('div');
+            const noCoupons = document.getElementById('noCoupons')
             if (coupons.length === 0) {
                 couponsListContainer.innerHTML = '<p>No coupons available.</p>';
+                noCoupons.innerHTML = "Currently no coupons avilable"
                 return;
             }
 
@@ -391,6 +407,17 @@
             document.execCommand('copy');
             document.body.removeChild(textarea);
 
+            Swal.fire({
+                icon: 'success',
+                title: 'Code Copied!',
+                text: 'The coupon code has been copied to the clipboard.',
+                timer: 2000, // Set the duration for the alert
+                showConfirmButton: false
+            });
+            // setTimeout(() => {
+            //     // location.reload();
+            // }, 1500);
+
             // You can display a notification or perform any other action here
             // alert('Code Copied!');
         }
@@ -403,7 +430,7 @@
 
         async function checkOut() {
             try {
-                console.log("Inside checkout");
+                console.log("Inside checkout frontend");
                 const address = document.getElementById(`addressOption`);
                 const payment = document.getElementById('paymentOption');
                 const selectedAddrerssOption = address.querySelector('input[name="selectedAddress"]:checked').value;
@@ -416,8 +443,9 @@
                 console.log(selectedPaymentOption)
 
                 if (selectedPaymentOption === 'razorpay') {
+                    console.log("selected payment option is razorpay");
 
-                    fetch("/razorpay", { method: "post" }).then(async res => {
+                    fetch("/razorpay", { method: "post", body: new URLSearchParams({couponId}) }).then(async res => {
                         if (res.ok) {
                             let id = await res.json()
                             console.log(id)
@@ -526,7 +554,7 @@
                                                         body: JSON.stringify(data),
                                                     });
 
-                                                    console.log(orderResponse , "sdfgdfgdfgdfgdfgsdffgsdfdfgdfgdfg");
+                                                    console.log(orderResponse, "sdfgdfgdfgdfgdfgsdffgsdfdfgdfgdfg");
 
                                                     if (orderResponse.ok) {
                                                         Swal.fire({
@@ -653,6 +681,7 @@
 
 
         function razorpay(id) {
+            console.log("Id from razorpay function in frontend", id);
 
             const address = document.getElementById(`addressOption`);
             const payment = document.getElementById('paymentOption');

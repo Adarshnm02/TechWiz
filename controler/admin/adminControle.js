@@ -10,15 +10,20 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
-    // logout(req, res) {
-    //     try {
-    //         req.session.destroy();
-    //         res.redirect('admin/')
+    logout(req, res) {
+        try {
+            req.session.destroy();
+            res.redirect('/admin/')
 
-    //     } catch (err) {
-    //         console.log(err);
-    //         res.render('user/500')
-    //     }
+        } catch (err) {
+            console.log(err);
+            res.render('user/500')
+        }
+    },
+    // async logouting (req,res,next) {
+    //     req.session.destroy()
+    //     res.redirect('/authentication-login')
+    
     // },
 
 
@@ -207,21 +212,11 @@ module.exports = {
 
     async loadReturnReq(req, res) {
         try {
-            // Use await to wait for the asynchronous operation to complete
+      
             const returnRequests = await Order.find({ status: "Return Processing" }).populate('products.product').populate('user.User');
-            // const returnRequests = await Order.find({
-            //     status: { $in: ['Return Processing', 'Return Approved', 'Return Rejected'] }
-            // }).populate('products.product').populate('user.User');
-
-
-            // Log the status of the first returned order (assuming there could be multiple)
-            if (returnRequests.length > 0) {
-                // console.log("Status of the first returned order:", returnRequests[0].deliveryAddress[0].userName);
-            } else {
+            if (returnRequests.length <= 0) {
                 console.log("No returned orders found.");
             }
-
-            // Render the view with the returnRequests data
             res.render('admin/returnRequest', { returnRequests });
         } catch (err) {
             console.error("Error:", err);
@@ -267,37 +262,23 @@ module.exports = {
     async returnUpdation(req, res) {
         try {
             const { requestId, status } = req.body;
-            // console.log('Received Request ID:', requestId);
-            // console.log('Received Status:', status);
-            // console.log("From backend");
+            console.log('Received Status:', status);
             const order = await Order.findById(requestId).populate('user.User')
-            // console.log("Order finded", order, order.grandTotal);
-            // order.user.wallet.balance += order.grandTotal;
-            // console.log("asdf", order.user.wallet.balance);
-            // await order.save()
-
             const user = await User.findById(order.user)
-            // console.log("User ", user, user.wallet.balance);
-            user.wallet.balance += order.grandTotal
+            user.wallet.balance += order.totalPrice
             const transactionData = {
-                amount: order.grandTotal,
-                description: "Order cancelled",
+                amount: order.totalPrice,
+                description: "Order Returned",
                 type: "Credit",
             };
             user.wallet.transactions.push(transactionData);
-            // console.log("wallet ", user.wallet);
             await user.save();
-
-         
-
 
             const updatedOrder = await Order.findByIdAndUpdate(
                 requestId,
                 { $set: { status: status } },
                 { new: true } // Return the updated document
             );
-
-            console.log(updatedOrder.status, "dsfadfasdf sfdasdf dfa adf");
 
             if (!updatedOrder) {
                 return res.status(404).json({ error: 'Order not found' });

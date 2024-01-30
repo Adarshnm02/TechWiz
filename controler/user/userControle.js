@@ -20,6 +20,22 @@ async function generateSalt() {
 
 generateSalt()
 
+
+
+function generateReferralCode(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let referralCode = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        referralCode += characters.charAt(randomIndex);
+    }
+
+    return referralCode;
+}
+
+
+
 // const securePassword = async (password) => {
 //     try{
 //         const passwordHash = await bcrypt.hash(password,10)
@@ -55,7 +71,7 @@ function isValidPassword(password) {
 module.exports = {
 
     login(req, res) {
-        if(!req.session.user){  
+        if (!req.session.user) {
             res.render('user/user_login')
         }
     },
@@ -74,7 +90,7 @@ module.exports = {
     },
 
 
-    
+
 
     logout(req, res) {
         try {
@@ -104,20 +120,20 @@ module.exports = {
                     is_delete: false
                 }).skip(skip).limit(limit).sort({ _id: -1 });
             } else {
-               products = await Product.aggregate([
+                products = await Product.aggregate([
                     {
                         $match: { is_delete: false }
                     },
                     {
                         $lookup: {
-                            from: 'productcategories', 
+                            from: 'productcategories',
                             localField: 'category',
                             foreignField: '_id',
                             as: 'category'
                         }
                     },
                     {
-                        $unwind: '$category' 
+                        $unwind: '$category'
                     },
                     {
                         $match: { 'category.is_disable': false }
@@ -133,7 +149,7 @@ module.exports = {
                     }
                 ]);
                 // console.log(products);
-                
+
                 latestPrd = await Product
                     .find({ is_delete: false })
                     .limit(limit)
@@ -144,7 +160,7 @@ module.exports = {
             const categorys = await Category.find({});
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
-    
+
             console.log("cartLen", cartLen, products[0].category.offer, products[0].offer, products[0].product_name);
 
             // Count total products for pagination calculation
@@ -186,7 +202,7 @@ module.exports = {
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
 
-            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount ,cartLen, categorys});
+            res.render('user/shop-grid', { products, session, currentPage: page, totalPages, totalCount, cartLen, categorys });
 
         } catch (err) {
             console.log(err);
@@ -197,31 +213,76 @@ module.exports = {
     async insertUser(req, res) {
         try {
             // console.log("Form req.body Body", req.body);
-            const { email, username, password, confirmPassword } = req.body;
+            const { email, username, referal, password, confirmPassword } = req.body;
+
+            let referalFrom
+            let isRefered = false
+            if (referal != undefined && referal) {
+                referalFrom = await User.findOne({ referal: referal })
+                const userId = referalFrom._id
+                const referedUser = await User.findById(userId)
+                console.log(referalFrom, "hhhhhhhhhihihiihhihihi", userId, referedUser);
+
+                referedUser.wallet.balance += 500;
+
+                const transactionData = {
+                    amount: 500,
+                    description: "Users sign up using your referral link.",
+                    type: "Credit",
+                };
+                referedUser.wallet.transactions.push(transactionData);
+                await referedUser.save();
+                isRefered = true
+            }
+            console.log("Referal ", referal, 'an d', referalFrom);
+
+
+
+
+
 
             if (email && username && password && confirmPassword) {
                 const foundUser = await User.findOne({ email: email });
 
                 if (foundUser) {
                     console.log("user is exist")
-                    res.render('user/userSignup',{message: "User is already exist"});
+                    res.render('user/userSignup', { message: "User is already exist" });
                 } else {
+
+                    const referralCode = generateReferralCode(15);
+                    console.log("New referal code ", referralCode);
+
+
                     if (password === confirmPassword) {
                         const hashPassword = await bcrypt.hash(password, salt)
                         const newUser = new User({
                             userName: username,
                             email: email,
                             password: hashPassword,
-                            is_verified: false
+                            is_verified: false,
+                            referal: referralCode
                         });
 
                         await newUser.save();
                         // console.log("User saved successfully ", newUser);
                         const savedUser = await User.findOne({ userName: username })
-                        console.log('ttt',savedUser._id);
+                        console.log('ttt', savedUser._id);
                         sendMail(req, res, savedUser._id, email)
-                        res.render('user/otpVerification', { id:savedUser._id })
-                        
+
+                        if (isRefered) {
+                            const NewUser = await User.findOne({ email: email });
+                            NewUser.wallet.balance += 500
+                            const transactionData2 = {
+                                amount: 500,
+                                description: "After using referral link.",
+                                type: "Credit",
+                            };
+                            NewUser.wallet.transactions.push(transactionData2);
+                            await NewUser.save()
+                        }
+
+                        res.render('user/otpVerification', { id: savedUser._id })
+
 
                     } else {
                         // Passwords don't match
@@ -257,8 +318,8 @@ module.exports = {
             }
             const { userId, otp } = OTPrecord;
             const isvalid = await bcrypt.compare(OTP, otp);
-            console.log("otp is ",isvalid);
-            
+            console.log("otp is ", isvalid);
+
 
             if (!isvalid) {
                 return res.render('user/otpVerification', { message: 'The entered OTP is invalid', id: ID })
@@ -483,39 +544,39 @@ module.exports = {
         }
     },
     //ave edited password
-    async saveChangePassword(req, res){
-        const { Oldpassword, password, confirmPassword,userId } = req.body
+    async saveChangePassword(req, res) {
+        const { Oldpassword, password, confirmPassword, userId } = req.body
         console.log(req.body);
 
         try {
-            
+
             const user = await User.findOne({ _id: userId });
-            console.log("fsdaf",user)
+            console.log("fsdaf", user)
             if (await bcrypt.compare(Oldpassword, user.password)) {
                 if (password === confirmPassword) {
-                    
-                        user.password = await bcrypt.hash(password, 10)
-                        await user.save()
-                        res.redirect('/')
+
+                    user.password = await bcrypt.hash(password, 10)
+                    await user.save()
+                    res.redirect('/')
                 } else {
-                    res.render('user/newPassword',{userId})
+                    res.render('user/newPassword', { userId })
                 }
             } else {
-                res.render('user/newPassword',{userId})
+                res.render('user/newPassword', { userId })
             }
         } catch (err) {
             console.log(err)
         }
     },
 
-    async loadContact(req,res){
-        try{
+    async loadContact(req, res) {
+        try {
             const session = req.session.user
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
-            res.render('user/contact',{cartLen, session})
+            res.render('user/contact', { cartLen, session })
 
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }

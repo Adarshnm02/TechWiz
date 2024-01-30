@@ -32,17 +32,20 @@
                                     </tr>
                                 </thead>
                                 <tbody id="search-results">
-                                    <% if(!coupon.length ) { %>
+                                    <% if(!coupon.length) { %>
                                         <tr>
                                             <td colspan="7">No coupons found.</td>
                                         </tr>
+
                                         <% } else { %>
                                             <% coupon.forEach((coupon)=> { %>
 
-                                                <tr class="<%= coupon.isActive ? 'active' : 'deactivate' %>" style="height: 90px;">
+                                                <tr class="<%= coupon.isActive ? 'active' : 'deactivate' %>"
+                                                    style="height: 90px;">
                                                     <td class="py-1 align-middle">
                                                         <%= coupon.code %><br>
                                                     </td>
+
                                                     <td class="align-middle">
                                                         <% if(coupon.discountType==='percentage' ) { %>
                                                             percentage (<%= coupon.discountAmount %>)
@@ -50,43 +53,48 @@
                                                                     Fixed Amount (<%= coupon.discountAmount %>/-)
                                                                         <% } %>
                                                     </td>
+
                                                     <td class="align-middle">
                                                         <!-- <td class="align-middle"> -->
-                                                            <% if (coupon.expiryDate) { %>
-                                                                <%= coupon.expiryDate.toLocaleDateString() %>
-                                                            <% } else { %>
-                                                                23/03/2000
-                                                            <% } %>
-                                                        <!-- </td> -->
-                                                        
+                                                        <% if (coupon.expiryDate) { %>
+                                                            <%= coupon.expiryDate.toLocaleDateString() %>
+                                                                <% } else { %>
+                                                                    23/03/2000
+                                                                    <% } %>
+                                                                        <!-- </td> -->
+
                                                     </td>
+
                                                     <td class="align-middle">
                                                         <%=coupon.minimumPurchaseAmount %>
                                                     </td>
+
                                                     <td class="align-middle">
                                                         <%= coupon.usageLimit %> / <%= coupon.usedCount %>
                                                     </td>
-                                                    <td class="align-middle">
-                                                        <% if(coupon.isActive) { %>
-                                                            Active
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <a href="/admin/couponStatus/"
-                                                            class="btn btn-danger" style="margin-top: -4px !important;">Deactivate</a>
-                                                    </td>
-                                                    <td class="align-middle"> 
-                                                        <% } else { %>
-                                                            Disabled
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <a href="/admin/couponStatus/"
-                                                            class="btn btn-success">Activate</a>
-                                                        <% } %>
-                                                    </td>
-                                                </tr>
 
-                                                <% }) %>
-                                                    <% } %>
+
+                                                    <td class="align-middle">
+                                                        <% if (coupon.isActive) { %>
+                                                            Active
+                                                            <% } else { %>
+                                                                Disabled
+                                                                <% } %>
+                                                    </td>
+
+                                                    <td class="align-middle">
+                                                        <form action="/admin/updateCouponStatus/<%= coupon._id %>" method="post">
+                                                            <% if (coupon.isActive) { %>
+                                                                <button type="submit" class="btn btn-danger" style="margin-top: -4px !important;">Deactivate</button>
+                                                            <% } else { %>
+                                                                <button type="submit" class="btn btn-success">Activate</button>
+                                                            <% } %>
+                                                        </form>
+                                                    </td>
+                                                    
+                                            <%})%>
+                                            <%}%>
+                                        
                                 </tbody>
                             </table>
                         </div>

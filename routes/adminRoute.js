@@ -17,10 +17,12 @@ const couponCtrl = require('../controler/admin/couponController')
 adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
 // adminRoute.post('/admin', authCtrl.checkAdmin)
 // user_Route.get('/logout', Auth.logouting, userControle.logout)
-// adminRoute.route('/logout', adminCtrl.logout)
+
+adminRoute.get('/adminLogout',adminCtrl.logout)
 
 adminRoute.get('/', adminCtrl.loadLogin)
 adminRoute.get('/index', adminCtrl.loadIndex)
+
 
 //Product
 adminRoute.get('/addProduct', authCtrl.isLogedout, loadAddProduct)
@@ -66,6 +68,7 @@ adminRoute.post('/returnRequests', authCtrl.isLogedout, adminCtrl.returnUpdation
 
 //Coupon
 adminRoute.get('/coupons', authCtrl.isLogedout, couponCtrl.loadCoupon)
+adminRoute.post('/updateCouponStatus/:id', authCtrl.isLogedout, couponCtrl.updateCouponStatus);
 adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
 adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 

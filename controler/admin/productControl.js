@@ -65,6 +65,8 @@ module.exports = {
                 productColor,
             } = req.body;
 
+                console.log("Files aer ", req.files)
+
             // Check if any required fields are missing
             if (!productName || !brandName || !price || !description || !stockCount || !category || !productOffer || !productColor) {
                 return res.render('admin/addProduct', { message: "All fields must be filled", categorys });
@@ -183,14 +185,16 @@ module.exports = {
             price,
             description,
             stockCount,
-            category,
+            categorys,
             productOffer,
             id,
             productColor,
             
         } = req.body;
 
-
+        if(req.files.length <= 0 ){
+            return res.redirect('/admin//products/edit/'+ id)
+        }
         // console.log(category)
 
         try {
@@ -201,7 +205,7 @@ module.exports = {
                 price: price,
                 stock_count: stockCount,
                 description: description,
-                category: category,
+                category: categorys,
                 offer: productOffer,
                 color: productColor,
             };

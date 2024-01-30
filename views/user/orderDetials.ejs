@@ -1,221 +1,222 @@
-<%- include('../partials/user/shortHeader') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <title>TechWiz</title>
+</head>
+
+<body>
+
+
 
     <style>
-        /* Custom CSS for enhanced design */
-        /* You can add these styles to your existing CSS file */
-
-        /* Main Content Styles */
-        .main {
-            margin-top: 20px;
+        body {
+            background: #ccc;
         }
 
-        .main h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #333;
-        }
 
-        .card {
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-        }
 
-        .table {
+        .invoice {
+            background: #fff;
             width: 100%;
-            margin-bottom: 0;
+            padding: 50px;
         }
 
-        .table td {
-            border-top: none;
-            padding: 8px 0;
+        .logo {
+            width: 2.5cm;
         }
 
-        .table tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .document-type {
+            text-align: right;
+            color: #444;
         }
 
-        .border-bottom {
-            border-bottom: 4px solid #c8c8c8 !important;
+        .conditions {
+            font-size: 0.7em;
+            color: #666;
         }
 
-        .address-div {
-            margin-top: 20px;
+        .bottom-page {
+            font-size: 0.7em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 20px;
         }
 
-        .order-details p {
-            margin-bottom: 10px;
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
 
-        .product-details th,
-        .product-details td {
-            text-align: center;
+        th {
+            background-color: #f2f2f2;
         }
 
-        .btnc {
-            background-color: #dc3545;
-            color: #fff !important;
-            border: none;
-            border-radius: 10px;
-            padding: 6px 13px;
-            transition: background-color 0.3s ease;
+        .text-right {
+            text-align: right;
+            margin-right: 5px;
         }
 
-        .btnc:hover {
-            background-color: #000000;
+        .download-button {
+            background: linear-gradient(to right, #0b0a69, #087e0e);
+            /* Example gradient colors */
             color: #fff;
-        }
-
-        .order-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .order-detail-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .order-detail-item .label {
-            font-weight: bold;
-            width: 150px;
-            /* Adjust the width as needed */
-        }
-
-        .order-detail-item .value {
-            flex-grow: 1;
-        }
-
-        .label-space {
-            width: 20px;
-            /* Adjust the width for the desired space */
-        }
-
-
-
-        .left-section,
-        .right-section {
-            width: 48%;
-            /* Adjust the width for the desired partition size */
+            /* Text color */
+            padding: 10px 20px;
+            /* Adjust padding as needed */
+            border: none;
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            margin-right: 10px;
+            /* Adjust margin as needed */
         }
     </style>
 
 
-    <div class="container">
-        <!-- <div>
 
-            <a href="/admin/order" class="btn btn-primary mb-3" style="margin-top: 20px;">Back to Order</a>
-        </div> -->
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <!-- Main Content -->
-                <div class="main">
-                    <h2>My Orders</h2>
-                    <div class="card">
-                        <div class="order-details border-bottom">
-                            <div class="left-section">
-                                <div class="order-detail-item">
-                                    <span class="label">Order ID:</span>
-                                    <span class="value">
-                                        <%= order[0].orderId %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">User Name:</span>
-                                    <span class="value">
-                                        <%= order[0].user.userName %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Email:</span>
-                                    <span class="value">
-                                        <%= order[0].user.email %>
-                                    </span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Mobile:</span>
-                                    <span class="value">1234567898</span>
-                                </div>
-                            </div>
-                            <div class="right-section">
-                                <div class="order-detail-item">
-                                    <span class="label">Grand Total Price:</span>
-                                    <span class="value">₹ <%= order[0].totalPrice %></span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Delivery Address:</span>
-                                    <span class="value">Pantheerankave, Calicut, Kerala, India, 673019</span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="label">Payment:</span>
-                                    <span class="value">
-                                        <%= order[0].paymentMethod %>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+    <div class="container ">
+        <div class="invoice ">
 
+            <div class="ml-auto text-right w-100">
+                <button class="download-button" onclick="downloadSalesReportPDF()">Download as PDF</button>
+            </div>
+            <div id="salesReportContent" class="col p-3">
 
-
-                        <!-- Products Table -->
-                        <table class="table product-details">
-                            <thead>
-                                <tr>
-                                    <!-- <th>Image</th> -->
-                                    <th>Product Name</th>
-                                    <th>Product Brand</th>
-                                    <th>Product Price</th>
-                                    <th>Product Quantity</th>
-                                    <th>Total Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Check if there are products and if products array is defined -->
-                                <% if (order[0].products && order[0].products.length > 0) { %>
-                                    <!-- Check if there are multiple products -->
-                                    <% if (order[0].products.length > 1) { %>
-                                        <!-- Loop through each product -->
-                                        <% order[0].products.forEach(item => { %>
-                                            <tr>
-                                                <td><%= item.product.product_name %></td>
-                                                <td><%= item.product.brand_name %></td>
-                                                <td>₹<%= item.product.price %></td>
-                                                <td><%= item.quantity %></td>
-                                                <td>₹<%= item.totalAmount %></td>
-                                            </tr>
-                                        <% }) %>
-                                    <% } else { %>
-                                        <!-- Use details for a single product -->
-                                        <tr>
-                                            <td><%= order[0].products[0].product.product_name %></td>
-                                            <td><%= order[0].products[0].product.brand_name %></td>
-                                            <td>₹<%= order[0].products[0].product.price %></td>
-                                            <td><%= order[0].products[0].quantity %></td>
-                                            <td>₹<%= order[0].products[0].totalAmount %></td>
-                                        </tr>
-                                    <% } %>
-                                <% } else { %>
-                                    <!-- Handle case when there are no products -->
-                                    <tr>
-                                        <td colspan="5">No products available</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                            
-
-
-                        </table>
-                        <!-- Back to Order Button -->
+                <div class="row">
+                    <div class="col">
+                        <p class="text-left"><strong id="currentDateTime"></strong></p>
+                    </div>
+                    <div class="col-5 align-self-end">
+                        <h1 class="document-type display-4">TechWiz</h1>
+                        <p class="text-right">
+                            Hr TRADING<br>
+                            6B Avenue NewBasl<br>
+                            Navi-MUMBAI-INDIA
+                        </p>
                     </div>
                 </div>
+                <div class="row">
+
+                    <div class="col-5">
+
+                        <strong>To:</strong>
+                        <p>
+                            <%= order[0].user.userName %><br>
+                                <%= order[0].user.email  %> <br>
+                                <%= order[0].user.mobile  %> <br>
+                                <%= order[0].deliveryAddress[0]?.state %>,
+                                        <%= order[0].deliveryAddress[0]?.city%> <br>
+                                            <%= order[0].deliveryAddress[0]?.postCode  %> <br>
+                                                <%= order[0].deliveryAddress[0]?.place %> <br>
+                                                    <%= order[0].deliveryAddress[0]?.houseName%>
+                        </p>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <h5>Order date: <%= order[0].orderDate %>
+                </h5> 
+                <br>
+                <table class="table table-striped p-2">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Offer</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order[0].products.forEach(item=> { %>
+                            <tr>
+                                <td>
+                                    <%=  item.product.product_name  %>
+                                </td>
+                                <td>
+                                    <%=  item.quantity %>
+                                </td>
+                                <td>
+                                    <%= item.product.price  %>
+                                </td>
+                                <td>
+                                    <%= item.product.offer  %>%
+                                </td>
+                                <td>
+                                    ₹<%=  item.totalAmount  %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-8"></div>
+                    <div class="col-4 d-flex justify-content-end">
+                        <div class="text-right">
+                            <div><strong>Total</strong> : &nbsp; <span>₹ <%= order[0].grandTotal %></span></div>
+                            <br>
+
+                            <div><strong>Coupon Discount </strong> : &nbsp; <span>₹ <%= order[0].discountAmount%></span> </div>
+                            <br>
+                            <div><strong>TotalAmount </strong> : &nbsp; <span>₹ <%= order[0].totalPrice %></span> </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
-    </div>
 
-    <%- include('../partials/user/footer') %>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
+    <script>
+        // Get the current timestamp in milliseconds
+        var currentTimestamp = Date.now();
+
+        // Create a new Date object using the timestamp
+        var currentDate = new Date(currentTimestamp);
+
+        // Get the individual components of the date and time
+        var year = currentDate.getFullYear();
+        var month = currentDate.getMonth() + 1; // Months are zero-based, so we add 1
+        var day = currentDate.getDate();
+        var hours = currentDate.getHours();
+        var minutes = currentDate.getMinutes();
+        var seconds = currentDate.getSeconds();
+
+        // Create a formatted date string
+        var formattedDate = `${year}-${month}-${day}: ${hours}:${minutes}:${seconds}`;
+
+        // Update the content of the element with the id "currentDateTime"
+        document.getElementById('currentDateTime').innerText = formattedDate;
+
+
+
+
+        function downloadSalesReportPDF() {
+            var element = document.getElementById("salesReportContent");
+            html2pdf(element);
+        }
+    </script>
+
+</body>
+
+</html>

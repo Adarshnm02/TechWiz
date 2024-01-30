@@ -3,6 +3,7 @@ const User = require('../../models/userModel')
 const Product = require("../../models/productModel")
 const Coupon = require('../../models/couponModel');
 const { default: mongoose } = require('mongoose');
+const coupon = require('../../models/couponModel');
 
 
 
@@ -71,7 +72,6 @@ module.exports = {
             }
 
 
-
             const productInTheCart = cart.find(cartItem => cartItem.product.equals(product));
 
             if (productInTheCart) {
@@ -93,10 +93,10 @@ module.exports = {
                     { _id: userId },
                     {
                         $addToSet: {
-                            cart: { product, quantity: 1, totalAmount: incrementAmount },
+                            cart: { product, quantity: 1, totalAmount: incrementAmount.toFixed(1) },
                         },
                         $inc: {
-                            grandTotal: incrementAmount
+                            grandTotal: incrementAmount.toFixed(1)
                         }
                     }
                 );
@@ -164,16 +164,18 @@ module.exports = {
                 }
                 console.log("after update ", cartItem.quantity);
                 cartItem.totalAmount = (product.price - (product.price * offer) / 100) * cartItem.quantity;
+                cartItem.totalAmount.toFixed(1)
 
                 let totalCartAmount = user.cart.reduce((total, item) => total + item.totalAmount, 0);
-                user.grandTotal = totalCartAmount;
+                user.grandTotal = totalCartAmount.toFixed(1)
+        
 
                 await user.save();
 
                 return res.status(200).json({
                     message: "Success",
                     quantity: cartItem.quantity,
-                    totalAmount: cartItem.totalAmount,
+                    totalAmount: cartItem.totalAmount.toFixed(1),
                     grandTotal: user.grandTotal,
                     stock_count: product.stock_count
                 });
@@ -232,11 +234,19 @@ module.exports = {
             const user = await User.findById(req.session.user)
             const { grandTotal } = user
             console.log("Grad from shwoe ", grandTotal);
-            const coupons = await Coupon.find({
+            const allCoupons = await Coupon.find({
                 minimumPurchaseAmount: { $lte: grandTotal + 500 },
                 isActive: true,
             })
             console.log("coupon backend");
+            // console.log("discount amount ", coupons[0].discountAmount);
+            const coupons = allCoupons.filter(coupon => {
+                console.log(coupon.discountAmount ," - " , grandTotal  ,"=", coupon.discountAmount - grandTotal)
+                return coupon.discountAmount < grandTotal / 2 && grandTotal - coupon.discountAmount > 0 && coupon.discountAmount > 0;
+            });
+            coupons.forEach( coupon =>{
+                console.log(coupon)
+            })
             res.json(coupons)
         } catch (err) {
             console.log(err);

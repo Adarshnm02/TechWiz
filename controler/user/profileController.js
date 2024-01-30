@@ -222,12 +222,13 @@ module.exports = {
             const page = parseInt(req.query.page) || 1;
             const limit = 10;
             const skip = (page - 1) * limit;
-
+            console.log("From orders in ");
             const address = await Address.find({ userId: req.session.user })
             const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
                 .limit(limit)
                 .sort({ _id: -1 });
-            console.log(orders[0].user.userName);
+            // console.log(orders[0].user.userName);
+            // console.log(orders.length, "sadfg");
 
             const user = await User.findById(req.session.user)
             const totalCount = await Order.countDocuments({});
@@ -328,7 +329,8 @@ module.exports = {
 
 
             const order = await Order.find({ orderId: orderId }).populate('user').populate('products.product')
-            console.log(order[0].products);
+            // console.log(order[0].products);
+            
 
 
             const cartLen = user && user.cart ? user.cart.length : 0;

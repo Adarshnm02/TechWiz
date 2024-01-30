@@ -1,4 +1,6 @@
 <%- include('../partials/admin/adminHeader') %>
+<!-- Include SweetAlert2 script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <div class="container">
         <form action="/admin/addProduct" method="post" class="myform form-group" style="padding-top: 70px;"
@@ -65,10 +67,11 @@
                             </div>
 
                             <div class="row">
-                               
+
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="productOffer" class="form-label mt-4">Product Offer(percentage)</label>
+                                        <label for="productOffer" class="form-label mt-4">Product
+                                            Offer(percentage)</label>
                                         <input type="number" name="productOffer" class="form-control" id="productOffer"
                                             placeholder="Product Offer(percentage)">
                                         <p class="text-danger" id="pedOffer_error"></p>
@@ -98,14 +101,16 @@
                                     </div>
                                 </div>
 
-                                
 
                                 <div class="col-md-4">
+                                    <label for="mainImage" class="form-label mt-4">Main Image / File</label>
                                     <div class="form-group">
-                                        <label for="mainImage" class="form-label mt-4">Main Image / File</label>
+                                        <div class="row" id="selectedImagesContainer">
+                                            <!-- Selected images will be displayed here dynamically -->
+                                        </div>
                                         <input type="file" name="image" multiple class="form-control" id="mainImage"
-                                            placeholder="Main Image / File">
-                                            <p class="text-danger" id="image_error"></p>
+                                            placeholder="Main Image / File" onchange="previewImages()">
+                                        <p class="text-danger" id="image_error"></p>
                                     </div>
                                 </div>
 
@@ -121,6 +126,45 @@
             </div>
         </form>
     </div>
+    <script>
+        function previewImages() {
+            const selectedImagesContainer = document.getElementById("selectedImagesContainer");
+            selectedImagesContainer.innerHTML = ""; // Clear previous images
+
+            const input = document.getElementById("mainImage"); // Change 'images' to 'mainImage'
+            const files = input.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const imgElement = document.createElement("img");
+                    imgElement.src = e.target.result;
+                    imgElement.alt = "Selected Image";
+                    imgElement.classList.add("img-fluid", "rounded", "mb-3");
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.classList.add("btn", "btn-danger", "btn-delete-preview");
+                    deleteButton.textContent = "X";
+                    deleteButton.addEventListener("click", function () {
+                        // Remove the corresponding preview image and button
+                        selectedImagesContainer.removeChild(divElement);
+                    });
+
+                    const divElement = document.createElement("div");
+                    divElement.classList.add("col-md-4");
+                    divElement.appendChild(imgElement);
+                    divElement.appendChild(deleteButton);
+
+                    selectedImagesContainer.appendChild(divElement);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 
 
     <script>
@@ -156,19 +200,19 @@
         const imageError = document.getElementById("image_error");
 
 
-        function offerValidation(){
+        function offerValidation() {
             console.log("cat", productOffer, "value", productOffer.value);
-            if(productOffer.value >= 100){
+            if (productOffer.value >= 100) {
                 prodOfferError.innerHTML = "You can't set offer above 100%"
                 return false;
-            }else if(!productOffer.value){
-                prodOfferError.innerHTML =  "Category offer must be filled or 0"
+            } else if (!productOffer.value) {
+                prodOfferError.innerHTML = "Category offer must be filled or 0"
                 return false;
-            }else if(productOffer.value < 0){
-                prodOfferError.innerHTML ="cannot set offer less than 0"
+            } else if (productOffer.value < 0) {
+                prodOfferError.innerHTML = "cannot set offer less than 0"
                 return false;
-            }else{
-                prodOfferError.innerHTML="";
+            } else {
+                prodOfferError.innerHTML = "";
                 return true;
             }
         }
@@ -227,8 +271,8 @@
                 colorTypes_error.innerHTML = "Color Types must contain only words (non-numeric characters)";
                 return false;
             }
-            colorTypes_error.innerHTML = ""; 
-            return true; 
+            colorTypes_error.innerHTML = "";
+            return true;
         }
 
         function validateStockCount() {
@@ -263,6 +307,10 @@
 
         function validateImages() {
             const files = Array.from(imageInput.files);
+            if(files.length <= 0){
+                imageError.innerHTML = "Image is Mandatory"
+                return false
+            }
 
             const invalidFiles = files.filter(file => !isValidImageType(file));
 
@@ -294,16 +342,16 @@
             console.log(hasErrors);
 
             if (!hasErrors) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Product Detialse Submitted",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                setTimeout(() => {
+                // Swal.fire({
+                //     position: "top-end",
+                //     icon: "success",
+                //     title: "Product Detialse Submitted",
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // });
+                // setTimeout(() => {
                     productEditingForm.submit();
-                },1500)
+                // }, 1500)
             }
         });
     </script>
