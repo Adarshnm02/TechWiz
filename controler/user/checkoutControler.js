@@ -63,20 +63,20 @@ module.exports = {
 
                 await coupon.save()
 
-            }else{
-                discountTotal=user.grandTotal
+            } else {
+                discountTotal = user.grandTotal
 
             }
 
-            const userN =  await User.findById(req.session.user)
+            const userN = await User.findById(req.session.user)
             const wallet = userN.wallet.balance;
             console.log("show wallet before register", wallet, "balence", userN.wallet.balance);
 
-            if(payment === 'wallet'){
+            if (payment === 'wallet') {
                 console.log('grand totoal inside wallet ', discountTotal);
-                if(discountTotal > wallet){
+                if (discountTotal > wallet) {
                     throw new Error('Insufficient funds in the wallet!');
-                }else{
+                } else {
                     userN.wallet.balance -= discountTotal;
                     // userN.orders.push({id:orderId, ...req.body});
 
@@ -107,7 +107,7 @@ module.exports = {
                 product.stock_count -= cartItem.quantity;
                 await product.save();
             }
-            const userl =  await User.findById(req.session.user)
+            const userl = await User.findById(req.session.user)
             userl.cart = [];
             userl.grandTotal = 0;
             await userl.save();
@@ -145,11 +145,14 @@ module.exports = {
     async createId(req, res) {
         try {
 
-            const {couponId} = req.body
+            const { couponId } = req.body
             console.log("coupon code ", couponId);
-            const coupon = await Coupon.findById(couponId)
-            const discount = coupon.discountAmount
             const user = await User.findOne({ _id: req.session.user });
+            let discount = "";
+            if (couponId && couponId != "undefined") {
+                const coupon = await Coupon.findById(couponId)
+                discount = coupon.discountAmount
+            }
             console.log("Inside create ID");
 
             options = {
@@ -164,7 +167,7 @@ module.exports = {
             });
 
         } catch (err) {
-            console.log("Error creating ID")
+            console.log("Error creating ID", err)
         }
 
     },
@@ -175,13 +178,13 @@ module.exports = {
                 const user = await User.findById(req.session.user);
                 const cartLen = user && user.cart ? user.cart.length : 0;
                 const session = req.session.user;
-                
+
                 const currentUser = await User.findById(req.session.user);
                 currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
-              
+
 
                 // console.log("fffffffffffffffffff", currentUser);
-                res.render("user/wallet", { session, currentUser, cartLen});
+                res.render("user/wallet", { session, currentUser, cartLen });
             } else {
                 console.log("Session is not found");
                 res.render('user/login')
