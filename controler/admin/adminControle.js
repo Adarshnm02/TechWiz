@@ -10,7 +10,8 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
-
+    
+    //Admin logouting and destroying the session
     logout(req, res) {
         try {
             req.session.destroy();
@@ -30,6 +31,7 @@ module.exports = {
         res.render('admin/category')
     },
 
+    //Loading the users list
     async loadUserList(req, res) {
         try {
             const page = parseInt(req.query.page) || 1;
@@ -70,6 +72,7 @@ module.exports = {
         }
     },
 
+    //Unblocking the user
     async unblock_user(req, res) {
         try {
             const { id } = req.params;
@@ -84,6 +87,7 @@ module.exports = {
         }
     },
 
+    //Blocking the user
     async block_user(req, res) {
         try {
             const { id } = req.params;
@@ -96,31 +100,24 @@ module.exports = {
             res.render("admin/500")
         }
     },
+
+    //loading orders list page
     async loadOrder(req, res) {
         try {
             const session = req.session.admin
-
             const orders = await Order.find().populate('products.product').sort({ _id: -1 });
-
-            // orders.forEach(value =>{
-            //     value.forEach(item => {
-            //         console.log(item);
-            //     })
-            //     console.log(value.product.product_name);
-            // })
-
 
             res.render('admin/orders', { session, orders })
 
         } catch (err) {
-            console.log(err)
+            console.log(err.message)
+            res.render("admin/500")
         }
     },
     // change status
     async changeDeliveryStatus(req, res) {
         const userId = req.params.userId;
         const newStatus = req.body.newStatus;
-        console.log(req.body)
         try {
             const updatedUser = await Order.findByIdAndUpdate(userId, { status: newStatus }, { new: true });
 
@@ -130,56 +127,10 @@ module.exports = {
                 res.status(404).json({ error: 'User not found' });
             }
         } catch (error) {
-            console.error('Error updating user status:', error);
+            console.error('Error updating user status:', error.message);
 
         }
     },
-
-
-    // async loadReturnReq(req,res){
-    //     try{
-    //         let ReturnOrders = await Order.find({ status : 'Returned'});
-
-    //         if(ReturnOrders){
-    //             res.render('admin/returnRequest', {ReturnOrders} );
-    //         }
-
-    //     }catch(err){
-    //         console.log("Error");
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // },
-
-
-    // async loadReturnReq(req,res){
-    //     try{
-    //     const ITEMS_PER_PAGE = 10;  // Define the number of items to display per page
-    //     const page = parseInt(req.query.page) || 1; // Extract the page from the query string
-    //     const totalRequests = await Return.countDocuments(); // Count the total number of return requests
-    //     const returnRequests = await Return.find()
-    //     .populate([
-    //         { path: 'user' },
-    //         { path: 'order' },
-    //         { path: 'product' },
-    //         { path: 'address'}
-    //     ])
-    //     .skip((page - 1) * ITEMS_PER_PAGE) // Calculate the number of items to skip
-    //     .limit(ITEMS_PER_PAGE); // Define the number of items to display per page
-    //     // console.log("hkkkkkkkkkk",returnRequests);
-    //     const totalPages = Math.ceil(totalRequests / ITEMS_PER_PAGE);
-    //    console.log(page);
-    //     res.render('admin/returnRequest',{
-    //         activePage:"order",
-    //         returnRequests,
-    //         totalPages,
-    //         currentPage: page 
-    //     });
-
-    // }catch(error){
-    //     console.log(error.message);
-    // }
-    // }
-
 
     async loadReturnReq(req, res) {
         try {
@@ -190,52 +141,18 @@ module.exports = {
             }
             res.render('admin/returnRequest', { returnRequests });
         } catch (err) {
-            console.error("Error:", err);
+            console.error("Error:", err.message);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 
-    // async returnUpdation(req,res){
-    //     try{
-    //         const reqStatus = req.body
-
-
-    //     }catch(err){
-    //         console.error("Error:", err);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // }
-
-
-    // async returnUpdation(req, res) {
-    //     try {
-    //         const { requestId, status } = req.body;
-
-    //         // Assuming requestId is a valid ObjectId, you can use it to update the order status
-    //         const updatedOrder = await Order.findByIdAndUpdate(
-    //             requestId,
-    //             { $set: { status: status } },
-    //             { new: true } // Return the updated document
-    //         );
-
-    //         if (!updatedOrder) {
-    //             return res.status(404).json({ error: 'Order not found' });
-    //         }
-
-    //         // Send a success response
-    //         res.status(200).json({ message: 'Order status updated successfully', updatedOrder });
-    //     } catch (error) {
-    //         console.error("Error updating order status:", error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // },
 
     async returnUpdation(req, res) {
         try {
             const { requestId, status } = req.body;
-            console.log('Received Status:', status);
             const order = await Order.findById(requestId).populate('user.User')
             const user = await User.findById(order.user)
+
             user.wallet.balance += order.totalPrice
             const transactionData = {
                 amount: order.totalPrice,
@@ -262,17 +179,10 @@ module.exports = {
 
             // Your existing code here
         } catch (error) {
-            console.error("Error updating order status:", error);
+            console.error("Error updating order status:", error.message);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
-
-
-
-
-    // module.exports = { returnUpdation }
-
-
 
 
 }
