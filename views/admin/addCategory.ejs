@@ -35,16 +35,7 @@
 
 
                                     </div>
-                                   
-                                    <!-- <div class="mb-3">
-                                        <label for="image" class="form-label">Image Upload</label>
-                                        <input type="file" id="image" name="image"
-                                            class="form-control file-upload-info">
-                                            <p class="text-danger" id="image_error"></p>
-                                    </div> -->
-                                    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-
-
+                                
 
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary"
@@ -77,10 +68,6 @@
         const descriptionError = document.getElementById("description-error")
         const categoryOffer = document.getElementById('categoryOfferId')
         const catOfferError = document.getElementById('offer-error')
-
-
-        // const imageInput = document.getElementById("image");
-        // const imageError = document.getElementById("image_error");
 
 
         function offerValidation(){
@@ -132,25 +119,6 @@
                 return true;
             }
         }
-
-        // function isValidImageType(file) {
-        //     const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-        //     return file && allowedImageTypes.includes(file.type);
-        // }
-
-        // function validateImages() {
-        //     const files = Array.from(imageInput.files);
-
-        //     const invalidFiles = files.filter(file => !isValidImageType(file));
-
-        //     if (invalidFiles.length > 0) {
-        //         imageError.innerHTML = "Invalid file type. Please upload a valid image.";
-        //         return false;
-        //     } else {
-        //         imageError.innerHTML = "";
-        //         return true;
-        //     }
-        // }
 
 
         CategoryForm.addEventListener("submit", function (event) {

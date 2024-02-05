@@ -6,7 +6,6 @@ const upload = multer({ storage: storage });
 const { imageCrop, multiCrop } = require('../middleware/crop')
 
 const adminCtrl = require('../controler/admin/adminControle')
-// const productCtrl = require('../controler/admin/productControl')
 const { loadAddProduct, addProduct } = require('../controler/admin/productControl')
 const categoryCtrl = require('../controler/admin/categoryControle');
 const productControl = require('../controler/admin/productControl');
@@ -15,8 +14,7 @@ const couponCtrl = require('../controler/admin/couponController')
 
 //Login
 adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
-// adminRoute.post('/admin', authCtrl.checkAdmin)
-// user_Route.get('/logout', Auth.logouting, userControle.logout)
+
 
 adminRoute.get('/adminLogout',adminCtrl.logout)
 
