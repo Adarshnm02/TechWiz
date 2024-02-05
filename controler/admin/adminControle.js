@@ -1,7 +1,5 @@
 const express = require('express')
 const User = require('../../models/userModel')
-// const Product = require('../../models/productModel')
-const Address = require('../../models/addressModel')
 const Order = require('../../models/orderModel')
 
 
@@ -10,7 +8,7 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
-    
+
     //Admin logouting and destroying the session
     logout(req, res) {
         try {
@@ -67,7 +65,7 @@ module.exports = {
                 query: query || ""
             });
         } catch (error) {
-            console.log("Users list",error)
+            console.log("Users list", error)
             res.render("admin/500", { error });
         }
     },
@@ -83,7 +81,7 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
             res.render("admin/500")
-            
+
         }
     },
 
@@ -134,11 +132,7 @@ module.exports = {
 
     async loadReturnReq(req, res) {
         try {
-
             const returnRequests = await Order.find({ status: "Return Processing" }).populate('products.product').populate('user.User');
-            if (returnRequests.length <= 0) {
-                console.log("No returned orders found.");
-            }
             res.render('admin/returnRequest', { returnRequests });
         } catch (err) {
             console.error("Error:", err.message);
@@ -187,41 +181,6 @@ module.exports = {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// async pagein(req, res){
-//     const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-//     const limit = 10; // Set a limit for the number of users per page
-//     const skip = (page - 1) * limit;
-
-//     try {
-//         const users = await User.find().skip(skip).limit(limit); // Fetch users with pagination
-//         const totalCount = await User.countDocuments(); // Get the total count of users
-
-//         res.render('admin/userList', { users, totalCount, currentPage: page, totalPages: Math.ceil(totalCount / limit) });
-//     } catch (error) {
-//         // Handle errors
-//         res.render('error', { error });
-//     }
-// },
 
 
 

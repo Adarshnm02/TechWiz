@@ -17,7 +17,6 @@ module.exports = {
                 const bpassword = findAdmin.password
                 const matchpass = await bcrypt.compare(password, bpassword)
                 if (!matchpass) {
-                    console.log(bpassword ,"  " ,password )
                     return res.render('admin/authentication-login', { message: 'Wrong Password' })
                 } else {
                     if (findAdmin.is_Admin == true) {
