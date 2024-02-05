@@ -2,21 +2,12 @@ const express = require('express');
 const productCategory = require('../../models/categoryModel');
 
 
-const isValidImage = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    return file && allowedTypes.includes(file.mimetype);
-};
-
-
-
-
 module.exports = {
 
 
     async category(req, res) {
         try {
             const category = await productCategory.find()
-            // console.log(category);
 
             if (category) {
                 res.render('admin/category', { category })
@@ -71,7 +62,6 @@ module.exports = {
                 });
     
                 await categorys.save();
-                console.log("Category Saved");
                 return res.render("admin/category", {category});
             } else {
                 console.log("This Category already exists");
@@ -141,27 +131,7 @@ module.exports = {
                 description: description,
                 offer: categoryOffer,
             };
-            // if (req.file) {
-            //     if (!isValidImage(req.file)) {
-            //         return res.render('admin/editCategory', { message: 'Not a valid image file', category });
-            //     }
-            // }
-
-
-            // if (req.file) {
-            //     if (category) {
-            //         category.image = {
-            //             data: req.file.buffer,
-            //             contentType: req.file.mimetype
-            //         };
-            //         await category.save();
-            //     } else {
-            //         console.log("Category not found");
-            //         return res.status(404).send("Category not found");
-            //     }
-            // }
-            // await category.save();
-
+            
             // Update other category details
             await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
 
@@ -172,38 +142,6 @@ module.exports = {
             res.render('admin/500');
         }
     },
-
-    async imageDelete(req, res) {
-        try {
-            const { id } = req.params;
-            const { imageId } = req.body; 
-
-            const updatedCategory = await productCategory.findByIdAndUpdate(
-                id,
-                { $unset: { image: '' } }, 
-                { new: true }
-            );
-
-            const category = updatedCategory;
-
-            if (category) {
-                console.log("Image Successfully Deleted");
-                return res.render('admin/editCategory', { category, message: "Image Successfully Deleted" });
-            } else {
-                console.log("Error Occurred While Image Deleting!");
-                return res.render('admin/editCategory', { message: "Error Occurred While Image Deleting!" });
-            }
-        } catch (error) {
-            console.error("Error occurred during image deletion:", error);
-            res.render('/admin/500')
-
-        }
-    }
-
-
-
-
-
 
 
 }

@@ -2,9 +2,6 @@ const express = require('express')
 const Coupon = require('../../models/couponModel')
 
 
-
-
-
 function generateCouponCode() {
     const codeRegex = /^[A-Z0-9]{5,15}$/;
     let code = '';
@@ -32,10 +29,10 @@ module.exports = {
     async updateCouponStatus(req, res) {
         try {
             const couponId = req.params.id;
-            console.log('id id back',   couponId);
             const coupon = await Coupon.findById(couponId);
     
             if (!coupon) {
+                console.log("Coupon is not fount");
                 return res.status(404).send('Coupon not found');
             }
     
