@@ -59,7 +59,6 @@ adminRoute.get('/userList/Block/:id', authCtrl.isLogedout, adminCtrl.block_user)
 // orders
 
 adminRoute.get('/order',authCtrl.isLogedout, adminCtrl.loadOrder)
-adminRoute.get('/orderList',authCtrl.isLogedout, adminCtrl.loadOrderList)
 adminRoute.post('/userlist/updateStatus/:userId',authCtrl.isLogedout, adminCtrl.changeDeliveryStatus);
 
 //return 

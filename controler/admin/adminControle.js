@@ -1,6 +1,6 @@
 const express = require('express')
 const User = require('../../models/userModel')
-const Product = require('../../models/productModel')
+// const Product = require('../../models/productModel')
 const Address = require('../../models/addressModel')
 const Order = require('../../models/orderModel')
 
@@ -10,45 +10,37 @@ module.exports = {
     loadLogin(req, res) {
         res.render('admin/authentication-login')
     },
+
     logout(req, res) {
         try {
             req.session.destroy();
             res.redirect('/admin/')
 
         } catch (err) {
-            console.log(err);
+            console.log("Logout", err);
             res.render('user/500')
         }
     },
-    // async logouting (req,res,next) {
-    //     req.session.destroy()
-    //     res.redirect('/authentication-login')
-    
-    // },
-
 
     loadIndex(req, res) {
         res.render('admin/index')
     },
-
-
 
     loadCategory(req, res) {
         res.render('admin/category')
     },
 
     async loadUserList(req, res) {
-        const page = parseInt(req.query.page) || 1; // Extract the page number from the query string
-        const limit = 10; // Set a limit for the number of users per page
-        const skip = (page - 1) * limit;
-
         try {
-            const { query } = req.query;
-            console.log(query)
-            let users;
-            let totalCount;
+            const page = parseInt(req.query.page) || 1;
+            const limit = 10;
+            const skip = (page - 1) * limit;
 
-            if (query) {
+
+            const { query } = req.query;
+            // console.log(query)
+            let users, totalCount;
+            if (query) {  //User searched products finding.
                 const regex = new RegExp(query, 'i');
                 users = await User.find({ userName: { $regex: regex } })
                     .skip(skip)
@@ -73,7 +65,7 @@ module.exports = {
                 query: query || ""
             });
         } catch (error) {
-            console.log(error)
+            console.log("Users list",error)
             res.render("admin/500", { error });
         }
     },
@@ -81,7 +73,6 @@ module.exports = {
     async unblock_user(req, res) {
         try {
             const { id } = req.params;
-            console.log("id from unblock ", id);
             const unblocked = await User.updateOne({ _id: id }, { $set: { is_blocked: false } })
             if (unblocked) {
                 res.redirect('/admin/userList')
@@ -89,6 +80,7 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
             res.render("admin/500")
+            
         }
     },
 
@@ -102,27 +94,6 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
             res.render("admin/500")
-        }
-    },
-    async loadOrderList(req, res) {
-        try {
-            // const userId = req.session.user
-            const session = req.session.admin
-
-            const address = await Address.find({ userId: req.session.user })
-            const orders = await Order.find({ user: req.session.user }).populate('products.product')
-            console.log("from back address:-", address, "orders from back", orders);
-            const user = await User.findById(req.session.user)
-            console.log("from profile", session)
-
-            // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].deliveryAddress[0].email)
-
-            res.render('admin/orderList', { session })
-            // user, address,, orders
-
-        } catch (err) {
-            console.log("Profile loading error ", err);
-            res.render("user/500")
         }
     },
     async loadOrder(req, res) {
@@ -212,7 +183,7 @@ module.exports = {
 
     async loadReturnReq(req, res) {
         try {
-      
+
             const returnRequests = await Order.find({ status: "Return Processing" }).populate('products.product').populate('user.User');
             if (returnRequests.length <= 0) {
                 console.log("No returned orders found.");
