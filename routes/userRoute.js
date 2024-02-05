@@ -54,7 +54,6 @@ user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 user_Route.post('/checkout', Auth.isLogedout, checkoutCtrl.saveOrder)
 user_Route.post('/checkStock', Auth.isLogedout, checkoutCtrl.checkStock)
 user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
-user_Route.post('/wallet', Auth.isLogedout, checkoutCtrl.payInWallet)
 
 // order
 user_Route.get('/order',Auth.isLogedout, profileCtrl.loadOrder)

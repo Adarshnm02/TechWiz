@@ -16,8 +16,7 @@ module.exports = {
 
             const address = await Address.find({ userId: req.session.user })
             const user = await User.findById(req.session.user)
-            // console.log(address);
-            // console.log("from profile", session)
+    
             const cartLen = user && user.cart ? user.cart.length : 0;
             res.render('user/user_profile', { user, address, session, cartLen })
 
@@ -28,11 +27,9 @@ module.exports = {
     },
     async loadProfileAddress(req, res) {
         try {
-            // const userId = req.session.user
             const session = req.session.user
 
             const address = await Address.find({ userId: req.session.user })
-            console.log("from load addres", address);
             const user = await User.findById(req.session.user)
             const cartLen = user && user.cart ? user.cart.length : 0;
             res.render('user/profile_address', { user, address, session, cartLen })
@@ -60,7 +57,6 @@ module.exports = {
     async updateProfile(req, res) {
         try {
             const userId = req.session.user
-            console.log(userId)
 
             const { userName, mobile } = req.body;
 
@@ -91,8 +87,6 @@ module.exports = {
             let session = req.session.user
             const addressId = req.params.id
             const address = await Address.findOne({ _id: addressId }).populate('userId')
-            // console.log("from adderere ", address);
-            // console.log("form params ", req.params);
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
             return res.render('user/editAddress', { session, address, cartLen })
@@ -117,7 +111,6 @@ module.exports = {
 
     async addAddress(req, res) {
         try {
-            // let session = req.session.user
             const { userName, email, mobile, city, postCode, district, state, country, houseName } = req.body
             if (userName && email && mobile && city && postCode && district && state && country) {
                 const otherAddress = await Address.find({ userId: req.session.user })
@@ -137,7 +130,7 @@ module.exports = {
                         default: (otherAddress.length === 0) ? true : false
                     })
                     await newAddress.save();
-                    // res.redirect('/profile/address')
+            
                     const url = req.session?.url ? req.session.url : "/index"
                     return res.redirect(url)
 
@@ -180,14 +173,11 @@ module.exports = {
                 }
             );
             if (!result) {
-                // console.log("updated result ", result);
-                // res.redirect('/profile/address');
                 res.status(404).send('Address not found');
             }
 
             const url = req.session?.url ? req.session.url : "/index"
             return res.redirect(url)
-            // res.status(404).send('Address not found');
 
         } catch (error) {
             console.log(error.message);
@@ -199,10 +189,8 @@ module.exports = {
             const { addressId } = req.body;
 
             const result = await Address.findByIdAndDelete(addressId);
-            console.log("result ", result);
 
             if (result) {
-                console.log("Deleted address:", result);
                 res.json({ success: true, result })
             }
         } catch (error) {
@@ -217,7 +205,6 @@ module.exports = {
 
     async loadOrder(req, res) {
         try {
-            // const userId = req.session.user
             const session = req.session.user
             const page = parseInt(req.query.page) || 1;
             const limit = 10;
@@ -227,15 +214,12 @@ module.exports = {
             const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
                 .limit(limit)
                 .sort({ _id: -1 });
-            // console.log(orders[0].user.userName);
-            // console.log(orders.length, "sadfg");
 
             const user = await User.findById(req.session.user)
             const totalCount = await Order.countDocuments({});
             const totalPages = Math.ceil(totalCount / limit);
 
             console.log(page, totalPages, totalCount);
-            // console.log("fndsdjanfnsdfnsdakfnsdk", orders[0].products[0].product.product_name)
             const cartLen = user && user.cart ? user.cart.length : 0;
 
             res.render('user/orders', { user, address, session, orders, currentPage: page, totalPages, totalCount, cartLen })
@@ -301,17 +285,12 @@ module.exports = {
         try {
             let { id } = req.params;
             const { reason } = req.body;
-            console.log(id, reason, 'gfdgfjguyedyrsgchgvuhvhgssyditgfhh');
-
 
             const result = await Order.findOneAndUpdate(
                 { orderId: id },
                 { $set: { status: 'Return Processing', returnReason: reason } },
                 { new: true }
             );
-
-
-            console.log(result, "foeroejfa");
 
             return res.json({ success: true, message: 'Order Returend Successfully', result })
         } catch (err) {
@@ -327,12 +306,8 @@ module.exports = {
             const user = await User.findById(req.session.user)
             const orderId = req.query.orderId;
 
-
             const order = await Order.find({ orderId: orderId }).populate('user').populate('products.product')
-            // console.log(order[0].products);
-            
-
-
+          
             const cartLen = user && user.cart ? user.cart.length : 0;
 
             res.render('user/orderDetials', { session, user, order, cartLen })
@@ -343,83 +318,4 @@ module.exports = {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // async returnOrder(req, res, next){
-    //     try {
-    //       let { id } = req.params;
-    //       const { reason } = req.body;
-    //       const foundOrder = await Order.findById(id).populate(
-    //         "products.product"
-    //       );
-    //       console.log("dddddddddddddddd", foundOrder);
-
-    //       const foundProduct = await Product.findOne({
-    //         product_name: req.body.product,
-    //       });
-    //       // console.log("ffffffffffffffffffffffffff",foundProduct);
-    //       const returnProduct = new Return({
-    //         user: req.session.user,
-    //         order: foundOrder._id,
-    //         product: foundProduct._id,
-    //         quantity: parseInt(req.body.quantity),
-    //         reason: reason,
-    //         address: foundOrder.deliveryAddress,
-    //       });
-    //       await returnProduct.save();
-    //       foundOrder.products.forEach((product) => {
-    //         if (product.product._id.toString() === foundProduct._id.toString()) {
-    //           product.returnRequested = "Pending";
-    //         }
-    //       });
-    //       await foundOrder.save();
-    //       res.redirect("/user/orders");
-    //     } catch (error) {
-    //       console.log(error.message);
-    //     }
-    //   },
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// async loadEditAddress(req,res) {
-//     const session = req.session.user;
-//     let cartnum;
-//     if(req.session.user){
-//       cartnum = await User.findById(req.session.user)
-//       //  console.log("jjjjjjjjjjjjj",currentuser.cart.length);
-//           }
-
-//     // console.log('dddddddddddd'+req.query.addressid);
-//     try{
-//         const address = await Address.findById(req.query.addressid)
-//         // console.log("vvvvvvvvvvv"+address);
-//         res.render('user/editAddress',{session,cartnum, address })
-
-//     }
-//     catch(error){
-//         console.log(error.message);
-//     }
-// },

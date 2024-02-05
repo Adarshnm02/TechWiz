@@ -17,10 +17,6 @@ module.exports = {
                 const skip = (page - 1) * limit;
 
                 const userId = req.session.user;
-                // const user = await User.findById(userId).populate({
-                //     path: 'cart.product',
-                //     options: { skip, limit }
-                // });
 
                 const user = await User.findById(userId)
                     .populate({
@@ -35,7 +31,6 @@ module.exports = {
                         }
                     });
 
-                // console.log("User", user.cart[1].product);
 
                 const cart = user.cart;
                 const totalCount = cart.length;
@@ -159,10 +154,8 @@ module.exports = {
                     if (cartItem.quantity - 1 >= 0) {
                     cartItem.quantity -= 1;
                     }
-                // } else {
-                //     return res.status(400).json({ message: "Invalid quantity update request" });
                 }
-                console.log("after update ", cartItem.quantity);
+
                 cartItem.totalAmount = (product.price - (product.price * offer) / 100) * cartItem.quantity;
                 cartItem.totalAmount.toFixed(1)
 
@@ -195,15 +188,12 @@ module.exports = {
             const session = req.session.user;
             const { id } = req.params;
             const details = await Product.findById({ _id: id }).populate('category')
-            // console.log("from details", details);
 
             const user = await User.findById(req.session.user).populate({
                 path: 'cart.product',
 
             })
 
-            console.log(details.category.offer, "cat offer");
-            console.log(details.offer, "prd offer");
             let offer
             if (details.category.offer > details.offer) {
                 offer = details.category.offer
@@ -213,14 +203,9 @@ module.exports = {
 
             cart = user.cart
             const cartLen = cart ? user.cart.length : 0;
-            // console.log("Detials", details);
             if (details) {
-                // console.log("Product Details Rendering");
                 res.render('user/productDetails', { details, session, id, cart, cartLen, offer })
-                // res.render('user/forDelete', { details, session, id, cart})
             }
-            // console.log("gdfg", details.category);
-
 
         } catch (error) {
             console.log(error.message);
@@ -268,8 +253,6 @@ module.exports = {
             }
 
 
-
-
         } catch (err) {
             console.log(err);
         }
@@ -283,19 +266,6 @@ module.exports = {
 
             const aggregationPipeline = [];
 
-
-
-
-
-            // if (category === "All") {
-            //     const products = await Product
-            //         .find({ is_delete: false })
-            //         .populate({
-            //             path: 'category',
-            //             match: { is_disable: false }
-            //         })
-            //     res.render('user/shop-grid', { products });
-            // }
 
             if (category && category !== 'null') {
                 console.log("category", category);
@@ -336,8 +306,6 @@ module.exports = {
                 totalCount
 
             });
-
-            // res.status(200).json({ success: true, message: 'Successfully processed the request' });
 
 
         } catch (err) {

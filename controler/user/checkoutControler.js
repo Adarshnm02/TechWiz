@@ -19,17 +19,11 @@ module.exports = {
             console.log('form checkout');
             let userId = req.session.user;
 
-            // console.log("userId:- ", userId);
-            // const session = req.session.user
-
             const address = await Address.find({ userId: req.session.user })
-            // console.log("address :- ", address);
 
             const user = await User.findById(userId).select("-password").populate('cart.product')
             const cart = await user.cart;
             const cartLen = cart ? user.cart.length : 0;
-
-            // console.log("from loadcheckout ", user);
 
             res.render('user/checkout', { session: req.session.user, user, cart, address, cartLen, coupon: req.session?.coupon || "" })
         } catch (err) {
@@ -41,16 +35,13 @@ module.exports = {
 
         try {
             const { address, payment } = req.body
-            console.log("from res.body", req.body);
-            console.log("form payment save", payment, address);
-
+        
             const user = await User.findById(req.session.user).populate('cart')
             const addres = await Address.findById(address)
             const coupon = req.session.coupon ? await Coupon.findById(req.session.coupon) : null;
 
             const orderId = uuidv4()
             let discountTotal;
-            console.log("jhnjnn", coupon);
 
             if (coupon) {
                 req.session.coupon = null
@@ -70,15 +61,12 @@ module.exports = {
 
             const userN = await User.findById(req.session.user)
             const wallet = userN.wallet.balance;
-            console.log("show wallet before register", wallet, "balence", userN.wallet.balance);
-
+  
             if (payment === 'wallet') {
-                console.log('grand totoal inside wallet ', discountTotal);
                 if (discountTotal > wallet) {
                     throw new Error('Insufficient funds in the wallet!');
                 } else {
                     userN.wallet.balance -= discountTotal;
-                    // userN.orders.push({id:orderId, ...req.body});
 
                     const transactionData = {
                         amount: discountTotal,
@@ -182,8 +170,6 @@ module.exports = {
                 const currentUser = await User.findById(req.session.user);
                 currentUser.wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
 
-
-                // console.log("fffffffffffffffffff", currentUser);
                 res.render("user/wallet", { session, currentUser, cartLen });
             } else {
                 console.log("Session is not found");
@@ -195,19 +181,9 @@ module.exports = {
     },
 
 
-    async payInWallet(req, res) {
-        try {
-
-        } catch (err) {
-            console.log("pay wallet error ".err);
-        }
-    },
-
-
     async walletPayment(req, res) {
         try {
 
-            console.log("ererereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             const user = await User.findById(req.session.user)
             const wallet = user.wallet
             const grandTotal = user.grandTotal
@@ -222,20 +198,5 @@ module.exports = {
             console.log(error);
         }
     }
-
-
-
-    // const instance = new Razorpay({
-    //     key_id: process.env.key_id,
-    //     key_secret: process.env.key_secret,
-    //   });
-    //   const options = {
-    //     amount: 50000,  // amount in the smallest currency unit
-    //     currency: "INR",
-    //     receipt: "order_rcptid_11"
-    //   };
-    //   instance.orders.create(options, function(err, order) {
-    //     console.log(order);
-    //   });
 
 }
