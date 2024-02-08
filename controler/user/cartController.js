@@ -147,14 +147,20 @@ module.exports = {
                 const product = await Product.findById(cartItem.product).populate('category');
 
                 let offer = product.category.offer > product.offer ? product.category.offer : product.offer;
+                let flag = 0;
 
                 if (req.body.action === "increment" && cartItem.quantity < product.stock_count) {
                     cartItem.quantity += 1;
                 } else if (req.body.action === "decrement" && cartItem.quantity > 1) {
                     if (cartItem.quantity - 1 >= 0) {
-                    cartItem.quantity -= 1;
+                        cartItem.quantity -= 1;
                     }
+                    if(cartItem.quantity - 1 === 0){
+                        flag = 1
+                    }
+
                 }
+               
 
                 cartItem.totalAmount = (product.price - (product.price * offer) / 100) * cartItem.quantity;
                 cartItem.totalAmount.toFixed(1)
@@ -170,7 +176,8 @@ module.exports = {
                     quantity: cartItem.quantity,
                     totalAmount: cartItem.totalAmount.toFixed(1),
                     grandTotal: user.grandTotal,
-                    stock_count: product.stock_count
+                    stock_count: product.stock_count,
+                    flag: flag
                 });
             } else {
                 console.log("Cart item not found");
