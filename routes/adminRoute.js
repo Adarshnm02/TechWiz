@@ -69,6 +69,10 @@ adminRoute.post('/updateCouponStatus/:id', authCtrl.isLogedout, couponCtrl.updat
 adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
 adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 
+//sales
+adminRoute.get('/sales', adminCtrl.loadSales)
+adminRoute.get('/sales', adminCtrl.loadSales)
+
 
 
 
