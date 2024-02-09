@@ -21,17 +21,17 @@
                             <div class="form-group">
                                 <label for="exampleInputName1">Description</label>
                                 <input type="text" class="form-control" name="description" id="exampleInputName1"
-                                    placeholder="Description" oninput="validateDescription(this)">
+                                    placeholder="Description" oninput="validateDescription(this)" required>
                             </div>
 
                             <div class="row mt-3">
                                 <div class="col-md-6 form-group">
                                     <label for="discountType">Discount Type Select</label>
                                     <select name="discountType" id="discountType"
-                                        class="form-control border border-primary"
+                                        class="form-control border border-primary" required
                                         onchange="updateDiscountValidation()">
                                         <option value="fixedAmount">Fixed amount</option>
-                                        <option value="percentage">Percentage of amount</option>
+                                        <!-- <option value="percentage">Percentage of amount</option> -->
                                     </select>
                                 </div>
 
@@ -39,7 +39,7 @@
                                     <label for="discountAmountLabel">Discount Amount / Discount Percentage</label>
                                     <input type="text" class="form-control" name="discountAmount"
                                         id="discountAmountLabel" placeholder="Discount Amount / Discount Percentage"
-                                        oninput="validateNumberAmountInput(this)">
+                                        oninput="validateNumberAmountInput(this)" required>
                                 </div>
                             </div>
 
@@ -48,13 +48,13 @@
                                     <label for="exampleInputName1">Minimum Purchase Amount</label>
                                     <input type="text" class="form-control" name="minimumPurchaseAmount"
                                         id="exampleInputName1" placeholder="Minimum Purchase Amount"
-                                        oninput="validateNumberInput(this)">
+                                        oninput="validateNumberInput2(this)" required>
                                 </div>
 
                                 <div class="col-md-6 form-group">
                                     <label for="exampleInputName1">Usage Limit</label>
                                     <input type="text" class="form-control" name="usageLimit" id="exampleInputName1"
-                                        placeholder="Limit" oninput="validateNumberInput(this)">
+                                        placeholder="Limit" oninput="validateNumberInput(this)" required>
                                 </div>
                             </div>
 
@@ -68,9 +68,18 @@
             </div>
         </div>
     </div>
+    <script>
+		setTimeout(() => {
+			const errorMessage = document.getElementById('errorMessage');
+			if (errorMessage) {
+				errorMessage.style.display = "none"
+			}
+		}, 3000);
+	</script>
 
 
     <script>
+        let disAm = 0
         function validateNumberAmountInput(input) {
             input.value = input.value.replace(/\D/g, ''); // Allow only digits (0-9)
 
@@ -78,12 +87,20 @@
             input.value = input.value.replace(/^0+/, '');
 
             // Additional validation for discount percentage
-            if ($('#discountType').val() === 'percentage') {
-                if (parseInt(input.value) > 100) {
-                    // Display error message
-                    input.setCustomValidity('Discount percentage cannot be greater than 100');
-                } else {
-                    // Reset validation
+            // if ($('#discountType').val() === 'percentage') {
+            //     if (parseInt(input.value) >= 80) {
+            //         // Display error message
+            //         input.setCustomValidity('Discount percentage cannot be greater than 80%');
+            //     } else {
+            //         // Reset validation
+            //         input.setCustomValidity('');
+            //     }
+            // }else 
+            if ($('#discountType').val() === 'fixedAmount'){
+                if(parseInt(input.value) > 0 && parseInt(input.value) > 300){
+                    input.setCustomValidity('Discount Amount cannot be greater than ₹300');
+                }else{
+                    disAm = parseInt(input.value)
                     input.setCustomValidity('');
                 }
             }
@@ -93,8 +110,32 @@
             input.value = input.value.replace(/\D/g, ''); // Allow only digits (0-9)
 
             // Remove leading zeros
-            input.value = input.value.replace(/^0+/, '');
+            input.value = input
+            .value.replace(/^0+/, '');
         }
+
+
+        function validateNumberInput2(input) {
+        input.value = input.value.replace(/\D/g, ''); // Allow only digits (0-9)
+
+        // Remove leading zeros
+        input.value = input.value.replace(/^0+/, '');
+
+        // Convert the value to a number
+        const amount = parseInt(input.value);
+
+        // Check if the amount is greater than 500
+        
+        if (amount > 0 && amount < 500) {
+            // Display error message
+            input.setCustomValidity('Amount must be greater than 500');
+        }else if(amount >= 10000){
+            input.setCustomValidity('Amount must be Lesse than 10000 Amount');
+        } else {
+            // Reset validation
+            input.setCustomValidity('');
+        }
+    }
 
         function validateDescription(input) {
             // Remove spaces at the beginning
@@ -114,9 +155,10 @@
             var discountType = $('#discountType').val();
             if (discountType === 'fixedAmount') {
                 $('#discountAmountLabel').text('Discount Amount');
-            } else if (discountType === 'percentage') {
-                $('#discountAmountLabel').text('Discount Percentage');
             }
+            //  else if (discountType === 'percentage') {
+            //     $('#discountAmountLabel').text('Discount Percentage');
+            // }
         } 
     </script>
 

@@ -152,10 +152,10 @@ module.exports = {
                 if (req.body.action === "increment" && cartItem.quantity < product.stock_count) {
                     cartItem.quantity += 1;
                 } else if (req.body.action === "decrement" && cartItem.quantity > 1) {
-                    if (cartItem.quantity - 1 >= 0) {
+                    if (cartItem.quantity >= 0) {
                         cartItem.quantity -= 1;
                     }
-                    if(cartItem.quantity - 1 === 0){
+                    if(cartItem.quantity === 0){
                         flag = 1
                     }
 
