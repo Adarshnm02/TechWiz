@@ -6,9 +6,7 @@ const cartCtrl = require('../controler/user/cartController')
 const checkoutCtrl = require('../controler/user/checkoutControler')
 const Auth = require('../middleware/Auth')
 const profileCtrl = require('../controler/user/profileController')
-// const UserOTPVerification = require("../models/userOTPVerification")
 
-// userRot = require('./views/user')
 
 
 
@@ -32,7 +30,7 @@ user_Route.post('/changePass', userControle.changepass)
 user_Route.get('/signup', Auth.isLogged, userControle.loadSignup)
 user_Route.post('/signup', Auth.isLogged, userControle.insertUser)
 
-// user_Route.get("/otpVerification", Auth.isLogged, userControle.load_otp)
+
 user_Route.post('/verification', userControle.otpVerification)
 user_Route.get('/resendOtp', userControle.resendOtp);
 
@@ -46,7 +44,7 @@ user_Route.get('/cart', Auth.isLogedout, cartCtrl.load_cart)
 user_Route.post('/addToCart', Auth.isLogedout, cartCtrl.addToCart)
 user_Route.post('/removeFromCart',Auth.isLogedout, cartCtrl.deleteFromCart)
 user_Route.post('/cart/qntUpdate', Auth.isLogedout, cartCtrl.qntUpdate)
-// user_Route.post('/cart/decrement/:id', Auth.isLogedout, cartCtrl.qntUpdate)
+
 
 
 //checkout
@@ -54,7 +52,6 @@ user_Route.get('/checkout', Auth.isLogedout, checkoutCtrl.loadCheckout)
 user_Route.post('/checkout', Auth.isLogedout, checkoutCtrl.saveOrder)
 user_Route.post('/checkStock', Auth.isLogedout, checkoutCtrl.checkStock)
 user_Route.post('/razorpay', Auth.isLogedout, checkoutCtrl.createId)
-user_Route.post('/wallet', Auth.isLogedout, checkoutCtrl.payInWallet)
 
 // order
 user_Route.get('/order',Auth.isLogedout, profileCtrl.loadOrder)

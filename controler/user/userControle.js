@@ -1,6 +1,5 @@
 const express = require('express')
 const { mongoose, Types } = require('mongoose')
-// const UserOTPVerification = require("../../models/userOTPVerification")
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const sendMail = require('../../util/sendMail')
@@ -33,20 +32,6 @@ function generateReferralCode(length) {
 
     return referralCode;
 }
-
-
-
-// const securePassword = async (password) => {
-//     try{
-//         const passwordHash = await bcrypt.hash(password,10)
-//         return passwordHash
-//     }catch(err){
-//         console.log(err);
-//         // res.render('/user/interItnalError', {err})
-//     }
-// }
-
-
 
 const securePassword = async (password) => {
 
@@ -88,8 +73,6 @@ module.exports = {
     loadBlog(req, res) {
         res.render('user/blog')
     },
-
-
 
 
     logout(req, res) {
@@ -148,7 +131,6 @@ module.exports = {
                         $limit: limit
                     }
                 ]);
-                // console.log(products);
 
                 latestPrd = await Product
                     .find({ is_delete: false })
@@ -156,12 +138,9 @@ module.exports = {
                     .sort({ _id: 1 })
             }
 
-            // console.log(latestPrd, "fsdgsdgsdfgsdfg", products);
             const categorys = await Category.find({});
             const user = await User.findById(session);
             const cartLen = user && user.cart ? user.cart.length : 0;
-
-            console.log("cartLen", cartLen, products[0].category.offer, products[0].offer, products[0].product_name);
 
             // Count total products for pagination calculation
             const totalCount = await Product.countDocuments({ is_delete: false });
@@ -212,7 +191,6 @@ module.exports = {
 
     async insertUser(req, res) {
         try {
-            // console.log("Form req.body Body", req.body);
             const { email, username, referal, password, confirmPassword } = req.body;
 
             let referalFrom
@@ -221,7 +199,6 @@ module.exports = {
                 referalFrom = await User.findOne({ referal: referal })
                 const userId = referalFrom._id
                 const referedUser = await User.findById(userId)
-                console.log(referalFrom, "hhhhhhhhhihihiihhihihi", userId, referedUser);
 
                 referedUser.wallet.balance += 500;
 
@@ -234,11 +211,6 @@ module.exports = {
                 await referedUser.save();
                 isRefered = true
             }
-            console.log("Referal ", referal, 'an d', referalFrom);
-
-
-
-
 
 
             if (email && username && password && confirmPassword) {
@@ -264,7 +236,7 @@ module.exports = {
                         });
 
                         await newUser.save();
-                        // console.log("User saved successfully ", newUser);
+            
                         const savedUser = await User.findOne({ userName: username })
                         console.log('ttt', savedUser._id);
                         sendMail(req, res, savedUser._id, email)
@@ -286,14 +258,14 @@ module.exports = {
 
                     } else {
                         // Passwords don't match
-                        res.render('user/userSignup', { message: "Confirm Password is not a match" });
                         console.log("Confirm Password is not a match");
+                        res.render('user/userSignup', { message: "Confirm Password is not a match" });
                     }
                 }
             } else {
                 // All fields are required
-                res.render('user/userSignup', { message: "All fields are required" });
                 console.log("All fields are required");
+                res.render('user/userSignup', { message: "All fields are required" });
             }
         } catch (error) {
 
@@ -306,7 +278,6 @@ module.exports = {
     async otpVerification(req, res) {
         try {
             const { OTP, ID } = req.body;
-            console.log("from verification ", ID);
             console.log(OTP);
             if (!OTP) {
                 return res.render('user/otpVerification', { message: "Cannot send empty message", id: ID })
@@ -350,8 +321,6 @@ module.exports = {
             res.redirect("/signup");
         }
     },
-
-
 
 
     async userLogin(req, res) {
@@ -418,12 +387,6 @@ module.exports = {
                 if (!findUser) {
                     res.render("user/forgotPassword", { message: "User not found" })
                 }
-                // newUserOPTVerification
-
-                // const userOTPE = await newUserOPTVeri.save()
-                // await transporter.sendMail(mailOptions)
-                // sendMail(req, res, savedUser._id, false)
-
 
                 sendMail(req, res, findUser._id, email)
 
@@ -512,7 +475,6 @@ module.exports = {
                 res.render('user/changePassword', { message: `Empty password is not allowed`, userId })
             } else {
                 const UserOTPVerificationRecords = await User.findById(userId)
-                // const UserOTPVerificationRecords = await userOTP.find( {userId: new Types.ObjectId(userId)} )
 
                 console.log("OTP verific from changepass:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length);
 
@@ -580,28 +542,5 @@ module.exports = {
             console.log(err);
         }
     }
-
-
-
-
-
-
-
-
-
-
 }
-// module.exports = {loadHome, login, loadBlog, insertUser, loadSignup, load_otp, userLogin, otpVerification ,logout, load_cart
 
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////

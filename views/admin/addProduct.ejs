@@ -202,8 +202,8 @@
 
         function offerValidation() {
             console.log("cat", productOffer, "value", productOffer.value);
-            if (productOffer.value >= 100) {
-                prodOfferError.innerHTML = "You can't set offer above 100%"
+            if (productOffer.value >= 81) {
+                prodOfferError.innerHTML = "You can't set offer above 80%"
                 return false;
             } else if (!productOffer.value) {
                 prodOfferError.innerHTML = "Category offer must be filled or 0"

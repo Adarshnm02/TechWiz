@@ -258,11 +258,19 @@
                             toast.onmouseleave = Swal.resumeTimer;
                         }
                     });
+                    if (data.flag === 1) {
+                        Toast.fire({
+                            icon: "warning",
+                            title: "Oops, can't go lower!"
+                        })
+                    } else {
 
-                    Toast.fire({
-                        icon: "success",
-                        title: "Quantity Updated successfuly"
-                    })
+                        Toast.fire({
+                            icon: "success",
+                            title: "Quantity Updated successfuly"
+                        })
+                    }
+
 
                     console.log('Success:', data);
                     showTotalAmount()
@@ -284,7 +292,7 @@
                     if (data.stock_count === data.quantity) {
                         Toast.fire({
                             icon: "warning",
-                            title: "Quantity is exeeded"
+                            title: "Quantity is exeeded!"
                         })
 
                     }

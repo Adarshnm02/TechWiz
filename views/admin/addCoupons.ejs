@@ -21,14 +21,14 @@
                             <div class="form-group">
                                 <label for="exampleInputName1">Description</label>
                                 <input type="text" class="form-control" name="description" id="exampleInputName1"
-                                    placeholder="Description" oninput="validateDescription(this)" required>
+                                    placeholder="Description" oninput="validateDescription(this)">
                             </div>
 
                             <div class="row mt-3">
                                 <div class="col-md-6 form-group">
                                     <label for="discountType">Discount Type Select</label>
                                     <select name="discountType" id="discountType"
-                                        class="form-control border border-primary" required
+                                        class="form-control border border-primary"
                                         onchange="updateDiscountValidation()">
                                         <option value="fixedAmount">Fixed amount</option>
                                         <option value="percentage">Percentage of amount</option>
@@ -39,7 +39,7 @@
                                     <label for="discountAmountLabel">Discount Amount / Discount Percentage</label>
                                     <input type="text" class="form-control" name="discountAmount"
                                         id="discountAmountLabel" placeholder="Discount Amount / Discount Percentage"
-                                        oninput="validateNumberAmountInput(this)" required>
+                                        oninput="validateNumberAmountInput(this)">
                                 </div>
                             </div>
 
@@ -48,13 +48,13 @@
                                     <label for="exampleInputName1">Minimum Purchase Amount</label>
                                     <input type="text" class="form-control" name="minimumPurchaseAmount"
                                         id="exampleInputName1" placeholder="Minimum Purchase Amount"
-                                        oninput="validateNumberInput(this)" required>
+                                        oninput="validateNumberInput(this)">
                                 </div>
 
                                 <div class="col-md-6 form-group">
                                     <label for="exampleInputName1">Usage Limit</label>
                                     <input type="text" class="form-control" name="usageLimit" id="exampleInputName1"
-                                        placeholder="Limit" oninput="validateNumberInput(this)" required>
+                                        placeholder="Limit" oninput="validateNumberInput(this)">
                                 </div>
                             </div>
 

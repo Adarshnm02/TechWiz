@@ -6,7 +6,6 @@ const upload = multer({ storage: storage });
 const { imageCrop, multiCrop } = require('../middleware/crop')
 
 const adminCtrl = require('../controler/admin/adminControle')
-// const productCtrl = require('../controler/admin/productControl')
 const { loadAddProduct, addProduct } = require('../controler/admin/productControl')
 const categoryCtrl = require('../controler/admin/categoryControle');
 const productControl = require('../controler/admin/productControl');
@@ -14,14 +13,14 @@ const authCtrl = require('../controler/admin/authControle')
 const couponCtrl = require('../controler/admin/couponController')
 
 //Login
-adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
-// adminRoute.post('/admin', authCtrl.checkAdmin)
-// user_Route.get('/logout', Auth.logouting, userControle.logout)
+// adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
+// adminRoute.get('/index', adminCtrl.loadIndex)
 
 adminRoute.get('/adminLogout',adminCtrl.logout)
 
 adminRoute.get('/', adminCtrl.loadLogin)
-adminRoute.get('/index', adminCtrl.loadIndex)
+adminRoute.post('/',authCtrl.checkAdmin)
+
 
 
 //Product
@@ -46,7 +45,7 @@ adminRoute.get('/category/activate/:id', authCtrl.isLogedout, categoryCtrl.categ
 adminRoute.get('/category/deactivate/:id', authCtrl.isLogedout, categoryCtrl.categoryDisable)
 adminRoute.get('/category/:id/edit', authCtrl.isLogedout, categoryCtrl.loadCategoryEdit)
 adminRoute.post('/category/edit/:id', authCtrl.isLogedout, categoryCtrl.updateCategory)
-adminRoute.get('/category/:id/deleteImg', authCtrl.isLogedout, categoryCtrl.imageDelete)
+
 
 
 //User management
@@ -59,7 +58,6 @@ adminRoute.get('/userList/Block/:id', authCtrl.isLogedout, adminCtrl.block_user)
 // orders
 
 adminRoute.get('/order',authCtrl.isLogedout, adminCtrl.loadOrder)
-adminRoute.get('/orderList',authCtrl.isLogedout, adminCtrl.loadOrderList)
 adminRoute.post('/userlist/updateStatus/:userId',authCtrl.isLogedout, adminCtrl.changeDeliveryStatus);
 
 //return 
@@ -71,6 +69,12 @@ adminRoute.get('/coupons', authCtrl.isLogedout, couponCtrl.loadCoupon)
 adminRoute.post('/updateCouponStatus/:id', authCtrl.isLogedout, couponCtrl.updateCouponStatus);
 adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
 adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
+
+//sales
+// adminRoute.get('/sales', adminCtrl.loadIndex)
+// adminRoute.get('/sales', adminCtrl.loadIndex)
+adminRoute.get('/index', adminCtrl.loadIndex)
+adminRoute.post('/index', adminCtrl.loadIndex)
 
 
 

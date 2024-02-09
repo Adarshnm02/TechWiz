@@ -1,12 +1,7 @@
 const express = require('express')
-// const bcrypt = require("bcrypt")
 const Product = require("../../models/productModel")
 const Category = require("../../models/categoryModel")
 
-// function isValidImage(file) {
-//     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-//     return allowedTypes.includes(file.mimetype);
-// }
 
 const isValidImage = (file) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
@@ -14,27 +9,6 @@ const isValidImage = (file) => {
 };
 
 module.exports = {
-
-
-    // async loadAddProduct(req, res) {
-    //     try {
-    //         const productsWithCategory = await Product.find().populate({
-    //             path: 'category',
-    //             select: 'categoryName' // Select only the categoryName field from the Category model
-    //         });
-
-    //         if (productsWithCategory) {
-    //             res.render('admin/addProduct', { productsWithCategory });
-    //         } else {
-    //             console.log("Products with Category not found");
-    //         }
-    //     } catch (err) {
-    //         console.log(err);
-    //         res.render("admin/500");
-    //     }
-    // }
-
-
 
     async loadAddProduct(req, res) {
         try {
@@ -51,7 +25,6 @@ module.exports = {
     },
 
     async addProduct(req, res) {
-        // console.log(req.body);
         const categorys = await Category.find()
         try {
             const {
@@ -162,7 +135,7 @@ module.exports = {
             const id = req.params.id;
             const products = await Product.findById(id);
             const category = await Category.find()
-            // console.log("cat from loadproductedit", category);
+    
             if (products && category) {
                 res.render("admin/editProduct", { message: "", products, id, category });
             } else {
@@ -195,7 +168,6 @@ module.exports = {
         if(req.files.length <= 0 ){
             return res.redirect('/admin//products/edit/'+ id)
         }
-        // console.log(category)
 
         try {
             const productId = id;
@@ -288,7 +260,6 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
             // Handle the error, perhaps send an error response
-            // res.status(500).send({ message: 'Internal Server Error' });
             res.render("admin/500", { message: 'Internal Server Error' })
         }
     }
