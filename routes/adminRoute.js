@@ -13,13 +13,14 @@ const authCtrl = require('../controler/admin/authControle')
 const couponCtrl = require('../controler/admin/couponController')
 
 //Login
-adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
-
+// adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
+// adminRoute.get('/index', adminCtrl.loadIndex)
 
 adminRoute.get('/adminLogout',adminCtrl.logout)
 
 adminRoute.get('/', adminCtrl.loadLogin)
-adminRoute.get('/index', adminCtrl.loadIndex)
+adminRoute.post('/',authCtrl.checkAdmin)
+
 
 
 //Product
@@ -70,8 +71,10 @@ adminRoute.get('/addCoupon', authCtrl.isLogedout, couponCtrl.loadAddCoupon)
 adminRoute.post('/saveCoupon', authCtrl.isLogedout, couponCtrl.saveCoupon)
 
 //sales
-adminRoute.get('/sales', adminCtrl.loadSales)
-adminRoute.get('/sales', adminCtrl.loadSales)
+// adminRoute.get('/sales', adminCtrl.loadIndex)
+// adminRoute.get('/sales', adminCtrl.loadIndex)
+adminRoute.get('/index', adminCtrl.loadIndex)
+adminRoute.post('/index', adminCtrl.loadIndex)
 
 
 

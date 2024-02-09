@@ -21,9 +21,9 @@ module.exports = {
         }
     },
 
-    loadIndex(req, res) {
-        res.render('admin/index')
-    },
+    // loadIndex(req, res) {
+    //     res.render('admin/index')
+    // },
 
     loadCategory(req, res) {
         res.render('admin/category')
@@ -153,7 +153,7 @@ module.exports = {
                 description: "Order Returned",
                 type: "Credit",
             };
-            user.wallet.transactions.push(transactionData);
+            user.wallet.transactions[user.wallet.transactions.length]=transactionData;
             await user.save();
 
             const updatedOrder = await Order.findByIdAndUpdate(
@@ -178,7 +178,14 @@ module.exports = {
         }
     },
 
-    async loadSales(req,res){
+
+
+    // loadIndex(req, res) {
+    //     res.render('admin/index')
+    // },
+
+
+    async loadIndex(req,res){
         try{
         
             let startOfMonth;
@@ -281,7 +288,7 @@ module.exports = {
             }
             // console.log("req.body.form");
            
-            res.render('admin/sales',{
+            res.render('admin/index',{
                 salesReport: filteredOrders,
                 orderDone,
                 totalRevenue
