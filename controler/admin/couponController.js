@@ -81,7 +81,7 @@ module.exports = {
                     })
                     await newCoupon.save();
                     console.log(newCoupon);
-                    res.render('admin/addCoupons')
+                    res.render('admin/addCoupons',{message: "Coupan Added Successfully"})
                 }
             }
 
