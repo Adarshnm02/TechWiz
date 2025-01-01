@@ -35,21 +35,6 @@
                 <div class="col-lg-3 col-md-5">
 
                     <div class="sidebar">
-                        <!-- <div class="sidebar__item">
-                            <h4>Department</h4>
-                            <ul>
-                                <li><a href="#"></a></li>
-                                <li><a href="#">Vegetables</a></li>
-                                <li><a href="#">Fruit & Nut Gifts</a></li>
-                                <li><a href="#">Fresh Berries</a></li>
-                                <li><a href="#">Ocean Foods</a></li>
-                                <li><a href="#">Butter & Eggs</a></li>
-                                <li><a href="#">Fastfood</a></li>
-                                <li><a href="#">Fresh Onion</a></li>
-                                <li><a href="#">Papayaya & Crisps</a></li>
-                                <li><a href="#">Oatmeal</a></li>
-                            </ul>
-                        </div> -->
                         <div class="sidebar__item">
                             <h4>Price</h4>
                             <div class="price-range-wrap">
@@ -121,7 +106,7 @@
                         </div>
                         <div class="row">
                             <div class="product__discount__slider owl-carousel">
-                            
+
 
                                 <div class="col-lg-4">
                                     <div class="product__discount__item">
@@ -262,7 +247,9 @@
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span><%= totalCount %></span> Products found</h6>
+                                    <h6><span>
+                                            <%= totalCount %>
+                                        </span> Products found</h6>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-3">
@@ -280,7 +267,7 @@
 
 
                     <div class="row " id="product_list">
-                        
+
 
                         <% products.forEach(element=> { %>
 
@@ -292,14 +279,15 @@
                                         style="display: flex; justify-content: center;">
                                         <% if(element.image[0] && element.image[0].contentType && element.image[0].data)
                                             { %>
-                                            <img onclick="productDetails('<%= element._id %>')" src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
+                                            <img onclick="productDetails('<%= element._id %>')"
+                                                src="data:<%= element.image[0].contentType %>;base64,<%= element.image[0].data.toString('base64')%>"
                                                 alt="IMG-PRODUCT" style="height: 260.34px" />
                                             <% } else { %>
                                                 <p>No image available</p>
                                                 <% } %>
                                                     <ul class="product__item__pic__hover">
                                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                        
+
                                                         </li>
                                                         <li><a onclick="addToCart('<%= element._id %>')"><i
                                                                     class="fa fa-shopping-cart"></i></a>
@@ -310,7 +298,8 @@
                                         <h6><a href="/product/Details/<%= element._id%>">
                                                 <%= element.product_name %>
                                             </a>
-                                            <h6>₹<%= element.price %></h6>
+                                            <h6>₹<%= element.price %>
+                                            </h6>
                                         </h6>
                                     </div>
                                 </div>
@@ -319,7 +308,7 @@
                             <% }); %>
 
                     </div>
-                    
+
                     <div class="pagination-container">
                         <% if (currentPage> 1) { %>
                             <a href="/shop-grid?page=1">First</a>
@@ -327,8 +316,7 @@
                             <% } %>
 
                                 <% for (let i=1; i <=totalPages; i++) { %>
-                                    <a href="/shop-grid?page=<%= i %>"
-                                        class="<%= currentPage === i ? 'active' : '' %>">
+                                    <a href="/shop-grid?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
                                         <%= i %>
                                     </a>
                                     <% } %>

@@ -2,12 +2,13 @@ const express = require('express')
 const { mongoose, Types } = require('mongoose')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const sendMail = require('../../util/sendMail')
+// const sendToMail = require('../../util/sendToMail')
 const User = require('../../models/userModel')
 const userOTP = require('../../models/userOtpModel')
 const Product = require('../../models/productModel')
 const Category = require('../../models/categoryModel')
-
+const sendToMail = require('../../util/sendToMail')
+const userOTPVerification = require('../../models/userOtpModel')
 
 
 
@@ -19,6 +20,10 @@ async function generateSalt() {
 
 generateSalt()
 
+function generateOTP() {
+    let otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
+    return otp
+}
 
 
 function generateReferralCode(length) {
@@ -193,10 +198,9 @@ module.exports = {
         try {
             const { email, username, referal, password, confirmPassword } = req.body;
 
-            let referalFrom
             let isRefered = false
             if (referal != undefined && referal) {
-                referalFrom = await User.findOne({ referal: referal })
+                const referalFrom = await User.findOne({ referal: referal })
                 const userId = referalFrom._id
                 const referedUser = await User.findById(userId)
 
@@ -217,12 +221,11 @@ module.exports = {
                 const foundUser = await User.findOne({ email: email });
 
                 if (foundUser) {
-                    console.log("user is exist")
+                    console.log("User already exists")
                     res.render('user/userSignup', { message: "User is already exist" });
                 } else {
 
                     const referralCode = generateReferralCode(15);
-                    console.log("New referal code ", referralCode);
 
 
                     if (password === confirmPassword) {
@@ -235,25 +238,26 @@ module.exports = {
                             referal: referralCode
                         });
 
-                        await newUser.save();
-            
-                        const savedUser = await User.findOne({ userName: username })
-                        console.log('ttt', savedUser._id);
-                        sendMail(req, res, savedUser._id, email)
-
                         if (isRefered) {
-                            const NewUser = await User.findOne({ email: email });
-                            NewUser.wallet.balance += 500
-                            const transactionData2 = {
+                            newUser.wallet = { balance: 500, transactions: [] };
+                            newUser.wallet.transactions.push({
                                 amount: 500,
-                                description: "After using referral link.",
+                                description: "Bonus for referral use.",
                                 type: "Credit",
-                            };
-                            NewUser.wallet.transactions.push(transactionData2);
-                            await NewUser.save()
+                            });
                         }
 
-                        res.render('user/otpVerification', { id: savedUser._id })
+                        await newUser.save();
+
+                        const savedUser = await User.findOne({ email: email })
+
+                        try {
+                            sendToMail(req, res, savedUser._id, email);
+                            return res.render('user/otpVerification', {message: '', id: savedUser._id });
+                        } catch (mailError) {
+                            console.error(mailError.message);
+                            return res.render('user/userSignup', { message: "Failed to send OTP." });
+                        }
 
 
                     } else {
@@ -263,14 +267,13 @@ module.exports = {
                     }
                 }
             } else {
-                // All fields are required
                 console.log("All fields are required");
                 res.render('user/userSignup', { message: "All fields are required" });
             }
         } catch (error) {
 
             console.log(error);
-            res.render('user/500')
+            return res.render('user/500')
         }
     },
 
@@ -278,7 +281,7 @@ module.exports = {
     async otpVerification(req, res) {
         try {
             const { OTP, ID } = req.body;
-            console.log(OTP);
+
             if (!OTP) {
                 return res.render('user/otpVerification', { message: "Cannot send empty message", id: ID })
             }
@@ -287,38 +290,55 @@ module.exports = {
             if (!OTPrecord) {
                 return res.render('user/otpVerification', { message: "Enter valied OTP", id: ID })
             }
-            const { userId, otp } = OTPrecord;
-            const isvalid = await bcrypt.compare(OTP, otp);
-            console.log("otp is ", isvalid);
 
+            // Check if OTP has expired
+            const currentTime = Date.now();
 
-            if (!isvalid) {
-                return res.render('user/otpVerification', { message: 'The entered OTP is invalid', id: ID })
+            if (currentTime > new Date(OTPrecord.expiresAt).getTime()) {
+                return res.render('user/otpVerification', { message: "OTP has expired", id: ID })
+            }
+            const isValid = await bcrypt.compare(OTP, OTPrecord.otp);
+            if (!isValid) {
+                return res.render('user/otpVerification', { message: "Invalid OTP.", id: ID });
             }
 
             await User.updateOne({ _id: ID }, { $set: { is_varified: true } })
-            await userOTP.deleteOne({ userId })
-            req.session.user = userId._id
+            await userOTP.deleteOne({ userId: ID })
+            req.session.user = ID
             return res.redirect('/')
         } catch (error) {
             console.log(error.message);
-            res.render('user/500')
+            return res.render('user/500')
         }
 
     },
 
     async resendOtp(req, res) {
+        const userId = req.body.userId;
         try {
-            console.log("from resernd");
-            const userId = req.query.userId;  // Corrected access
-            console.log("UserId from resend", userId);
             const user = await User.findById(userId);
-            console.log(user.email, "dfsdfsd");
-            sendMail(req, res, userId, user.email);
-            res.status(200)
+
+            if (!user) {
+                return res.status(404).json({ success: false, message: "User not found." });
+            }
+
+            const OTP = generateOTP()
+            const salt = await bcrypt.genSalt(10);
+            const hashedOTP = await bcrypt.hash(OTP, salt);
+
+            const expirationTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+            await userOTPVerification.updateOne(
+                {userId},
+                {otp: hashedOTP, expiresAt: expirationTime, createdAt: new Date()},
+                {upsert: true}
+            )
+
+            await sendToMail(req, res, userId, user.email);
+            res.status(200).json({ success: true, message: "OTP resent successfully." });
         } catch (err) {
-            console.log(err);
-            res.redirect("/signup");
+            console.error('Error in resendOtp:', err.message);
+            res.status(500).json({ success: false, message: "An unexpected error occurred. Please try again later." });
         }
     },
 
@@ -344,7 +364,6 @@ module.exports = {
                         return res.render('user/user_login', { message: "Invalid Password" })
                     } else {
                         req.session.user = verifiedUser._id
-                        console.log("Login Successful");
 
                         const url = req.session?.url ? req.session.url : "/index"
                         return res.redirect(url)
@@ -378,17 +397,15 @@ module.exports = {
     async forgetPassword(req, res) {
         try {
             const { email } = req.body;
-            // const userId = req.session.user
             if (!email) {
                 res.render("user/forgotPassword", { message: "enter email id" })
             } else {
                 const findUser = await User.findOne({ email });
-                console.log("sdafsdagsdg", findUser._id);
                 if (!findUser) {
                     res.render("user/forgotPassword", { message: "User not found" })
                 }
 
-                sendMail(req, res, findUser._id, email)
+                sendToMail(req, res, findUser._id, email)
 
                 res.redirect(`/verifyOTPForgetPass?userId=${findUser._id}`)
 
@@ -417,19 +434,13 @@ module.exports = {
     async verifyOTPForgetPassPage(req, res) {
         try {
             let { otp, userId } = req.body;
-            console.log("OTP and userId :-", otp, userId);
 
             if (!otp || !userId) {
-                console.log(userId);
-                console.log(otp);
                 res.render('user/forgetPassOTP', { message: "Empty details are not allowed", userId })
             } else {
                 const UserOTPVerificationRecords = await userOTP.findOne({ userId: userId });
 
-                console.log("OTP verific Record:- ", UserOTPVerificationRecords, " ")
-
                 if (!UserOTPVerificationRecords) {
-                    //no record found
                     res.render("user/forgetPassOTP", { message: "Account does not exist", userId })
 
                 } else {
@@ -438,25 +449,16 @@ module.exports = {
                     const hashedOTP = UserOTPVerificationRecords.otp
 
                     if (expireAt < Date.now()) {
-                        //user otp records has expires
                         await userOTP.deleteMany({ userId })
                         res.render("user/forgotPassword", { message: "Code has expires. Please request again.", userId })
 
                     } else {
-                        console.log("hereeee");
-                        console.log(hashedOTP);
-                        console.log(otp);
                         const validOTP = await bcrypt.compare(otp, hashedOTP)
 
-
-                        console.log("otp comparing:- ", validOTP);
                         if (!validOTP) {
-                            //supplied otp is wrong
                             res.render("user/forgetPassOTP", { message: "Invalid OTP. Check your Email.", userId })
 
                         } else {
-                            //success
-                            console.log("rendering to changePassword");
                             await userOTP.deleteMany({ userId })
                             res.render("user/changePassword", { userId })
                         }
@@ -476,18 +478,13 @@ module.exports = {
             } else {
                 const UserOTPVerificationRecords = await User.findById(userId)
 
-                console.log("OTP verific from changepass:- ", UserOTPVerificationRecords, " ", UserOTPVerificationRecords.length);
-
                 if (UserOTPVerificationRecords.length <= 0) {
                     //no record found
                     res.render("user/changePassword", { message: `Account record doesn't exist . Please sign up`, userId })
                 } else {
-                    //success
                     const spassword = await securePassword(password)
                     await User.updateOne({ _id: userId }, { $set: { password: spassword } })
                     await userOTP.deleteMany({ userId })
-
-                    console.log("success");
                     res.render("user/user_login", { message: "password changed" })
                 }
             }
@@ -498,11 +495,10 @@ module.exports = {
 
     async loadnewPassword(req, res) {
         try {
-            const userId = req.session.user; // Assuming userId is the user ID you want to pass to the view
-            res.render('user/newPassword', { userId: userId }); // Passing userId as an object
+            const userId = req.session.user; 
+            res.render('user/newPassword', { userId: userId }); 
         } catch (err) {
             console.log(err);
-            // Handle error here if needed
         }
     },
     //ave edited password
@@ -513,7 +509,6 @@ module.exports = {
         try {
 
             const user = await User.findOne({ _id: userId });
-            console.log("fsdaf", user)
             if (await bcrypt.compare(Oldpassword, user.password)) {
                 if (password === confirmPassword) {
 

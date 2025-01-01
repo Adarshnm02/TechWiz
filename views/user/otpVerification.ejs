@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="/user/css/style.css" type="text/css">
     <link rel="stylesheet" href="/user/css/user.css" type="text/css">
 
-
     <style>
         /* Additional styles for centering the container */
         .centered-container {
@@ -31,7 +30,6 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Full viewport height */
         }
 
         .form-container {
@@ -47,14 +45,16 @@
         .form-group button {
             display: block;
             margin: 0 auto;
-            /* Center align horizontally */
+        }
+
+        /* Style for the OTP expiration timer */
+        #timer {
+            font-size: 14px;
+            color: #f44336;
         }
     </style>
 
-
 </head>
-
-
 
 <body>
     <main>
@@ -78,120 +78,92 @@
                                     <input type="hidden" name="ID" id="userId" value="<%= id %>">
                                     <p>After 5 seconds, this OTP will expire.</p>
 
-                                    <!-- <div class="form-group">
-                                        <button type="submit" value="submit" id="resend"
-                                            class="btn btn-primary">Verify</button>
-                                    </div> -->
                                     <div class="form-group">
                                         <!-- Initially show the Verify button -->
-                                        <button type="submit" value="submit" id="verifyButton" class="btn btn-primary">Verify</button>
+                                        <button type="submit" value="submit" id="verifyButton"
+                                            class="btn btn-primary">Verify</button>
                                     </div>
-                                    
-                                    <!-- Add a hidden container for the Resend OTP button -->
-                                    <div id="resendContainer" class="form-group" style="display: none;">
-                                        <form action=""method="post">
-                                            <input type="hidden" name="userId" value="<%= id %>">
-                                            <a href="/resendOtp?userId=<%=id %>" style="color: #5e96d3;"  id="resendButton">Resend OTP</a>
-                                        </form>
+
+                                    <div id="resendContainer" class="form-group" style="display: none">
+                                        <button type="button" class="btn btn-secondary" id="resendButton">Resend
+                                            OTP</button>
                                     </div>
-                                    
-                                    
 
                                     <!-- Error message -->
-                                    <% if (typeof message !=="undefined" ) { %>
+                                    <% if (message) { %>
                                         <p class="mt-3 text-danger">
                                             <%= message %>
                                         </p>
                                         <% } %>
+
                                             <!-- End error message -->
                                 </form>
 
-                                <div id="resendContainer" class="form-group" style="display: none;">
-                                    <form action="/resend-otp" method="post">
-                                        <input type="hidden" name="userId" value="<%= id %>">
-                                        <button type="submit" class="btn btn-secondary" id="resendButton">Resend
-                                            OTP</button>
-                                    </form>
-                                </div>
+                                <!-- Timer for OTP expiration -->
+                                <div id="timer"></div>
                             </div>
                         </div>
-                        <div id="timer"></div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <script>
+        // Handle the OTP expiration and resend functionality
+        let otpExpirationTime = 1 * 60 * 1000;
+        let timeRemaining = otpExpirationTime;
 
-    
+        const timerElement = document.getElementById("timer");
+        const resendContainer = document.getElementById("resendContainer");
+        const verifyButton = document.getElementById("verifyButton");
+        const resendButton = document.getElementById("resendButton");
+        const userId = document.getElementById("userId").value;
 
-<script>
-    // Show the Resend OTP button after 3 seconds
-    setTimeout(function () {
-        // document.getElementById("verifyButton").style.display = "none";
-        document.getElementById("resendContainer").style.display = "block";
-    }, 5000);
-    
+        // Update the timer and show resend button when OTP expires
+        function updateTimer() {
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            timerElement.innerHTML = `OTP expires in ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                resendContainer.style.display = "block";
+                verifyButton.style.display = "none"; 
+            }
+            timeRemaining -= 1000;
+        }
 
-    function resendOtpFun(id) {
-        fetch(`/resendOtp?orderId=${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .catch(err => {
-            console.log(err.message);
+        // Start the OTP expiration countdown
+        const timerInterval = setInterval(updateTimer, 2000);
+
+        // Resend OTP logic
+        resendButton.addEventListener("click", function () {
+            fetch(`/resendOtp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message || "OTP has been resent successfully!");
+                        timeRemaining = otpExpirationTime;
+                        clearInterval(timerInterval); 
+                        timerInterval = setInterval(updateTimer, 1000);
+                        resendContainer.style.display = "none"; 
+                        verifyButton.style.display = "block"; 
+                    } else {
+                        alert(data.message || "Failed to resend OTP. Please try again.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Fetch error:", err.message);
+                    alert("An unexpected error occurred. Please try again later.");
+                });
         });
-    }
-</script>
-
-
-    <!-- <script>
-        let countdownTime;
-        let timerElement = document.getElementById("timer");
-
-        // Retrieve the remaining time from localStorage
-        if (localStorage.getItem("expire")) {
-            countdownTime = Number(localStorage.getItem("expire"));
-        } else {
-            // Set the countdown time to 5 minutes (300 seconds) if not in localStorage
-            countdownTime = Number(300);
-            localStorage.setItem("expire", countdownTime);
-        }
-
-        function startTimer() {
-            let minutes, seconds;
-            let countdown = setInterval(function () {
-                minutes = parseInt(countdownTime / 60, 10);
-                seconds = parseInt(countdownTime % 60, 10);
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                timerElement.innerHTML = minutes + ":" + seconds;
-
-                countdownTime--;
-                localStorage.setItem("expire", countdownTime);
-
-                if (countdownTime < 0) {
-                    clearInterval(countdown);
-                    timerElement.innerHTML = "New OTP! Please click Resend OTP.";
-                    localStorage.removeItem("expire");
-
-                    // Uncomment this line if you have a "Resend OTP" button
-                    // document.getElementById("resendButton").style.display = "block";
-
-                    // Remove the Verify and info elements
-                    // document.getElementById("Verify").remove();
-                    // document.getElementById("info").remove();
-                }
-            }, 1000); // Update the timer every 1 second (1000 milliseconds)
-        }
-
-        window.onload = startTimer;
-    </script> -->
+    </script>
 
     <!-- Js Plugins -->
     <script src="/user/js/jquery-3.3.1.min.js"></script>
@@ -202,8 +174,6 @@
     <script src="/user/js/mixitup.min.js"></script>
     <script src="/user/js/owl.carousel.min.js"></script>
     <script src="/user/js/main.js"></script>
-
-
 
 </body>
 

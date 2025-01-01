@@ -226,9 +226,6 @@
             if (productName.value.trim() === "") {
                 name_error.innerHTML = "Please enter the Product Name!";
                 return false;
-                // } else if (!nameRegex.test(productName.value)) {
-                //     name_error.innerHTML = "Please enter a valid Product Name.";
-                //     return false;
             } else {
                 name_error.innerHTML = "";
                 return true;
@@ -250,12 +247,6 @@
         }
 
         function description_Validation() {
-
-            // if (!/^[A-Za-z\s]+$/.test(description.value.trim())) {
-            //     description_error.innerHTML = "Description must contain only words (non-numeric characters).";
-            //     return false;
-
-            // } else 
             if (description.value.trim().length <= 15) {
                 description_error.innerHTML = "Description must be at least 15 characters long.";
                 return false;
@@ -342,16 +333,7 @@
             console.log(hasErrors);
 
             if (!hasErrors) {
-                // Swal.fire({
-                //     position: "top-end",
-                //     icon: "success",
-                //     title: "Product Detialse Submitted",
-                //     showConfirmButton: false,
-                //     timer: 1500
-                // });
-                // setTimeout(() => {
                     productEditingForm.submit();
-                // }, 1500)
             }
         });
     </script>

@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt')
 module.exports = {
 
     async checkAdmin(req, res){
-        console.log("Enter to CheckAdmin");
         try {
             
             const { email, password } = req.body;
@@ -23,15 +22,10 @@ module.exports = {
                     if (findAdmin.is_Admin == true) {
                         req.session.admin = findAdmin._id;
 
-                        // try{
-        
                             let startOfMonth;
                             let endOfMonth;
                            
                             if(req.query.filtered){
-                            //     console.log("req.body.form");
-                            // console.log("req.body.form",req.body.from);
-                            // console.log("req.body.upto",req.body.upto);
                                 startOfMonth = new Date(req.body.from);
                                 endOfMonth = new Date(req.body.upto);
                                 endOfMonth.setHours(23, 59, 59, 999);
@@ -55,7 +49,7 @@ module.exports = {
                     
                             const filteredOrders = await Order.aggregate([
                                 {
-                                    $unwind: "$products" // Unwind the products array
+                                    $unwind: "$products" 
                                 },
                                 {
                                     $match: {
@@ -67,11 +61,11 @@ module.exports = {
                                         ...orderStatusFilter
                                         // status : orderStatusFilter
                                     }
-                                      // Use the complete orderStatusFilter object
+                                     
                                 },
                                 {
                                     $lookup: {
-                                        from: "products", // Replace with the actual name of your products collection (clarify it)
+                                        from: "products", 
                                         localField:"products.product",
                                         foreignField:"_id",
                                         as: "productInfo"  // Store the product info in the "productInfo" array
@@ -80,7 +74,7 @@ module.exports = {
                                 {
                                     $addFields: {
                                         "products.productInfo": {
-                                            $arrayElemAt: ["$productInfo", 0]   // Get the first (and only) element of the "productInfo" array
+                                            $arrayElemAt: ["$productInfo", 0]   
                     
                                         }
                                     }
@@ -123,20 +117,12 @@ module.exports = {
                                     totalRevenue += (filteredOrders[i].products.quantity*filteredOrders[i].products.productInfo.price)
                                 }
                             }
-                            // console.log("req.body.form");
                            
                             res.render('admin/index',{
                                 salesReport: filteredOrders,
                                 orderDone,
                                 totalRevenue
                             })
-                        // }catch(error){
-                        //     console.log(error);
-                        // }
-                    
-
-
-                        // return res.render('admin/index')
                     } else {
                         res.render('admin/authentication-login', { message: 'Your Not Admin' })
                     }
@@ -152,7 +138,6 @@ module.exports = {
 
     isLogedout (req, res, next) {
         if (req.session.admin) {
-          console.log(req.session.admin);
            next()
         } else {
             console.log("Admin not found");

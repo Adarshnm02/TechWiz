@@ -37,11 +37,9 @@ module.exports = {
         try {
             const category = await productCategory.find()
             const { categoryName, description , categoryOffer} = req.body;
-            console.log(categoryName, description , categoryOffer);
             
     
             if (!categoryName || !description) {
-                console.log("Category name or description not found");
                 return res.render('admin/addCategory', {
                     message: "All fields must be filled",
                 });
@@ -135,7 +133,6 @@ module.exports = {
             // Update other category details
             await productCategory.findByIdAndUpdate(id, { $set: data }, { new: true });
 
-            console.log("Category updated");
             return res.redirect('/admin/category');
         } catch (error) {
             console.error(error.message);

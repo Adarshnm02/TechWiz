@@ -63,13 +63,6 @@
                                     placeholder="Search User" style="margin-left: 50px">
                             </div>
                         </div>
-                        <!-- <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary" style="margin-left: 23px; width: 133px;">Search</button>
-                            <div>
-                            <a href="/admin/addProduct">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary mb-3">Add Product</button>
-                            </a>
-                        </div> -->
 
 
                         <div class="col-md-4">
@@ -133,11 +126,6 @@
                                             
 
 
-
-
-
-
-
                                                 <%console.log(product)%>
                                                     <td>
                                                         <%= product.price %>
@@ -190,10 +178,9 @@
     <script>
         $(document).ready(function () {
             $('#productTable').DataTable({
-                searching: true, // Enable search functionality
-                ordering: true, // Enable column sorting
-                paging: false // Disable pagination
-                // Other options...
+                searching: true, 
+                ordering: true, 
+                paging: false 
             });
         });
     </script>

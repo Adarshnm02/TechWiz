@@ -77,7 +77,6 @@ module.exports = {
             }
 
             await createdProduct.save();
-            console.log('Product added successfully:', createdProduct);
             res.redirect("/admin/products");
 
         } catch (error) {
@@ -187,7 +186,6 @@ module.exports = {
             );
 
             if (req.files && req.files.length > 0) {
-                // Assuming 'req.files' contains the uploaded image files
                 req.files.forEach((file) => {
                     if (isValidImage(file)) {
                         updatedproduct.image.push({
@@ -201,11 +199,9 @@ module.exports = {
             }
 
             const savedProduct = await updatedproduct.save();
-            // console.log("product saved", savedProduct);
             res.redirect(`/admin/products`);
         } catch (error) {
             console.log(error.message);
-            // Handle the error appropriately
             res.status(500).send("Error updating product");
             res.render("admin/500")
         }
@@ -252,14 +248,12 @@ module.exports = {
             );
 
             if (deleteImg) {
-                console.log("Image deleted:", deleteImg);
                 return res.redirect(`/admin/products/${req.params.id}/Edit`);
             } else {
                 console.log("Image not updated");
             }
         } catch (error) {
             console.log(error.message);
-            // Handle the error, perhaps send an error response
             res.render("admin/500", { message: 'Internal Server Error' })
         }
     }

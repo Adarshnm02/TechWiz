@@ -12,9 +12,6 @@ const productControl = require('../controler/admin/productControl');
 const authCtrl = require('../controler/admin/authControle')
 const couponCtrl = require('../controler/admin/couponController')
 
-//Login
-// adminRoute.route('/adminlog').get(adminCtrl.loadLogin).post(authCtrl.checkAdmin)
-// adminRoute.get('/index', adminCtrl.loadIndex)
 
 adminRoute.get('/adminLogout',adminCtrl.logout)
 

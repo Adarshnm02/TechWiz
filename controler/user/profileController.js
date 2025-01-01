@@ -64,7 +64,6 @@ module.exports = {
                 const user = await User.findById(userId);
 
                 if (!user) {
-                    console.log("User is Not found");
                     return res.status(404).render('user/404');
                 }
                 user.userName = userName;
@@ -72,7 +71,6 @@ module.exports = {
                 // user.email 
 
                 await user.save();
-                console.log(user, "form submited");
                 res.redirect('/profile')
             }
 
@@ -209,7 +207,6 @@ module.exports = {
             const page = parseInt(req.query.page) || 1;
             const limit = 10;
             const skip = (page - 1) * limit;
-            console.log("From orders in ");
             const address = await Address.find({ userId: req.session.user })
             const orders = await Order.find({ user: req.session.user }).populate('products.product').populate('user').skip(skip)
                 .limit(limit)
@@ -219,7 +216,6 @@ module.exports = {
             const totalCount = await Order.countDocuments({});
             const totalPages = Math.ceil(totalCount / limit);
 
-            console.log(page, totalPages, totalCount);
             const cartLen = user && user.cart ? user.cart.length : 0;
 
             res.render('user/orders', { user, address, session, orders, currentPage: page, totalPages, totalCount, cartLen })
@@ -234,15 +230,12 @@ module.exports = {
     async cancelOrder(req, res) {
         let { id } = req.params;
         const { reason } = req.body;
-        console.log(id, reason);
         try {
             const result = await Order.findOneAndUpdate(
                 { orderId: id },
                 { $set: { status: 'Cancelled', cancelReason: reason } },
                 { new: true }
             );
-
-            console.log("from cancel ", result.products[0].quantity);
 
             for (const item of result.products) {
                 let product = await Product.findById(item.product);
@@ -253,12 +246,10 @@ module.exports = {
                 await product.save();
             }
             const order = await Order.find({orderId: id})
-                console.log("order", order[0].paymentMethod, order[0].status);
 
             if (order[0].paymentMethod !== "cod" && order[0].status === 'Cancelled' || order[0].status === 'Return Complited') {
 
                 const user = await User.findById(req.session.user)
-                console.log(user);
 
                 user.wallet.balance += order[0].grandTotal;
                 const transactionData = {
@@ -267,7 +258,6 @@ module.exports = {
                     type: "Credit",
                 };
                 user.wallet.transactions.push(transactionData);
-                console.log("wallet ", user.wallet);
                 await user.save();
             } else {
                 console.log("User not found");

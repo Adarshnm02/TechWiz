@@ -9,7 +9,6 @@ module.exports = {
         res.render('admin/authentication-login')
     },
 
-    //Admin logouting and destroying the session
     logout(req, res) {
         try {
             req.session.destroy();
@@ -21,15 +20,11 @@ module.exports = {
         }
     },
 
-    // loadIndex(req, res) {
-    //     res.render('admin/index')
-    // },
 
     loadCategory(req, res) {
         res.render('admin/category')
     },
 
-    //Loading the users list
     async loadUserList(req, res) {
         try {
             const page = parseInt(req.query.page) || 1;
@@ -38,7 +33,6 @@ module.exports = {
 
 
             const { query } = req.query;
-            // console.log(query)
             let users, totalCount;
             if (query) {  //User searched products finding.
                 const regex = new RegExp(query, 'i');
@@ -159,30 +153,23 @@ module.exports = {
             const updatedOrder = await Order.findByIdAndUpdate(
                 requestId,
                 { $set: { status: status } },
-                { new: true } // Return the updated document
+                { new: true } 
             );
 
             if (!updatedOrder) {
                 return res.status(404).json({ error: 'Order not found' });
             }
 
-            // Send a success response
             res.status(200).json({ message: 'Order status updated successfully', updatedOrder });
 
 
 
-            // Your existing code here
         } catch (error) {
             console.error("Error updating order status:", error.message);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 
-
-
-    // loadIndex(req, res) {
-    //     res.render('admin/index')
-    // },
 
 
     async loadIndex(req,res){
@@ -230,7 +217,6 @@ module.exports = {
                         ...orderStatusFilter
                         // status : orderStatusFilter
                     }
-                      // Use the complete orderStatusFilter object
                 },
                 {
                     $lookup: {
@@ -286,7 +272,6 @@ module.exports = {
                     totalRevenue += (filteredOrders[i].products.quantity*filteredOrders[i].products.productInfo.price)
                 }
             }
-            // console.log("req.body.form");
            
             res.render('admin/index',{
                 salesReport: filteredOrders,

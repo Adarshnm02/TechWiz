@@ -3,9 +3,6 @@
 
 
     <style>
-        /* Custom CSS for enhanced design */
-        /* You can add these styles to your existing CSS file */
-
         /* Sidebar Styles */
         .sidenav {
             background-color: #f3f3f3;
@@ -149,8 +146,6 @@
             </div>
 
 
-
-
             <div class="col-md-8">
                 <!-- Main Content -->
                 <div class="main">
@@ -264,7 +259,6 @@
     </div>
 
     <script>
-        // JavaScript function to redirect to order details page
         function redirectToOrderDetails(orderId) {
             console.log(orderId, "adfsdsfsdafdf")
             window.location.href = `/orderDetials?orderId=${orderId}`;
@@ -321,17 +315,7 @@
 
 
                                             }
-                                            // setTimeout(() => {
-
-                                            //     window.location.reload()
-                                            // },)
-                                            // const statusElement = document.getElementById(`orderStatus_${orderid}`);
-                                            // const button = document.getElementById(`${orderid}`);
-                                            // statusElement.textContent = 'Cancelled';
-                                            // statusElement.classList.remove('text-orange-300');
                                         })
-                                        // statusElement.classList.add('text-red-500');
-                                        // button.classList.add('hidden');
                                     } else {
                                         Swal.fire({
                                             title: 'Error',

@@ -51,7 +51,6 @@
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Set the initial time in seconds (5 minutes)
             let timer = 60;
 
             // Retrieve the timer value from localStorage if available
@@ -60,14 +59,12 @@
                 timer = parseInt(storedTimer);
             }
 
-            // Function to update the timer
             function updateTimer() {
                 const minutes = Math.floor(timer / 60);
                 const seconds = timer % 60;
                 document.getElementById('timer').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             }
 
-            // Function to decrement the timer every second
             function decrementTimer() {
                 if (timer > 0) {
                     timer--;
@@ -79,10 +76,8 @@
                 }
             }
 
-            // Initial update
             updateTimer();
 
-            // Start the timer interval
             const interval = setInterval(decrementTimer, 1000);
         });
     </script>

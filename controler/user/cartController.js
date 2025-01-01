@@ -36,8 +36,6 @@ module.exports = {
                 const totalCount = cart.length;
                 const totalPages = Math.ceil(totalCount / limit);
 
-                // console.log(`cart ${cart} user ${user} userId ${userId} cart.productname ${cart.productName}`)
-                console.log("from load cart", cart.length)
                 let cartLen = cart.length;
 
                 res.render('user/shoping-cart', { cart, user, session: req.session.user, currentPage: page, totalPages, totalCount, cartLen, message: cartLen === 0 ? "The Cart Is Empty" : "" })
@@ -180,7 +178,6 @@ module.exports = {
                     flag: flag
                 });
             } else {
-                console.log("Cart item not found");
                 return res.status(404).json({ message: "Cart item not found" });
             }
         } catch (err) {
@@ -225,20 +222,13 @@ module.exports = {
         try {
             const user = await User.findById(req.session.user)
             const { grandTotal } = user
-            console.log("Grad from shwoe ", grandTotal);
             const allCoupons = await Coupon.find({
                 minimumPurchaseAmount: { $lte: grandTotal + 500 },
                 isActive: true,
             })
-            console.log("coupon backend");
-            // console.log("discount amount ", coupons[0].discountAmount);
             const coupons = allCoupons.filter(coupon => {
-                console.log(coupon.discountAmount ," - " , grandTotal  ,"=", coupon.discountAmount - grandTotal)
                 return coupon.discountAmount < grandTotal / 2 && grandTotal - coupon.discountAmount > 0 && coupon.discountAmount > 0;
             });
-            coupons.forEach( coupon =>{
-                console.log(coupon)
-            })
             res.json(coupons)
         } catch (err) {
             console.log(err);
@@ -250,7 +240,6 @@ module.exports = {
         try {
             const { code } = req.body;
             code.trim()
-            console.log("From appllyCouponCode :-  ", code);
             const currentCoupon = await Coupon.findOne({ code })
             if (currentCoupon.length === 0) {
                 console.log("There is no copon same as user enterd ");
@@ -275,16 +264,13 @@ module.exports = {
 
 
             if (category && category !== 'null') {
-                console.log("category", category);
 
-                // Assuming 'category' is an array of category IDs
                 const categoryObjectId = new mongoose.Types.ObjectId(category);
                 aggregationPipeline.push({
                     $match: {
                         $and: [
                             { category: categoryObjectId },
                             { is_delete: false }
-                            // Add more conditions if needed
                         ]
                     }
                 });
@@ -299,10 +285,7 @@ module.exports = {
             aggregationPipeline.push({ $skip: skip });
             aggregationPipeline.push({ $limit: limit });
 
-            // Execute the aggregation pipeline on your Product model
-            console.log("dd", aggregationPipeline);
             const products = await Product.aggregate(aggregationPipeline);
-            console.log('Found Products:', products.length);
 
 
             res.json({

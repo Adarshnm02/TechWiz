@@ -159,16 +159,7 @@
             ];
             const hasErrors = validations.some(validation => validation === false);
             if (!hasErrors) {
-                // Swal.fire({
-                //     position: "top-end",
-                //     icon: "success",
-                //     title: "Category Detials Submitted",
-                //     showConfirmButton: false,
-                //     timer: 1500
-                // });
-                // setTimeout(()=>{
                 CategoryForm.submit(); 
-                // },1500)
             }
         })
     </script>

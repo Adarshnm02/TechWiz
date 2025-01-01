@@ -36,11 +36,9 @@ module.exports = {
                 return res.status(404).send('Coupon not found');
             }
     
-            // Toggle the isActive status
             coupon.isActive = !coupon.isActive;
             await coupon.save();
     
-            // Redirect back to the coupons page or send a response
             res.redirect('/admin/coupons');
         } catch (err) {
             console.log(err);

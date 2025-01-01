@@ -16,7 +16,6 @@ module.exports = {
 
     async loadCheckout(req, res) {
         try {
-            console.log('form checkout');
             let userId = req.session.user;
 
             const address = await Address.find({ userId: req.session.user })
@@ -116,12 +115,10 @@ module.exports = {
                 const product = await Product.findOne({ _id: cartItem.product });
 
                 if (product.stock_count < cartItem.quantity) {
-                    // console.log("Insufficient stock for product:", product._id);
                     return res.json({ success: false, insufficientStockProducts: [{ productId: product._id, quantity: product.stock_count }] });
                 }
             }
 
-            console.log("All products have sufficient stock");
             return res.json({ success: true });
         } catch (error) {
             console.error('Error checking stock:', error);
@@ -134,14 +131,12 @@ module.exports = {
         try {
 
             const { couponId } = req.body
-            console.log("coupon code ", couponId);
             const user = await User.findOne({ _id: req.session.user });
             let discount = "";
             if (couponId && couponId != "undefined") {
                 const coupon = await Coupon.findById(couponId)
                 discount = coupon.discountAmount
             }
-            console.log("Inside create ID");
 
             options = {
                 amount: (user.grandTotal - discount) * 100,
@@ -187,7 +182,6 @@ module.exports = {
             const user = await User.findById(req.session.user)
             const wallet = user.wallet
             const grandTotal = user.grandTotal
-            console.log("asjdfjsdaf", grandTotal, wallet);
 
 
             res.json({ wallet: wallet, grandTotal: grandTotal })

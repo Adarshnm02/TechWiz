@@ -32,7 +32,7 @@ user_Route.post('/signup', Auth.isLogged, userControle.insertUser)
 
 
 user_Route.post('/verification', userControle.otpVerification)
-user_Route.get('/resendOtp', userControle.resendOtp);
+user_Route.post('/resendOtp', userControle.resendOtp);
 
 //pages
 user_Route.get('/shop-grid',Auth.isLogedout, userControle.loadShop )

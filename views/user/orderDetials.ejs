@@ -71,17 +71,12 @@
 
         .download-button {
             background: linear-gradient(to right, #0b0a69, #087e0e);
-            /* Example gradient colors */
             color: #fff;
-            /* Text color */
             padding: 10px 20px;
-            /* Adjust padding as needed */
             border: none;
             border-radius: 5px;
-            /* Rounded corners */
             cursor: pointer;
             margin-right: 10px;
-            /* Adjust margin as needed */
         }
     </style>
 
@@ -188,7 +183,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js"></script>
     <script>
-        // Get the current timestamp in milliseconds
         var currentTimestamp = Date.now();
 
         // Create a new Date object using the timestamp
@@ -205,7 +199,6 @@
         // Create a formatted date string
         var formattedDate = `${year}-${month}-${day}: ${hours}:${minutes}:${seconds}`;
 
-        // Update the content of the element with the id "currentDateTime"
         document.getElementById('currentDateTime').innerText = formattedDate;
 
 

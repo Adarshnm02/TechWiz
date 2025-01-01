@@ -41,7 +41,6 @@
         /* Adjust the z-index and position of the departments list */
         .hero__categories {
             position: relative;
-            /* Ensure it's a positioned element for z-index to work */
         }
         .hero {
             padding-bottom: 0;
@@ -50,13 +49,9 @@
         .departments-list {
             position: absolute;
             top: 100%;
-            /* Position it below the "All departments" button */
             left: 0;
             background-color: white;
-            /* Set background color as needed */
             z-index: 1000;
-            /* Set a higher z-index to overlap other content */
-            /* Additional styling */
             width: 260px;
         }
     </style>
@@ -82,7 +77,6 @@
                     <a href="#"><i class="fa fa-heart"></i> <span>0</span></a>
                 </li>
                 <li>
-                    <!-- <a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a> -->
                     <a href="/cart"><i class="fa fa-shopping-bag"></i> <span id="cartLen"><% if(cartLen){%>
                         <%= cartLen %>
                     <%} else {%>
@@ -92,7 +86,6 @@
                     <a href="/profile"><i class="fa solid fa-user"></i></a>
                 </li>
             </ul>
-            <!-- <div class="header__cart__price">item: <span>$150.00</span></div> -->
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
@@ -120,10 +113,8 @@
                 <li>
                     <a href="#">Pages</a>
                     <ul class="header__menu__dropdown">
-                        <!-- <li><a href="./shop-details.html">Shop Details</a></li> -->
                         <li><a href="/cart">Shoping Cart</a></li>
                         <li><a href="/checkout">Check Out</a></li>
-                        <!-- <li><a href="./blog-details.html">Blog Details</a></li> -->
                     </ul>
                 </li>
                 <li><a href="./blog.html">Blog</a></li>
@@ -208,10 +199,8 @@
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
-                                    <!-- <li><a href="./shop-details.html">Shop Details</a></li> -->
                                     <li><a href="/cart">Shoping Cart</a></li>
                                     <li><a href="/checkout">Check Out</a></li>
-                                    <!-- <li><a href="./blog-details.html">Blog Details</a></li> -->
                                 </ul>
                             </li>
                             <li><a href="/">Blog</a></li>

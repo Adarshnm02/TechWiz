@@ -9,13 +9,10 @@ const session = require('express-session');
 const flash = require("connect-flash");
 const morgan = require('morgan')
 const { v4: uuidv4 } = require("uuid");
-const Razorpay = require('razorpay')
 
 const userRoute = require("./routes/userRoute.js");
 const adminRoute = require("./routes/adminRoute.js");
 
-
-// const server = http.createServer(app);
 
 app.set('views',path.join(__dirname,"views"));
 
@@ -32,14 +29,11 @@ app.use(session({
   secret: 'your-secret-key',
   resave: true,
   saveUninitialized: true,
-  // store: new MongoStore({
-  //   mongoUrl: process.env.MONGO_URL,
-  //   collection: 'sessions',
-  // }),  
+  store: new MongoStore({
+    mongoUrl: process.env.MONGO_URL,
+    collection: 'sessions',
+  }),  
 }));
-
-  
-
 
 
 app.use(flash());

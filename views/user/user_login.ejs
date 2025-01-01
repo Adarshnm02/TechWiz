@@ -1,5 +1,3 @@
-
-  
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -34,8 +32,8 @@
         <div class="loader"></div>
     </div>
 
-    
-    
+
+
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
@@ -67,9 +65,9 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                
+
                                 <li><a href="#"><i class="fa fa-user"></i> Login</a></li>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -84,131 +82,128 @@
 
 
 
- <section class="container" style="margin-top: 175px;">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body p-4">
-                    <h5 class="card-title text-center mb-4">Login</h5>
-                    <% if (typeof message !="undefined" ) {%>
+    <section class="container" style="margin-top: 175px;">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h5 class="card-title text-center mb-4">Login</h5>
+                        <% if (typeof message !="undefined" ) {%>
 
-                        <p id="errorMessage" class="mt-3 text-danger">
-                            <%= message %>
-                        </p>
-                        <%}%>
+                            <p id="errorMessage" class="mt-3 text-danger">
+                                <%= message %>
+                            </p>
+                            <%}%>
 
-                    <form action="/login" method="POST" id="registrationForm2">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email2" name="email">
-                            <p id="emailError"></p>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password2" name="password">
-                            <p id="passwordError"></p>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <!-- <a href="/index"> -->
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            <!-- </a> -->
-                        </div>
-                        <div class="text-center mt-3">
-                            <a href="/forgetPassword" style="color: #5e96d3;">ForgetPassword</a>
-                            <p>Create an account <a href="/signup" style="color: #5e96d3;">Register</a></p>
-                        </div>
-                    </form>
+                                <form action="/login" method="POST" id="registrationForm2">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="email2" name="email">
+                                        <p id="emailError"></p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password2" name="password">
+                                        <p id="passwordError"></p>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <!-- <a href="/index"> -->
+                                        <button type="submit" class="btn btn-primary">Login</button>
+                                        <!-- </a> -->
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="/forgetPassword" style="color: #5e96d3;">ForgetPassword</a>
+                                        <p>Create an account <a href="/signup" style="color: #5e96d3;">Register</a></p>
+                                    </div>
+                                </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 
-<script>
-    setTimeout(() => {
-        const errorMessage = document.getElementById('errorMessage');
-        if (errorMessage) {
-            errorMessage.style.display = "none"
+    <script>
+        setTimeout(() => {
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.style.display = "none"
+            }
+        }, 3000);
+    </script>
+
+    <script>
+
+
+        const couponForm = document.getElementById("registrationForm2");
+
+        const emailInput = document.getElementById("email2");
+        const emailError = document.getElementById("emailError");
+
+
+        const passwordInput = document.getElementById("password2");
+        const passwordError = document.getElementById("passwordError");
+
+
+
+        function emailValidation() {
+            if (emailInput.value.trim() === "") {
+                emailError.innerHTML = "Please enter your Email Address!";
+                return false;
+            } else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
+                emailError.innerHTML = "Please enter a valid Email address.";
+                return false;
+            } else {
+                emailError.innerHTML = "";
+                return true;
+            }
         }
-    }, 3000);
-</script>
-
-<script>
 
 
-		const couponForm = document.getElementById("registrationForm2");
+        function passwordValidation() {
+            if (passwordInput.value.trim() === "" || passwordInput.value.length < 4) {
+                passwordError.innerHTML = "Please Enter Password with a minimum length of 4 characters!";
+                return false;
+            } else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{4,}$/.test(passwordInput.value))) {
+                passwordError.innerHTML = "Password includes uppercase, lowercase, numbers, and symbols!";
+                return false;
+            } else {
+                passwordError.innerHTML = "";
+                return true;
+            }
+        }
 
-		const emailInput = document.getElementById("email2");
-		const emailError = document.getElementById("emailError");
+        couponForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const validations = [
+                emailValidation(),
+                passwordValidation()
+            ];
+            const hasErrors = validations.some(validation => validation === false);
+            if (!hasErrors) {
+                couponForm.submit();
+            }
+        });
 
-	
-		const passwordInput = document.getElementById("password2");
-		const passwordError = document.getElementById("passwordError");
-
-		
-
-		function emailValidation() {
-			if (emailInput.value.trim() === "") {
-				emailError.innerHTML = "Please enter your Email Address!";
-				return false;
-			} else if (!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailInput.value))) {
-				emailError.innerHTML = "Please enter a valid Email address.";
-				return false;
-			} else {
-				emailError.innerHTML = "";
-				return true;
-			}
-		}
-
-
-		function passwordValidation() {
-			if (passwordInput.value.trim() === "" || passwordInput.value.length < 4) {
-				passwordError.innerHTML = "Please Enter Password with a minimum length of 4 characters!";
-				return false;
-			} else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{4,}$/.test(passwordInput.value))) {
-				passwordError.innerHTML = "Password includes uppercase, lowercase, numbers, and symbols!";
-				return false;
-			} else {
-				passwordError.innerHTML = "";
-				return true;
-			}
-		}
-
-		couponForm.addEventListener("submit", function (event) {
-			event.preventDefault();
-			const validations = [
-				emailValidation(),
-				passwordValidation()
-			];
-			const hasErrors = validations.some(validation => validation === false);
-			if (!hasErrors) {
-				couponForm.submit(); 
-			}
-		});
-
-</script>
+    </script>
 
 
 
-</footer>
+    </footer>
 
-<!-- Js Plugins -->
-<script src="/user/js/jquery-3.3.1.min.js"></script>
-<script src="/user/js/bootstrap.min.js"></script>
-<script src="/user/js/jquery.nice-select.min.js"></script>
-<script src="/user/js/jquery-ui.min.js"></script>
-<script src="/user/js/jquery.slicknav.js"></script>
-<script src="/user/js/mixitup.min.js"></script>
-<script src="/user/js/owl.carousel.min.js"></script>
-<script src="/user/js/main.js"></script>
+    <!-- Js Plugins -->
+    <script src="/user/js/jquery-3.3.1.min.js"></script>
+    <script src="/user/js/bootstrap.min.js"></script>
+    <script src="/user/js/jquery.nice-select.min.js"></script>
+    <script src="/user/js/jquery-ui.min.js"></script>
+    <script src="/user/js/jquery.slicknav.js"></script>
+    <script src="/user/js/mixitup.min.js"></script>
+    <script src="/user/js/owl.carousel.min.js"></script>
+    <script src="/user/js/main.js"></script>
 
 
 
 </body>
 
 </html>
-
-
-

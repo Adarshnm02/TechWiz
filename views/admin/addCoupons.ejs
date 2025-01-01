@@ -86,16 +86,6 @@
             // Remove leading zeros
             input.value = input.value.replace(/^0+/, '');
 
-            // Additional validation for discount percentage
-            // if ($('#discountType').val() === 'percentage') {
-            //     if (parseInt(input.value) >= 80) {
-            //         // Display error message
-            //         input.setCustomValidity('Discount percentage cannot be greater than 80%');
-            //     } else {
-            //         // Reset validation
-            //         input.setCustomValidity('');
-            //     }
-            // }else 
             if ($('#discountType').val() === 'fixedAmount'){
                 if(parseInt(input.value) > 0 && parseInt(input.value) > 300){
                     input.setCustomValidity('Discount Amount cannot be greater than ₹300');
@@ -121,10 +111,7 @@
         // Remove leading zeros
         input.value = input.value.replace(/^0+/, '');
 
-        // Convert the value to a number
         const amount = parseInt(input.value);
-
-        // Check if the amount is greater than 500
         
         if (amount > 0 && amount < 500) {
             // Display error message
@@ -132,16 +119,13 @@
         }else if(amount >= 10000){
             input.setCustomValidity('Amount must be Lesse than 10000 Amount');
         } else {
-            // Reset validation
             input.setCustomValidity('');
         }
     }
 
         function validateDescription(input) {
-            // Remove spaces at the beginning
             input.value = input.value.replace(/^\s+/g, '');
 
-            // Allow only letters, commas, and full stops
             input.value = input.value.replace(/[^A-Za-z0-9,.\s]/g, '');
         }
 
