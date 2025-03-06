@@ -72,7 +72,7 @@ TechWiz is built to provide a seamless online shopping experience, featuring:
 | **Nodemailer** | Sending email notifications (including OTP)       |
 
 **Workflow**: MVC architecture  
-**Integrations**: Razorpay, Multer, NodeMailer, OTP Services (e.g., Twilio or custom)  
+**Integrations**: Razorpay, Multer, NodeMailer  
 
 ---
 
@@ -106,8 +106,6 @@ TechWiz is built to provide a seamless online shopping experience, featuring:
 ---
 
 ## Screenshots (Optional)
-
-If you have screenshots, place them in a `screenshots` folder and reference them here:
 
 | Home Page                | Product Page              | Admin Dashboard           |
 |--------------------------|---------------------------|---------------------------|
